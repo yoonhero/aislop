@@ -1,0 +1,1216 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Worst Login UI • Oldschool Bureaucracy Edition</title>
+    <style>
+      :root {
+        --ok: #c6ff00;
+        --warn: #ff5f00;
+        --bad: #ff005d;
+        --line: #0efff7;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        color: #110;
+        font-family: "Comic Sans MS", "Comic Sans", "굴림", "Times New Roman", serif;
+        background:
+          repeating-conic-gradient(from 17deg at 13% 35%, #ff00d4 0 2%, #00fff6 2% 7%, #ffea00 7% 11%, #000 11% 12%, #00f 12% 19%, #f0f 19% 25%, #fff 25% 27%, #ff4500 27% 36%, #00ff3f 36% 48%, #0000 48% 100%),
+          radial-gradient(circle at 80% 40%, #fffc89 0 12%, #0ff 12% 24%, #0000 36%),
+          linear-gradient(132deg, #f0f 0%, #00f 30%, #ff0 47%, #0ff 63%, #f30 81%, #0f0 100%);
+        background-blend-mode: hard-light, multiply, color-dodge;
+        background-size: 200px 200px, 220px 220px, 250px 250px;
+        letter-spacing: 0.25px;
+        overflow-x: hidden;
+        filter: saturate(190%) contrast(170%) hue-rotate(9deg);
+      }
+
+      .wrap {
+        width: min(100%, 1220px);
+        min-height: 100vh;
+        margin: 0 auto;
+        padding: 10px 0 28px 14px;
+        position: relative;
+        transform: rotate(0.72deg) skew(-0.8deg);
+      }
+
+      .card {
+        width: 96vw;
+        max-width: 960px;
+        min-height: 2100px;
+        margin-left: -8px;
+        margin-top: 8px;
+        border: 18px ridge #7a00ff;
+        position: relative;
+        overflow: visible;
+        padding: 18px 18px 28px;
+        background:
+          linear-gradient(42deg, #fffb00, #0ff 14%, #ff00d4 28%, #00f 52%, #ff6200 68%, #fff 83%, #00ff7b 100%),
+          repeating-linear-gradient(90deg, #ffffff22 0 4px, #00000055 4px 8px, #fff4 8px 11px),
+          radial-gradient(circle at 84% 10%, #ff0f8c 0 16px, #00ffe2 16px 32px, #0000 32px);
+        background-blend-mode: hue, multiply, overlay;
+        box-shadow:
+          22px 18px 0 #ff00ff,
+          -16px -11px 0 #00ffff,
+          5px 8px 30px #000;
+        transform: rotate(-2.1deg) scale(1.01);
+      }
+
+      .card::before,
+      .card::after {
+        content: "";
+        position: absolute;
+        pointer-events: none;
+      }
+
+      .card::before {
+        inset: 6px;
+        border: 3px dashed #000;
+        border-left-color: #ff0;
+        border-bottom-color: #0ff;
+        transform: rotate(0.8deg);
+      }
+
+      .card::after {
+        inset: 18px 9px 14px;
+        background: repeating-linear-gradient(45deg, #0000 0 5px, #fff2 5px 6px);
+        opacity: 0.18;
+        z-index: -1;
+        transform: skew(1.1deg);
+      }
+
+      .tag {
+        position: sticky;
+        top: 6px;
+        left: 78%;
+        width: fit-content;
+        margin-bottom: 8px;
+        color: #faff00;
+        border: 3px solid #00ffea;
+        background: #000;
+        padding: 4px 9px;
+        font-size: 11px;
+        font-family: "Courier New", monospace;
+        letter-spacing: 2px;
+        text-shadow: 2px 2px 0 #f0f;
+        transform: rotate(12.2deg) skew(-3deg);
+        z-index: 50;
+      }
+
+      h1 {
+        margin: 4px 0 6px;
+        width: 108%;
+        position: relative;
+        left: -4%;
+        text-transform: uppercase;
+        text-align: center;
+        font-size: clamp(2rem, 5.8vw, 4.2rem);
+        line-height: 0.88;
+        padding: 4px 2px 8px;
+        border: 7px dashed #000;
+        border-left: 14px double #ff00ea;
+        border-right: 14px solid #00fff2;
+        text-shadow: 5px 5px 0 #ff0, -3px -2px 0 #00f;
+        background:
+          linear-gradient(90deg, #fff 0 14%, #ff00da 22%, #00ffd5 46%, #fff 74%, #ff8f00 100%);
+        color: #000;
+        box-shadow:
+          -7px 7px 0 #ff00c8,
+          4px -4px 0 #00ffb1;
+        transform: rotate(-4deg) skew(1.4deg);
+      }
+
+      .subtitle {
+        width: 112%;
+        margin: 2px 0 16px -6px;
+        padding: 9px 14px 11px;
+        background:
+          conic-gradient(from 70deg, #ff00f0 0 16%, #00fff1 16% 34%, #ffea00 34% 55%, #ff5500 55% 72%, #fff 72% 100%);
+        border: 4px solid #000;
+        font-size: 14px;
+        text-align: center;
+        transform: rotate(3.4deg) translateY(-2px);
+        text-decoration: underline;
+        text-decoration-style: wavy;
+        text-decoration-thickness: 3px;
+        box-shadow: 5px 4px 0 #000;
+      }
+
+      .panel {
+        position: absolute;
+        width: 100%;
+        border: 6px groove #ff00d0;
+        min-height: 210px;
+        padding: 11px 15px 14px;
+        overflow: visible;
+        background:
+          repeating-linear-gradient(100deg, #fff 0 10px, #0ff 10px 20px, #ff00f2 20px 30px, #000 30px 32px),
+          linear-gradient(45deg, #fffd95 0 34%, #00f0ff 34% 62%, #ff0000 62% 100%);
+        background-blend-mode: hard-light, difference;
+        box-shadow: -8px 6px 0 #00ffd5, 10px -9px 0 #f0f, inset 0 0 26px #fff;
+        clip-path: polygon(2% 2%, 96% 0, 100% 18%, 88% 100%, 4% 94%, 0 70%);
+        transform-origin: top left;
+      }
+
+      .panel::before {
+        content: "";
+        position: absolute;
+        inset: 6px -8px 8px -5px;
+        border: 2px dashed #000;
+        opacity: 0.34;
+        pointer-events: none;
+        transform: rotate(-0.9deg);
+      }
+
+      .panel:nth-of-type(1) {
+        top: 102px;
+        left: -54px;
+        width: 130%;
+        transform: rotate(-18deg) skew(5.8deg) translateY(-4px);
+        z-index: 13;
+      }
+
+      .panel:nth-of-type(2) {
+        top: 458px;
+        left: 78px;
+        width: 109%;
+        transform: rotate(12deg) skew(-7.5deg) scaleX(1.03);
+        z-index: 9;
+        min-height: 255px;
+      }
+
+      .panel:nth-of-type(3) {
+        top: 760px;
+        left: -70px;
+        width: 128%;
+        transform: rotate(-15deg) skew(4.5deg) scaleX(0.96);
+        z-index: 11;
+        min-height: 350px;
+      }
+
+      .panel:nth-of-type(4) {
+        top: 1180px;
+        left: 34px;
+        width: 112%;
+        transform: rotate(9deg) skew(-6deg) scaleY(1.12);
+        z-index: 7;
+        min-height: 320px;
+      }
+
+      .panel h2 {
+        margin: 0;
+        padding: 8px 9px;
+        display: inline-block;
+        width: auto;
+        position: relative;
+        left: -14px;
+        font-size: 26px;
+        text-transform: uppercase;
+        color: #000;
+        background:
+          linear-gradient(90deg, #ff0 0 22%, #ff00ff 22% 48%, #00fff0 48% 72%, #fff 72% 100%);
+        border: 4px double #111;
+        text-shadow: 2px 2px 0 #f0f;
+        transform: rotate(-8.2deg) skew(2.1deg);
+        letter-spacing: 4px;
+      }
+
+      .panel:nth-of-type(2) h2 {
+        left: 20px;
+        transform: rotate(1.9deg);
+      }
+
+      .panel:nth-of-type(3) h2 {
+        left: 16px;
+        transform: rotate(4.5deg);
+      }
+
+      .panel:nth-of-type(4) h2 {
+        left: 5px;
+        transform: rotate(-2.6deg);
+      }
+
+      .tiny,
+      .avatar-meta,
+      .rps-state,
+      .rps-meta,
+      #mineCount,
+      #mineLog {
+        border-left: 5px solid #000;
+        margin-top: 3px;
+        padding: 3px 5px 3px 8px;
+        color: #000;
+        background: repeating-linear-gradient(90deg, #fff 0 14px, #00ffe8 14px 26px, #ff00d8 26px 38px);
+        font-size: 20px;
+        line-height: 1.18;
+        text-decoration: underline double #000;
+        position: relative;
+        left: -16px;
+        width: fit-content;
+      }
+
+      .mine-hash-line {
+        width: 100%;
+        word-break: break-all;
+        overflow-wrap: anywhere;
+      }
+
+      .avatar-grid {
+        margin-top: 6px;
+        margin-left: -2%;
+        width: 180px;
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 4px;
+      }
+
+      .dot {
+        aspect-ratio: 1;
+        min-height: 30px;
+        border: 2px solid #444;
+        border-radius: 50% 20% 50% 20%;
+        background: #fff;
+        cursor: pointer;
+        box-shadow: inset 0 0 0 2px #ff0, inset 0 0 10px #00f7ff;
+        transform: rotate(-4deg);
+      }
+
+      .dot.active {
+        background: #ff00ff;
+      }
+
+      .avatar-meta {
+        width: 180px;
+        margin-left: 12%;
+        padding: 4px;
+        border: 2px dashed #555;
+        background: #fffde8;
+      }
+
+      .voice-wrap {
+        margin-top: 4px;
+        display: grid;
+        gap: 8px;
+      }
+
+      label {
+        display: block;
+        color: #000;
+        text-decoration: underline;
+        text-indent: 4px;
+        font-weight: 900;
+        margin-bottom: 3px;
+      }
+
+      input {
+        margin-top: 2px;
+        margin-left: 24px;
+        min-width: 240px;
+        width: 56%;
+        padding: 9px 10px;
+        font-family: inherit;
+        font-size: 20px;
+        color: #111;
+        border: 3px solid #111;
+        border-radius: 18px 3px 18px 0;
+        background:
+          linear-gradient(90deg, #fff 0 33px, #ff00b0 33px 66px, #00ffe5 66px 99px),
+          repeating-linear-gradient(180deg, #0003 0 10px, #fff3 10px 20px);
+        box-shadow: 5px 6px 0 #000;
+      }
+
+      .voice-row {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: flex-start;
+      }
+
+      button {
+        min-height: 42px;
+        border: 3px solid #222;
+        padding: 6px 10px;
+        font-family: inherit;
+        font-weight: 900;
+        background:
+          linear-gradient(180deg, #00fff0 0 36%, #ff00ff 36% 78%, #fffb00 78% 100%);
+        box-shadow: 4px 4px 0 #000, -2px -2px 0 #fff;
+        cursor: pointer;
+      }
+
+      .rps-grid {
+        margin-top: 6px;
+        width: 66%;
+        margin-right: 12%;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 6px;
+      }
+
+      .rps {
+        height: 54px;
+        font-size: 14px;
+        color: #fff;
+        text-transform: uppercase;
+        border-color: #444;
+        text-shadow: 1px 1px 0 #000;
+        background: linear-gradient(45deg, #000, #ff00ff 42%, #00fff0 90%);
+        letter-spacing: 1px;
+      }
+
+      .rps-duel {
+        margin-top: 8px;
+        margin-left: -68px;
+        width: 130%;
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        gap: 8px;
+        align-items: center;
+        border: 2px solid #222;
+        padding: 8px;
+        background: repeating-linear-gradient(180deg, #fff 0 14px, #ff00ff 14px 28px, #00ffd5 28px 42px);
+      }
+
+      .hand-box {
+        min-height: 86px;
+        border: 2px dashed #555;
+        padding: 4px 6px;
+        background: linear-gradient(110deg, #ff00ee 0 40%, #00f8ff 40% 80%, #ffff00 80% 100%);
+        display: grid;
+        grid-template-rows: auto 1fr;
+        justify-items: center;
+        align-items: center;
+      }
+
+      .hand-label {
+        width: 100%;
+        margin-bottom: 4px;
+        font-size: 11px;
+        font-weight: 700;
+        border-bottom: 1px dotted #444;
+        text-align: center;
+      }
+
+      .hand-icon {
+        min-height: 36px;
+        line-height: 1;
+        font-size: 34px;
+      }
+
+      .rps-countdown {
+        min-width: 72px;
+        border: 2px solid #111;
+        background: #fff;
+        padding: 6px 8px;
+        text-align: center;
+        font-family: "Courier New", monospace;
+        font-size: 18px;
+      }
+
+      .rps-state {
+        width: 74%;
+        margin-left: 18%;
+        min-height: 36px;
+        transform: rotate(1.1deg);
+        overflow: hidden;
+        border: 3px solid #000;
+        background: linear-gradient(90deg, #fff 0 20px, #ff0 20px 40px);
+        line-height: 1.2;
+        padding: 3px;
+        white-space: normal;
+      }
+
+      .rps-meta {
+        width: 88%;
+        transform: rotate(-1deg);
+        border: 2px solid #000;
+        background: linear-gradient(180deg, #fff 0 33%, #ff00bb 33% 66%, #00f7d9 66% 100%);
+        padding: 3px;
+      }
+
+      .rps-log {
+        width: 90%;
+        margin-top: 6px;
+        max-height: 72px;
+        min-height: 54px;
+        border: 2px dotted #000;
+        padding: 6px;
+        overflow: auto;
+        white-space: pre-line;
+        transform: rotate(-1.6deg);
+        background:
+          linear-gradient(90deg, #fff700 0 6px, #ff00d4 6px 18px, #00ffe0 18px 24px),
+          repeating-radial-gradient(circle at 8% 50%, #0004 0 8px, #fff0 8px 20px);
+        font-family: "Courier New", monospace;
+        font-size: 11px;
+      }
+
+      .mining-row {
+        margin-top: -4px;
+        margin-left: -12px;
+        transform: rotate(-0.3deg);
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+        justify-content: flex-start;
+      }
+
+      .mining-row button {
+        transform: rotate(-0.6deg);
+      }
+
+      .mine-control {
+        padding: 4px 8px;
+        min-height: 36px;
+        font-size: 12px;
+        transform: rotate(0.9deg);
+      }
+
+      .meter {
+        margin-top: 6px;
+        margin-left: -10px;
+        width: 90%;
+        height: 23px;
+        border: 3px solid #000;
+        transform: skew(-1.4deg);
+        overflow: hidden;
+        background: repeating-linear-gradient(90deg, #fff 0 4px, #000 4px 8px, #ff00cc 8px 14px);
+      }
+
+      .meter > div {
+        width: 0;
+        height: 100%;
+        background: linear-gradient(90deg, #7f7f7f 0 50%, #a6a6a6 50% 100%);
+        transition: width 120ms linear;
+      }
+
+      .mine-stats {
+        margin-top: 6px;
+        width: 120%;
+        margin-left: -24px;
+        padding: 4px 6px;
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 4px;
+        border: 2px solid #333;
+        background: linear-gradient(45deg, #fff 0 14px, #ff00ff 14px 28px, #00fff6 28px 40px);
+        font-size: 11px;
+        font-family: "Courier New", monospace;
+      }
+
+      .mine-console {
+        margin-top: 6px;
+        margin-left: -18px;
+        width: 108%;
+        min-height: 74px;
+        max-height: 88px;
+        border: 2px solid #111;
+        padding: 6px;
+        overflow: auto;
+        transform: rotate(0.6deg);
+        background: linear-gradient(90deg, #fff 0 20px, #ff00ff 20px 40px, #00ffe5 40px 60px);
+        font-family: "Courier New", monospace;
+        font-size: 11px;
+        line-height: 1.25;
+        white-space: pre-line;
+      }
+
+      .row-final {
+        position: absolute;
+        top: 1280px;
+        left: -50px;
+        width: 114%;
+        margin-top: 10px;
+        z-index: 20;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        transform: rotate(14deg) skew(-8deg);
+      }
+
+      #loginBtn {
+        width: 52%;
+        margin-left: 0;
+        margin-bottom: 4px;
+        padding: 14px 18px;
+        font-size: 28px;
+        border-color: #fff;
+        color: #00ffb5;
+        background: #111 !important;
+        box-shadow: 6px 7px 0 #ff00f6, -5px -2px 0 #00fff5;
+        transform: rotate(0.8deg);
+      }
+
+      #status {
+        width: 60%;
+        min-width: 260px;
+        max-width: 60%;
+        margin-right: 14%;
+        min-height: 50px;
+        position: relative;
+        left: 26%;
+        padding: 6px;
+        border: 3px solid #000;
+        transform: rotate(-0.8deg) skew(-2deg);
+        background: linear-gradient(90deg, #fff 0 12px, #ff00d4 12px 24px, #00fff0 24px 36px);
+        color: #000;
+        font-size: 16px;
+        font-weight: 900;
+        box-shadow: 4px 4px 0 #000, -2px -2px 0 #ff0;
+      }
+
+      #status.ok { color: var(--ok); }
+      #status.warn { color: var(--warn); }
+      #status.bad { color: var(--bad); }
+
+      @media (max-width: 860px) {
+        .avatar-grid,
+        .rps-grid,
+        input,
+        .rps-state,
+        .meter,
+        .rps-duel,
+        .rps-log,
+        .mine-stats,
+        .mine-console,
+        .avatar-meta,
+        .rps-meta,
+        .subtitle,
+        .tiny,
+        .rps-state {
+          width: 100%;
+          margin-left: 0;
+          transform: skew(-0.5deg);
+          padding-right: 8px;
+        }
+
+        h1 {
+          width: 100%;
+        }
+
+        .row-final {
+          width: 102%;
+          left: -6px;
+          top: 1440px;
+          flex-direction: column;
+          align-items: flex-start;
+        }
+      }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="card" id="card">
+        <div class="tag">실사용 금지 / 민원 폭주 모드</div>
+      <h1>최악 로그인 UI</h1>
+      <p class="subtitle">사용자 편의는 반려되었습니다. 불편을 양해하지 마세요.</p>
+
+      <section class="panel">
+        <h2>1) USERNAME = GitHub Dot Avatar</h2>
+        <p class="tiny">이름은 사치입니다. 점 3개 미만이면 신원조회 창구로 이동합니다.</p>
+        <div class="avatar-grid" id="avatarGrid"></div>
+        <div class="avatar-meta">패턴 해시: <strong id="avatarSeed">none</strong></div>
+      </section>
+
+      <section class="panel">
+        <h2>2) Password = Voice Input</h2>
+        <div class="tiny" id="voiceHint">말해야 할 문구: 로딩 중</div>
+        <div class="voice-wrap">
+          <label for="voicePassword">voice-pass</label>
+          <div class="voice-row">
+            <input id="voicePassword" type="text" readonly value="" placeholder="음성 인식 결과가 여기에 표시됩니다" />
+            <button type="button" id="voiceBtn">🎤 음성 시작</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>3) CAPTCHA = Rock Paper Scissors</h2>
+        <div class="rps-meta" id="rpsSecret">컴퓨터는 이미 결과를 아는 척합니다</div>
+        <div class="rps-duel">
+          <div class="hand-box">
+            <div class="hand-label">당신</div>
+            <div class="hand-icon" id="userHand">?</div>
+          </div>
+          <div class="rps-countdown" id="rpsCountdown">READY</div>
+          <div class="hand-box">
+            <div class="hand-label">컴퓨터</div>
+            <div class="hand-icon" id="cpuHand">?</div>
+          </div>
+        </div>
+        <div class="rps-grid">
+          <button class="rps" type="button" data-choice="rock">바위</button>
+          <button class="rps" type="button" data-choice="paper">보</button>
+          <button class="rps" type="button" data-choice="scissors">가위</button>
+        </div>
+        <div class="rps-state" id="rpsState">캡차 시작 전</div>
+        <div class="rps-log" id="rpsLog">최근 대결 로그 없음</div>
+      </section>
+
+      <section class="panel">
+        <h2 id="miningDifficultyLabel">4) Bitcoin Mining / difficulty 16</h2>
+        <div class="mining-row">
+          <button type="button" id="mineBtn">채굴 시작</button>
+          <button type="button" id="mineBoostBtn" class="mine-control">오버클럭 +</button>
+          <button type="button" id="mineCoolBtn" class="mine-control">강제 냉각 -</button>
+          <span id="difficulty">difficulty 16</span>
+          <span id="mineCount">completed: 0/16</span>
+        </div>
+        <div class="meter" aria-hidden="true"><div id="mineBar"></div></div>
+        <div class="mine-stats">
+          <div>hashrate: <strong id="mineRate">0 H/s</strong></div>
+          <div>temp: <strong id="mineTemp">32C</strong></div>
+          <div>nonce: <strong id="mineNonce">0</strong></div>
+        </div>
+        <div class="tiny mine-hash-line">full hash: <strong id="mineHashFull">-</strong></div>
+        <div class="mine-console" id="mineConsole">[BOOT] miner not started</div>
+        <p class="tiny" id="mineLog">대기 중: 팬 소음만 준비됨</p>
+      </section>
+
+      <div class="row-final">
+        <button id="loginBtn" type="button">로그인 신청서 제출</button>
+        <div id="status">state: 민원 접수 대기</div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const state = {
+      avatar: new Array(25).fill(false),
+      passTarget: generateTargetPhrase(),
+      voiceCaptured: '',
+      rpsChoice: null,
+      rpsCpu: null,
+      rpsPassed: false,
+      rpsRounds: 0,
+      rpsWins: 0,
+      rpsInProgress: false,
+      rpsLogLines: [],
+      mining: {
+        enabled: false,
+        done: 0,
+        baseTargetBits: 16,
+        targetBits: 16,
+        minTargetBits: 12,
+        maxTargetBits: 20,
+        lastTargetChangeTs: 0,
+        minimumMs: 60000,
+        nonce: 0,
+        bestBits: 0,
+        blockHash: '',
+        foundNonce: null,
+        foundBits: null,
+        startTs: 0,
+        targetMetTs: null,
+        speedMultiplier: 1,
+        hashRate: 0,
+        temp: 32,
+        hashCounter: 0,
+        lastRateTs: performance.now(),
+        baseBlock: '',
+        consoleLines: ['[BOOT] miner not started'],
+      },
+      last: null,
+    };
+
+    const $ = (id) => document.getElementById(id);
+    const avatarGrid = $('avatarGrid');
+    const difficultyLabel = $('difficulty');
+    const miningDifficultyLabel = $('miningDifficultyLabel');
+    const encoder = new TextEncoder();
+    const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+    function rand(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function normalizePhrase(text) {
+      return (text || '').trim().toLowerCase().replace(/\s+/g, ' ');
+    }
+
+    function generateTargetPhrase() {
+      const words = ['민원', '창구', '도장', '복사본', '접수', '보류', '결재', '반려', '원본', '대기'];
+      return `${words[rand(0, 9)]} ${words[rand(0, 9)]} ${words[rand(0, 9)]}`;
+    }
+
+    function hashAvatar(bits) {
+      return bits.map((v, i) => (v ? ((i * 11 + 5) % 32).toString(16) : '')).filter(Boolean).join('') || 'none';
+    }
+
+    function updateStatus(text, cls = '') {
+      const s = $('status');
+      s.textContent = text;
+      s.className = cls ? cls : '';
+    }
+
+    const dotButtons = [];
+
+    function renderAvatarUi() {
+      for (let i = 0; i < 25; i += 1) {
+        dotButtons[i].classList.toggle('active', state.avatar[i]);
+      }
+      $('avatarSeed').textContent = `${hashAvatar(state.avatar)} / ${state.avatar.filter(Boolean).length}개`;
+    }
+
+    for (let i = 0; i < 25; i += 1) {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'dot';
+      b.setAttribute('data-index', String(i));
+      b.addEventListener('click', () => {
+        state.avatar[i] = !state.avatar[i];
+        renderAvatarUi();
+      });
+      dotButtons.push(b);
+      avatarGrid.appendChild(b);
+    }
+    renderAvatarUi();
+
+    const voiceBtn = $('voiceBtn');
+    const voiceInput = $('voicePassword');
+    const voiceHint = $('voiceHint');
+    const target = state.passTarget;
+    voiceHint.textContent = `암송 지정 문구: "${target}"`;
+
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    let recognition = null;
+    let isListening = false;
+
+    if (SR) {
+      recognition = new SR();
+      recognition.lang = 'ko-KR';
+      recognition.maxAlternatives = 1;
+      recognition.interimResults = false;
+
+      recognition.addEventListener('start', () => {
+        isListening = true;
+        updateStatus('창구 직원이 발음을 감정 없이 듣는 중...', 'warn');
+      });
+
+      recognition.addEventListener('result', (ev) => {
+        const spoken = (ev.results[0]?.[0]?.transcript || '').trim();
+        state.voiceCaptured = spoken;
+        voiceInput.value = spoken || '';
+        if (normalizePhrase(spoken) === normalizePhrase(target)) {
+          updateStatus('발음 합격: 기계가 마지못해 인정함', 'ok');
+        } else {
+          updateStatus('발음 불합격: 띄어쓰기의 죄가 큽니다', 'bad');
+        }
+      });
+
+      recognition.addEventListener('end', () => {
+        isListening = false;
+      });
+
+      recognition.addEventListener('error', (ev) => {
+        isListening = false;
+        updateStatus(`음성 인식 오류: ${ev.error || 'unknown'} (다시 번호표 뽑으세요)`, 'bad');
+      });
+
+      voiceBtn.addEventListener('click', () => {
+        if (!recognition || isListening) return;
+        try {
+          recognition.start();
+        } catch {
+          updateStatus('음성 시작 실패: 마이크가 서류를 거부함', 'bad');
+        }
+      });
+    } else {
+      voiceHint.textContent = '이 브라우저는 음성민원을 접수하지 않습니다.';
+      voiceBtn.disabled = true;
+    }
+
+    const rpsState = $('rpsState');
+    const rpsSecret = $('rpsSecret');
+    const rpsLog = $('rpsLog');
+    const rpsCountdown = $('rpsCountdown');
+    const userHand = $('userHand');
+    const cpuHand = $('cpuHand');
+    const rpsButtons = Array.from(document.querySelectorAll('.rps'));
+    const handIcons = { rock: '✊', paper: '🖐', scissors: '✌' };
+    const moves = ['rock', 'paper', 'scissors'];
+    const names = { rock: '바위', paper: '보', scissors: '가위' };
+
+    function cpuMove() {
+      return moves[rand(0, moves.length - 1)];
+    }
+
+    function battle(cpu, user) {
+      if (cpu === user) return 'draw';
+      if (
+        (cpu === 'rock' && user === 'scissors') ||
+        (cpu === 'scissors' && user === 'paper') ||
+        (cpu === 'paper' && user === 'rock')
+      ) {
+        return 'cpu';
+      }
+      return 'user';
+    }
+
+    function appendRpsLog(line) {
+      state.rpsLogLines.unshift(line);
+      state.rpsLogLines = state.rpsLogLines.slice(0, 4);
+      rpsLog.textContent = state.rpsLogLines.join('\n');
+    }
+
+    async function playRpsRound(user) {
+      if (state.rpsInProgress) return;
+      state.rpsInProgress = true;
+      rpsButtons.forEach((btn) => { btn.disabled = true; });
+
+      state.rpsRounds += 1;
+      state.rpsChoice = user;
+      userHand.textContent = handIcons[user];
+      cpuHand.textContent = '?';
+      rpsCountdown.textContent = '3';
+      rpsSecret.textContent = '심사관이 무표정으로 카운트다운 진행 중';
+      updateStatus('가위바위보 심사 진행 중...', 'warn');
+
+      await sleep(220);
+      rpsCountdown.textContent = '2';
+      await sleep(220);
+      rpsCountdown.textContent = '1';
+      await sleep(220);
+      rpsCountdown.textContent = '공개';
+
+      const cpu = cpuMove();
+      const out = battle(cpu, user);
+      state.rpsCpu = cpu;
+      cpuHand.textContent = handIcons[cpu];
+      rpsSecret.textContent = `심사관 선택: ${names[cpu]}`;
+
+      if (out === 'user') {
+        state.rpsWins += 1;
+        state.rpsPassed = state.rpsWins >= 2;
+        rpsState.textContent = `승리. 누적 ${state.rpsWins}승 / 최소 2승 필요`;
+        appendRpsLog(`R${state.rpsRounds}: 사용자 ${names[user]} vs 컴퓨터 ${names[cpu]} -> 승리`);
+        updateStatus(
+          state.rpsPassed ? '캡차 통과: 인간성 임시 인증됨' : '추가 1승 필요: 담당자는 아직 의심 중',
+          state.rpsPassed ? 'ok' : 'warn'
+        );
+      } else if (out === 'cpu') {
+        state.rpsPassed = false;
+        state.rpsWins = Math.max(0, state.rpsWins - 1);
+        rpsState.textContent = `패배. 누적 ${state.rpsWins}승 / 최소 2승 필요`;
+        appendRpsLog(`R${state.rpsRounds}: 사용자 ${names[user]} vs 컴퓨터 ${names[cpu]} -> 패배`);
+        updateStatus('캡차 실패: 재교육 후 재도전', 'bad');
+      } else {
+        state.rpsPassed = false;
+        rpsState.textContent = `무승부. 누적 ${state.rpsWins}승 / 최소 2승 필요`;
+        appendRpsLog(`R${state.rpsRounds}: 사용자 ${names[user]} vs 컴퓨터 ${names[cpu]} -> 무승부`);
+        updateStatus('캡차 보류: 다시 제출 필요', 'warn');
+      }
+
+      rpsCountdown.textContent = state.rpsPassed ? 'PASS' : 'RETRY';
+      rpsButtons.forEach((btn) => { btn.disabled = false; });
+      state.rpsInProgress = false;
+    }
+
+    rpsButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const user = btn.getAttribute('data-choice');
+        playRpsRound(user);
+      });
+    });
+
+    const mineBar = $('mineBar');
+    const mineCount = $('mineCount');
+    const mineLog = $('mineLog');
+    const mineBtn = $('mineBtn');
+    const mineBoostBtn = $('mineBoostBtn');
+    const mineCoolBtn = $('mineCoolBtn');
+    const mineRate = $('mineRate');
+    const mineTemp = $('mineTemp');
+    const mineNonce = $('mineNonce');
+    const mineHashFull = $('mineHashFull');
+    const mineConsole = $('mineConsole');
+
+    function updateMiningUi() {
+      mineBar.style.width = `${Math.min(100, (state.mining.done / state.mining.targetBits) * 100)}%`;
+      const elapsed = state.mining.startTs ? (performance.now() - state.mining.startTs) : 0;
+      const left = Math.max(0, state.mining.minimumMs - elapsed);
+      mineCount.textContent = `completed: ${state.mining.done}/${state.mining.targetBits} / 남은 ${(state.mining.minimumMs / 1000).toFixed(0)}초: ${(left / 1000).toFixed(1)}s`;
+      difficultyLabel.textContent = `difficulty ${state.mining.targetBits}`;
+      miningDifficultyLabel.textContent = `4) Bitcoin Mining / difficulty ${state.mining.targetBits}`;
+      mineRate.textContent = `${Math.round(state.mining.hashRate)} H/s`;
+      mineTemp.textContent = `${state.mining.temp.toFixed(1)}C`;
+      mineNonce.textContent = String(state.mining.nonce);
+      mineHashFull.textContent = state.mining.blockHash || '-';
+    }
+
+    function appendMineConsole(line) {
+      state.mining.consoleLines.unshift(line);
+      state.mining.consoleLines = state.mining.consoleLines.slice(0, 7);
+      mineConsole.textContent = state.mining.consoleLines.join('\n');
+    }
+
+    function updateHashRate(attempts) {
+      const now = performance.now();
+      state.mining.hashCounter += attempts;
+      const delta = now - state.mining.lastRateTs;
+      if (delta >= 350) {
+        state.mining.hashRate = (state.mining.hashCounter * 1000) / delta;
+        state.mining.hashCounter = 0;
+        state.mining.lastRateTs = now;
+      }
+    }
+
+    function updateMiningDifficulty(now) {
+      const since = now - state.mining.lastTargetChangeTs;
+      if (since < 900) return;
+
+      const drift = rand(-1, 1);
+      const next = Math.max(
+        state.mining.minTargetBits,
+        Math.min(state.mining.maxTargetBits, state.mining.targetBits + drift),
+      );
+      if (next === state.mining.targetBits) return;
+
+      const previous = state.mining.targetBits;
+      state.mining.targetBits = next;
+      state.mining.lastTargetChangeTs = now;
+
+      if (state.mining.targetMetTs && state.mining.foundBits !== null && next > state.mining.foundBits) {
+        state.mining.targetMetTs = null;
+        state.mining.foundBits = null;
+        state.mining.foundNonce = null;
+        state.mining.blockHash = '';
+        mineLog.textContent = `난이도 급등: 검증 재개 필요 (${previous} -> ${next})`;
+        appendMineConsole(`[DIFF] ${previous} -> ${next} bits, cached solution invalidated`);
+      } else {
+        mineLog.textContent = `난이도 변동: ${previous} → ${next}`;
+        appendMineConsole(`[DIFF] ${previous} -> ${next} bits`);
+      }
+
+      state.mining.done = Math.min(state.mining.bestBits, state.mining.targetBits);
+      updateMiningUi();
+    }
+
+    function leadingZeroBits(hex) {
+      let bits = 0;
+      for (let i = 0; i < hex.length; i += 1) {
+        const nibble = parseInt(hex[i], 16);
+        if (nibble === 0) {
+          bits += 4;
+          continue;
+        }
+        if (nibble < 2) bits += 3;
+        else if (nibble < 4) bits += 2;
+        else if (nibble < 8) bits += 1;
+        break;
+      }
+      return bits;
+    }
+
+    async function sha256Hex(input) {
+      const digest = await crypto.subtle.digest('SHA-256', encoder.encode(input));
+      return Array.from(new Uint8Array(digest), (b) => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    function applyThermalDrift(attempts) {
+      const heatGain = attempts * (0.005 + (state.mining.speedMultiplier - 1) * 0.003);
+      const passiveCooling = 0.9;
+      state.mining.temp = Math.max(26, state.mining.temp - passiveCooling + heatGain);
+    }
+
+    async function startMining() {
+      if (!window.crypto || !window.crypto.subtle) {
+        mineLog.textContent = '암호 모듈 미설치';
+        updateStatus('채굴 실패: 브라우저가 삽질을 지원하지 않음', 'bad');
+        return;
+      }
+
+      state.mining.enabled = true;
+      state.mining.startTs = performance.now();
+      state.mining.lastTargetChangeTs = performance.now();
+      state.mining.targetBits = state.mining.baseTargetBits;
+      state.mining.targetMetTs = null;
+      state.mining.done = 0;
+      state.mining.bestBits = 0;
+      state.mining.blockHash = '';
+      state.mining.foundNonce = null;
+      state.mining.foundBits = null;
+      state.mining.lastRateTs = performance.now();
+      state.mining.hashCounter = 0;
+      if (!state.mining.baseBlock) {
+        state.mining.baseBlock = `${hashAvatar(state.avatar)}|${normalizePhrase(target)}|${Date.now()}|ticket-${rand(1000, 9999)}`;
+      }
+
+      mineBtn.disabled = true;
+      mineBtn.textContent = '채굴 중...';
+      mineLog.textContent = '실제 SHA-256 PoW 시작: 전기요금은 본인 부담';
+      appendMineConsole(`[BOOT] base=${state.mining.baseBlock.slice(0, 24)}...`);
+
+      while (state.mining.enabled) {
+        const hot = state.mining.temp > 87;
+        const chunk = Math.max(14, Math.floor(46 * state.mining.speedMultiplier * (hot ? 0.35 : 1)));
+        let attempts = 0;
+
+        for (let i = 0; i < chunk; i += 1) {
+          const nonce = state.mining.nonce;
+          state.mining.nonce += 1;
+          attempts += 1;
+          const now = performance.now();
+          updateMiningDifficulty(now);
+          const elapsed = now - state.mining.startTs;
+
+          const hash = await sha256Hex(`${state.mining.baseBlock}|${nonce}`);
+          const bits = leadingZeroBits(hash);
+
+          if (bits > state.mining.bestBits) {
+            state.mining.bestBits = bits;
+            state.mining.done = Math.min(state.mining.bestBits, state.mining.targetBits);
+            mineLog.textContent = `삽질 진행: nonce=${nonce}, 최고=${bits} bits`;
+            appendMineConsole(`[BEST] ${bits} bits @ nonce ${nonce}, hash=${hash}`);
+            updateMiningUi();
+          } else if (nonce % 140 === 0) {
+            appendMineConsole(`[SCAN] nonce ${nonce} -> ${hash}`);
+          }
+
+          if (
+            bits >= state.mining.targetBits
+            && state.mining.targetMetTs === null
+          ) {
+            state.mining.targetMetTs = now;
+            state.mining.blockHash = hash;
+            state.mining.foundNonce = nonce;
+            state.mining.foundBits = bits;
+            mineLog.textContent = `난이도 충족: ${state.mining.minimumMs / 1000}초 장문 서류 심사 대기`;
+            appendMineConsole(`[FOUND] target reached @ nonce ${nonce}, waiting for hold window`);
+          }
+
+          if (
+            state.mining.targetMetTs !== null
+            && state.mining.foundBits !== null
+            && state.mining.foundBits >= state.mining.targetBits
+            && elapsed >= state.mining.minimumMs
+          ) {
+            state.mining.done = state.mining.targetBits;
+            state.mining.enabled = false;
+            mineBtn.disabled = false;
+            mineBtn.textContent = '채굴 완료 (체력 -99)';
+            mineLog.textContent = `채굴 성공: nonce=${state.mining.foundNonce}, hash=${state.mining.blockHash}`;
+            appendMineConsole(`[SOLVED] target ${state.mining.targetBits} bits satisfied`);
+            updateMiningUi();
+            updateStatus('채굴 통과: 서버가 드디어 고개를 끄덕임', 'ok');
+            return;
+          }
+        }
+
+        updateHashRate(attempts);
+        applyThermalDrift(attempts);
+        updateMiningUi();
+
+        if (state.mining.temp >= 99) {
+          state.mining.enabled = false;
+          state.mining.targetMetTs = null;
+          mineBtn.disabled = false;
+          mineBtn.textContent = '채굴 재가동';
+          mineLog.textContent = '열폭주로 자동 정지: 팬이 퇴사서를 제출함';
+          appendMineConsole('[TRIP] thermal shutdown');
+          updateStatus('채굴 중단: GPU가 노사협상 요구', 'bad');
+          return;
+        }
+
+        await sleep(0);
+      }
+    }
+
+    mineBoostBtn.addEventListener('click', () => {
+      if (!state.mining.enabled) {
+        updateStatus('오버클럭은 채굴 중에만 허용됩니다', 'warn');
+        return;
+      }
+      state.mining.speedMultiplier = Math.min(4, state.mining.speedMultiplier + 0.5);
+      state.mining.temp += 7;
+      mineLog.textContent = `오버클럭 적용 x${state.mining.speedMultiplier.toFixed(1)}`;
+      appendMineConsole(`[TUNE] overclock -> x${state.mining.speedMultiplier.toFixed(1)}`);
+      updateMiningUi();
+    });
+
+    mineCoolBtn.addEventListener('click', () => {
+      state.mining.temp = Math.max(26, state.mining.temp - 12);
+      if (state.mining.speedMultiplier > 1) {
+        state.mining.speedMultiplier = Math.max(1, state.mining.speedMultiplier - 0.5);
+      }
+      mineLog.textContent = `강제 냉각 적용, 현재 x${state.mining.speedMultiplier.toFixed(1)}`;
+      appendMineConsole('[COOL] emergency fan activated');
+      updateMiningUi();
+      updateStatus('냉각 완료: 팬 소음만 더 커졌습니다', 'warn');
+    });
+
+    mineBtn.addEventListener('click', () => {
+      if (state.mining.done >= state.mining.targetBits) {
+        updateStatus('이미 채굴 완료: 더 고생할 필요는 충분합니다', 'ok');
+        return;
+      }
+      if (state.mining.enabled) return;
+
+      startMining().catch(() => {
+        state.mining.enabled = false;
+        mineBtn.disabled = false;
+        mineBtn.textContent = '채굴 시작';
+        updateStatus('채굴 중 오류 발생: 우주의 뜻으로 중단됨', 'bad');
+      });
+    });
+
+    $('loginBtn').addEventListener('click', () => {
+      updateStatus('신청서 제출 중... 담당자 자리 비움', 'warn');
+
+      const dots = state.avatar.filter(Boolean).length;
+      if (dots < 3) {
+        state.last = 'avatar-few';
+        updateStatus('실패: 점 개수 부족 (신원정보 빈약)', 'bad');
+        return;
+      }
+
+      if (!SR) {
+        state.last = 'voice-unsupported';
+        updateStatus('실패: 음성 접수 창구가 없는 브라우저입니다', 'bad');
+        return;
+      }
+
+      if (normalizePhrase(state.voiceCaptured) !== normalizePhrase(target)) {
+        state.last = 'voice-mismatch';
+        updateStatus('실패: 암송 문구 불일치 (발음도 인생도 어려움)', 'bad');
+        return;
+      }
+
+      if (!state.rpsPassed) {
+        state.last = 'rps-not-passed';
+        updateStatus('실패: 캡차 미통과 (2승 이상 필요)', 'bad');
+        return;
+      }
+
+      if (state.mining.done < state.mining.targetBits) {
+        state.last = 'mine-short';
+        updateStatus(`실패: difficulty ${state.mining.targetBits} 미달성 (노동량 부족)`, 'bad');
+        return;
+      }
+
+      updateStatus('로그인 승인: 고생이 인정되어 임시 입장 허가', 'ok');
+    });
+
+    voiceInput.addEventListener('focus', (e) => {
+      e.preventDefault();
+      e.target.blur();
+      updateStatus('직접 타이핑 금지: 이 창구는 음성 전용입니다', 'warn');
+    });
+
+    difficultyLabel.textContent = `difficulty ${state.mining.targetBits}`;
+    miningDifficultyLabel.textContent = `4) Bitcoin Mining / difficulty ${state.mining.targetBits}`;
+    appendRpsLog('R0: 시범경기 대기 중 (2승하면 통과)');
+    updateMiningUi();
+    updateStatus('state: 민원 시스템 준비됨', 'warn');
+  </script>
+</body>
+</html>
