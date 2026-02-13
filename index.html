@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Project Home</title>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --line: #222;
+      --text: #111;
+      --muted: #555;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 24px;
+      font-family: ui-sans-serif, -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+    main {
+      max-width: 780px;
+      margin: 0 auto;
+      border: 1px solid var(--line);
+      padding: 20px;
+    }
+    h1, h2, h3 {
+      margin: 0 0 10px;
+      font-weight: 600;
+    }
+    h1 { font-size: 1.5rem; }
+    h2 { font-size: 1.05rem; margin-top: 18px; }
+    p, li { color: var(--muted); }
+    ul { margin: 8px 0 0 18px; }
+    a {
+      color: var(--text);
+      text-decoration: underline;
+    }
+    .panel {
+      border-top: 1px solid var(--line);
+      margin-top: 16px;
+      padding-top: 12px;
+    }
+  </style>
+</head>
+  <body>
+  <main>
+    <h1>Project Home</h1>
+    <p>현재 프로젝트 루트에서 존재하는 경로만 표시합니다.</p>
+
+    <section class="panel">
+      <h2>프로젝트 목록</h2>
+      <ul>
+        <li><a href="./worst-login-ui/">/worst-login-ui</a></li>
+      </ul>
+    </section>
+  </main>
+</body>
+</html>
