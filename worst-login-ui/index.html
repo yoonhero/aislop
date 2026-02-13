@@ -86,8 +86,70 @@
         transform: skew(1.1deg);
       }
 
+      .chaos-node {
+        --chaos-x: 0px;
+        --chaos-y: 0px;
+        --chaos-r: 0deg;
+        --chaos-s: 1;
+        --chaos-abs-x: 0px;
+        --chaos-abs-y: 0px;
+        --chaos-anchor-left: 0px;
+        --chaos-anchor-top: 0px;
+        transform: var(--base-transform, none) translate(var(--chaos-x), var(--chaos-y)) rotate(var(--chaos-r)) scale(var(--chaos-s));
+        transition: transform 110ms linear, left 90ms linear, top 90ms linear;
+      }
+
+      .chaos-node.chaos-focus {
+        position: relative;
+        z-index: 9999 !important;
+        outline: 5px dashed #fff;
+        outline-offset: -3px;
+        background: #fff !important;
+        color: #000 !important;
+        box-shadow: 0 0 0 2px #000, 0 0 0 6px #0ff, 0 0 35px 4px #f0f, inset 0 0 24px #0004 !important;
+        filter: saturate(360%) contrast(230%) brightness(1.4) !important;
+        text-shadow: 1px 1px 0 #000 !important;
+      }
+
+      .chaos-node.chaos-focus::before {
+        content: "FOCUSED";
+        position: absolute;
+        left: 8px;
+        top: -24px;
+        padding: 2px 6px;
+        font-size: 10px;
+        color: #00ffff;
+        background: #111;
+        border: 2px solid #0ff;
+        box-shadow: 0 0 0 2px #000;
+        z-index: 1;
+      }
+
+      #loginBtn.chaos-focus::before {
+        content: none;
+      }
+
+      #chaosFocusMask {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 9998;
+        opacity: 0;
+        transition: opacity 150ms linear;
+        background: radial-gradient(circle at var(--focus-x, 50%) var(--focus-y, 50%), transparent var(--focus-size, 220px), rgba(0, 0, 0, 0.76) calc(var(--focus-size, 220px) + 8px));
+      }
+
+      body.chaos-focus-active #chaosFocusMask {
+        opacity: 1;
+      }
+
+      .chaos-node.chaos-absolute {
+        left: calc(var(--chaos-anchor-left) + var(--chaos-abs-x));
+        top: calc(var(--chaos-anchor-top) + var(--chaos-abs-y));
+      }
+
       .tag {
-        position: sticky;
+        position: absolute;
         top: 6px;
         left: 78%;
         width: fit-content;
@@ -100,14 +162,17 @@
         font-family: "Courier New", monospace;
         letter-spacing: 2px;
         text-shadow: 2px 2px 0 #f0f;
-        transform: rotate(12.2deg) skew(-3deg);
+        --base-transform: rotate(12.2deg) skew(-3deg);
+        transform-origin: top left;
         z-index: 50;
+        --chaos-s: 1.02;
       }
 
       h1 {
         margin: 4px 0 6px;
         width: 108%;
-        position: relative;
+        position: absolute;
+        top: 34px;
         left: -4%;
         text-transform: uppercase;
         text-align: center;
@@ -124,19 +189,23 @@
         box-shadow:
           -7px 7px 0 #ff00c8,
           4px -4px 0 #00ffb1;
-        transform: rotate(-4deg) skew(1.4deg);
+        --base-transform: rotate(-4deg) skew(1.4deg);
+        transform-origin: top left;
       }
 
       .subtitle {
         width: 112%;
+        position: absolute;
         margin: 2px 0 16px -6px;
+        top: 188px;
         padding: 9px 14px 11px;
         background:
           conic-gradient(from 70deg, #ff00f0 0 16%, #00fff1 16% 34%, #ffea00 34% 55%, #ff5500 55% 72%, #fff 72% 100%);
         border: 4px solid #000;
         font-size: 14px;
         text-align: center;
-        transform: rotate(3.4deg) translateY(-2px);
+        --base-transform: rotate(3.4deg) translateY(-2px);
+        transform-origin: top left;
         text-decoration: underline;
         text-decoration-style: wavy;
         text-decoration-thickness: 3px;
@@ -156,7 +225,15 @@
         background-blend-mode: hard-light, difference;
         box-shadow: -8px 6px 0 #00ffd5, 10px -9px 0 #f0f, inset 0 0 26px #fff;
         clip-path: polygon(2% 2%, 96% 0, 100% 18%, 88% 100%, 4% 94%, 0 70%);
+        --base-transform: none;
+        transform: var(--base-transform) translate(var(--chaos-x, 0px), var(--chaos-y, 0px)) rotate(var(--chaos-r, 0deg)) scale(var(--chaos-s, 1));
         transform-origin: top left;
+        z-index: 10;
+        --chaos-x: 0px;
+        --chaos-y: 0px;
+        --chaos-r: 0deg;
+        --chaos-s: 1;
+        transition: transform 120ms linear;
       }
 
       .panel::before {
@@ -173,7 +250,7 @@
         top: 102px;
         left: -54px;
         width: 130%;
-        transform: rotate(-18deg) skew(5.8deg) translateY(-4px);
+        --base-transform: rotate(-18deg) skew(5.8deg) translateY(-4px);
         z-index: 13;
       }
 
@@ -181,7 +258,7 @@
         top: 458px;
         left: 78px;
         width: 109%;
-        transform: rotate(12deg) skew(-7.5deg) scaleX(1.03);
+        --base-transform: rotate(12deg) skew(-7.5deg) scaleX(1.03);
         z-index: 9;
         min-height: 255px;
       }
@@ -190,7 +267,7 @@
         top: 760px;
         left: -70px;
         width: 128%;
-        transform: rotate(-15deg) skew(4.5deg) scaleX(0.96);
+        --base-transform: rotate(-15deg) skew(4.5deg) scaleX(0.96);
         z-index: 11;
         min-height: 350px;
       }
@@ -199,7 +276,7 @@
         top: 1180px;
         left: 34px;
         width: 112%;
-        transform: rotate(9deg) skew(-6deg) scaleY(1.12);
+        --base-transform: rotate(9deg) skew(-6deg) scaleY(1.12);
         z-index: 7;
         min-height: 320px;
       }
@@ -526,7 +603,7 @@
 
       .row-final {
         position: absolute;
-        top: 1280px;
+        top: 1520px;
         left: -50px;
         width: 114%;
         margin-top: 10px;
@@ -534,11 +611,18 @@
         display: flex;
         align-items: center;
         gap: 12px;
-        transform: rotate(14deg) skew(-8deg);
+        --base-transform: rotate(14deg) skew(-8deg);
+        --chaos-s: 1.01;
+        --chaos-r: 0deg;
+        --chaos-x: 0px;
+        --chaos-y: 0px;
+        transform: var(--base-transform) translate(var(--chaos-x), var(--chaos-y)) rotate(var(--chaos-r)) scale(var(--chaos-s));
+        transition: transform 100ms linear;
       }
 
       #loginBtn {
         width: 52%;
+        position: relative;
         margin-left: 0;
         margin-bottom: 4px;
         padding: 14px 18px;
@@ -547,7 +631,101 @@
         color: #00ffb5;
         background: #111 !important;
         box-shadow: 6px 7px 0 #ff00f6, -5px -2px 0 #00fff5;
-        transform: rotate(0.8deg);
+        --base-transform: rotate(0.8deg);
+        --chaos-r: 0deg;
+        --chaos-x: 0px;
+        --chaos-y: 0px;
+        --chaos-s: 1.01;
+        transform: var(--base-transform) translate(var(--chaos-x), var(--chaos-y)) rotate(var(--chaos-r)) scale(var(--chaos-s));
+        overflow: hidden;
+        transition: transform 80ms linear;
+        animation: sleep-host 1.4s linear infinite;
+      }
+
+      #loginBtn .sleep-logo {
+        position: absolute;
+        top: 50%;
+        right: 14px;
+        width: 68px;
+        height: 38px;
+        transform: translateY(-50%);
+        pointer-events: none;
+        display: block;
+        animation: sleep-logo-sway 1.4s ease-in-out infinite;
+      }
+
+      #loginBtn .sleep-monitor {
+        position: absolute;
+        left: 2px;
+        top: 11px;
+        width: 26px;
+        height: 18px;
+        border: 3px solid #00fff4;
+        border-radius: 3px;
+        transform: rotate(-8deg);
+        animation: sleep-monitor 1.2s steps(2, jump-end) infinite;
+      }
+
+      #loginBtn .sleep-monitor::before {
+        content: "";
+        position: absolute;
+        inset: 2px;
+        border: 2px solid #111;
+        border-top-color: #ff00ff;
+        border-bottom-color: #ffea00;
+      }
+
+      #loginBtn .sleep-monitor::after {
+        content: "";
+        position: absolute;
+        left: 8px;
+        top: 19px;
+        width: 8px;
+        height: 6px;
+        border-radius: 0 0 2px 2px;
+        background: #111;
+      }
+
+      #loginBtn .sleep-moon {
+        position: absolute;
+        top: 4px;
+        left: 28px;
+        width: 24px;
+        height: 24px;
+        border: 4px solid #00fff6;
+        border-left-color: transparent;
+        border-radius: 50%;
+        transform: scaleY(0.7) rotate(22deg);
+        animation: sleep-moon 1.2s steps(2, jump-end) infinite;
+        z-index: 2;
+      }
+
+      #loginBtn .sleep-z {
+        position: absolute;
+        left: 52px;
+        font-size: 11px;
+        color: #ffe000;
+        font-family: "Courier New", monospace;
+        text-shadow: 1px 1px 0 #000;
+        animation: sleep-z 1s linear infinite;
+      }
+
+      #loginBtn .sleep-z.sleep-z-1 {
+        top: 2px;
+        left: 55px;
+        animation-delay: 0s;
+      }
+
+      #loginBtn .sleep-z.sleep-z-2 {
+        top: 11px;
+        left: 44px;
+        animation-delay: 0.17s;
+      }
+
+      #loginBtn .sleep-z.sleep-z-3 {
+        top: 20px;
+        left: 48px;
+        animation-delay: 0.33s;
       }
 
       #status {
@@ -560,12 +738,77 @@
         left: 26%;
         padding: 6px;
         border: 3px solid #000;
-        transform: rotate(-0.8deg) skew(-2deg);
+        --base-transform: rotate(-0.8deg) skew(-2deg);
+        transform: var(--base-transform) translate(var(--chaos-x, 0px), var(--chaos-y, 0px)) rotate(var(--chaos-r, 0deg)) scale(var(--chaos-s, 1));
         background: linear-gradient(90deg, #fff 0 12px, #ff00d4 12px 24px, #00fff0 24px 36px);
         color: #000;
         font-size: 16px;
         font-weight: 900;
         box-shadow: 4px 4px 0 #000, -2px -2px 0 #ff0;
+      }
+
+      @keyframes sleep-moon {
+        0%, 100% {
+          transform: scaleY(0.7) rotate(22deg);
+        }
+
+        50% {
+          transform: scaleY(0.85) rotate(44deg) translate(-1px, 2px);
+        }
+      }
+
+      @keyframes sleep-monitor {
+        0%, 100% {
+          transform: rotate(-8deg) scale(1);
+          filter: drop-shadow(0 0 2px #0ff3);
+        }
+
+        50% {
+          transform: rotate(18deg) scale(0.95) translateY(-1px);
+          filter: drop-shadow(0 0 5px #ff00);
+        }
+      }
+
+      @keyframes sleep-logo-sway {
+        0% {
+          transform: translateY(-50%) translateX(0) rotate(0deg);
+        }
+
+        50% {
+          transform: translateY(-50%) translateX(2px) rotate(3deg);
+        }
+
+        100% {
+          transform: translateY(-50%) translateX(-3px) rotate(-4deg);
+        }
+      }
+
+      @keyframes sleep-host {
+        0%,
+        100% {
+          filter: brightness(1);
+        }
+
+        50% {
+          filter: brightness(0.7);
+        }
+      }
+
+      @keyframes sleep-z {
+        0% {
+          opacity: 0.05;
+          transform: translateY(14px) rotate(-14deg);
+        }
+
+        45% {
+          opacity: 1;
+          transform: translate(4px, 4px) rotate(0deg);
+        }
+
+        100% {
+          opacity: 0;
+          transform: translate(18px, -16px) rotate(24deg);
+        }
       }
 
       #status.ok { color: var(--ok); }
@@ -608,20 +851,21 @@
   </style>
 </head>
 <body>
-  <div class="wrap">
+    <div id="chaosFocusMask" aria-hidden="true"></div>
+    <div class="wrap">
     <section class="card" id="card">
-        <div class="tag">실사용 금지 / 민원 폭주 모드</div>
-      <h1>최악 로그인 UI</h1>
-      <p class="subtitle">사용자 편의는 반려되었습니다. 불편을 양해하지 마세요.</p>
+        <div class="tag chaos-node">실사용 금지 / 민원 폭주 모드</div>
+      <h1 class="chaos-node">최악 로그인 UI</h1>
+      <p class="subtitle chaos-node">사용자 편의는 반려되었습니다. 불편을 양해하지 마세요.</p>
 
-      <section class="panel">
+      <section class="panel chaos-node">
         <h2>1) USERNAME = GitHub Dot Avatar</h2>
         <p class="tiny">이름은 사치입니다. 점 3개 미만이면 신원조회 창구로 이동합니다.</p>
         <div class="avatar-grid" id="avatarGrid"></div>
         <div class="avatar-meta">패턴 해시: <strong id="avatarSeed">none</strong></div>
       </section>
 
-      <section class="panel">
+      <section class="panel chaos-node">
         <h2>2) Password = Voice Input</h2>
         <div class="tiny" id="voiceHint">말해야 할 문구: 로딩 중</div>
         <div class="voice-wrap">
@@ -633,7 +877,7 @@
         </div>
       </section>
 
-      <section class="panel">
+      <section class="panel chaos-node">
         <h2>3) CAPTCHA = Rock Paper Scissors</h2>
         <div class="rps-meta" id="rpsSecret">컴퓨터는 이미 결과를 아는 척합니다</div>
         <div class="rps-duel">
@@ -656,7 +900,7 @@
         <div class="rps-log" id="rpsLog">최근 대결 로그 없음</div>
       </section>
 
-      <section class="panel">
+      <section class="panel chaos-node">
         <h2 id="miningDifficultyLabel">4) Bitcoin Mining / difficulty 16</h2>
         <div class="mining-row">
           <button type="button" id="mineBtn">채굴 시작</button>
@@ -676,9 +920,18 @@
         <p class="tiny" id="mineLog">대기 중: 팬 소음만 준비됨</p>
       </section>
 
-      <div class="row-final">
-        <button id="loginBtn" type="button">로그인 신청서 제출</button>
-        <div id="status">state: 민원 접수 대기</div>
+      <div class="row-final chaos-node">
+        <button id="loginBtn" class="chaos-node" type="button">
+          <span class="login-label">로그인 신청서 제출</span>
+          <span class="sleep-logo" aria-hidden="true">
+            <span class="sleep-monitor"></span>
+            <span class="sleep-moon"></span>
+            <span class="sleep-z sleep-z-1">Z</span>
+            <span class="sleep-z sleep-z-2">Z</span>
+            <span class="sleep-z sleep-z-3">Z</span>
+          </span>
+        </button>
+        <div id="status" class="chaos-node">state: 민원 접수 대기</div>
       </div>
     </section>
   </div>
@@ -726,12 +979,143 @@
     const avatarGrid = $('avatarGrid');
     const difficultyLabel = $('difficulty');
     const miningDifficultyLabel = $('miningDifficultyLabel');
+    const chaosNodes = [];
     const encoder = new TextEncoder();
     const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
     function rand(min, max) {
       return Math.floor(Math.random() * (max - min + 1)) + min;
     }
+
+    function randFloat(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+
+    function registerChaosNode(el, ampX, ampY, ampRotate, ampScale) {
+      if (!el) return;
+      el.classList.add('chaos-node');
+      const s = getComputedStyle(el);
+      const absolute = s.position === 'absolute' || s.position === 'fixed';
+      const leftValue = s.left;
+      const topValue = s.top;
+      const isAnchored = absolute && leftValue !== 'auto' && topValue !== 'auto';
+      if (isAnchored) {
+        el.classList.add('chaos-absolute');
+        el.style.setProperty('--chaos-anchor-left', leftValue);
+        el.style.setProperty('--chaos-anchor-top', topValue);
+      }
+
+      chaosNodes.push({
+        el,
+        ampX: Math.max(4, ampX),
+        ampY: Math.max(4, ampY),
+        ampRotate: ampRotate || 0,
+        ampScale: ampScale || 0.02,
+        baseLeft: isAnchored ? leftValue : null,
+        baseTop: isAnchored ? topValue : null,
+        absolute,
+        chaosX: (Math.random() * 2 - 1) * (Math.random() * ampX),
+        chaosY: (Math.random() * 2 - 1) * (Math.random() * ampY),
+        chaosR: (Math.random() * 2 - 1) * (Math.random() * ampRotate),
+        chaosS: 1 + (Math.random() * 2 - 1) * (Math.random() * ampScale),
+        targetX: 0,
+        targetY: 0,
+        targetR: 0,
+        targetS: 1,
+        nextChaosAt: performance.now() + rand(120, 900),
+        glide: randFloat(0.1, 0.24),
+        jitter: 0,
+      });
+    }
+
+    function applyChaos() {
+      const now = performance.now();
+      for (let i = 0; i < chaosNodes.length; i += 1) {
+        const item = chaosNodes[i];
+        if (now >= item.nextChaosAt) {
+          item.nextChaosAt = now + rand(140, 1200);
+          const jitterKick = Math.random();
+          item.targetX = ((Math.random() * 2 - 1) * item.ampX) + (jitterKick > 0.82 ? (Math.random() * 2 - 1) * (item.ampX * 1.9) : 0);
+          item.targetY = ((Math.random() * 2 - 1) * item.ampY) + (jitterKick > 0.82 ? (Math.random() * 2 - 1) * (item.ampY * 1.9) : 0);
+          item.targetR = (Math.random() * 2 - 1) * item.ampRotate;
+          item.targetS = 1 + (Math.random() * 2 - 1) * item.ampScale;
+          item.glide = randFloat(0.08, 0.22) * (item.ampScale + 1.2);
+          item.jitter = randFloat(-0.9, 0.9);
+        }
+
+        item.chaosX += (item.targetX - item.chaosX) * item.glide;
+        item.chaosY += (item.targetY - item.chaosY) * item.glide;
+        item.chaosR += (item.targetR - item.chaosR) * item.glide;
+        item.chaosS += (item.targetS - item.chaosS) * item.glide;
+
+        const pulse = 1 + Math.sin(now / 111 + i * 0.4) * 0.0015;
+        const nx = item.chaosX + Math.sin(now / 53 + i * 1.1) * 1.9;
+        const ny = item.chaosY + Math.cos(now / 47 + i * 0.8) * 1.3;
+        const nr = item.chaosR + item.jitter;
+        const ns = item.chaosS * pulse;
+
+        item.el.style.setProperty('--chaos-x', `${nx.toFixed(1)}px`);
+        item.el.style.setProperty('--chaos-y', `${ny.toFixed(1)}px`);
+        item.el.style.setProperty('--chaos-r', `${nr.toFixed(2)}deg`);
+        item.el.style.setProperty('--chaos-s', `${ns.toFixed(3)}`);
+
+        if (item.absolute && item.baseLeft !== null && item.baseTop !== null) {
+          item.el.style.setProperty('--chaos-abs-x', `${(nx * 0.62).toFixed(1)}px`);
+          item.el.style.setProperty('--chaos-abs-y', `${(ny * 0.62).toFixed(1)}px`);
+        }
+      }
+
+      if (state.mining.enabled) {
+        const sleepMarks = ['▒', '▓', '░'];
+        mineBtn.textContent = `채굴 중 ${sleepMarks[Math.floor(performance.now() / 220) % sleepMarks.length]}`;
+      }
+    }
+
+    function startChaosLoop() {
+      requestAnimationFrame(function animate() {
+        applyChaos();
+        requestAnimationFrame(animate);
+      });
+    }
+
+    let focusedChaosNode = null;
+    const chaosFocusMask = document.getElementById('chaosFocusMask');
+
+    function setChaosFocus(node) {
+      if (!node || focusedChaosNode === node) return;
+      if (focusedChaosNode) {
+        focusedChaosNode.classList.remove('chaos-focus');
+      }
+
+      const r = node.getBoundingClientRect();
+      const cx = `${r.left + (r.width / 2)}px`;
+      const cy = `${r.top + (r.height / 2)}px`;
+      const radius = `${Math.max(140, Math.sqrt((r.width * r.width) + (r.height * r.height)) + 90)}px`;
+      chaosFocusMask.style.setProperty('--focus-x', cx);
+      chaosFocusMask.style.setProperty('--focus-y', cy);
+      chaosFocusMask.style.setProperty('--focus-size', radius);
+
+      focusedChaosNode = node;
+      node.classList.add('chaos-focus');
+      document.body.classList.add('chaos-focus-active');
+    }
+
+    function clearChaosFocus() {
+      if (focusedChaosNode) {
+        focusedChaosNode.classList.remove('chaos-focus');
+        focusedChaosNode = null;
+        document.body.classList.remove('chaos-focus-active');
+      }
+    }
+
+    document.addEventListener('pointerdown', (e) => {
+      const node = e.target.closest('.chaos-node');
+      if (node) {
+        setChaosFocus(node);
+      } else {
+        clearChaosFocus();
+      }
+    });
 
     function normalizePhrase(text) {
       return (text || '').trim().toLowerCase().replace(/\s+/g, ' ');
@@ -749,7 +1133,10 @@
     function updateStatus(text, cls = '') {
       const s = $('status');
       s.textContent = text;
-      s.className = cls ? cls : '';
+      s.classList.remove('ok', 'warn', 'bad');
+      if (cls) {
+        s.classList.add(cls);
+      }
     }
 
     const dotButtons = [];
@@ -933,6 +1320,27 @@
     const mineNonce = $('mineNonce');
     const mineHashFull = $('mineHashFull');
     const mineConsole = $('mineConsole');
+    const status = $('status');
+    const loginBtn = $('loginBtn');
+    const rowFinal = document.querySelector('.row-final');
+
+    function registerChaosNodesBySelector(selector, ampX, ampY, ampRotate, ampScale) {
+      document.querySelectorAll(selector).forEach((node) => {
+        registerChaosNode(node, ampX, ampY, ampRotate, ampScale);
+      });
+    }
+
+    registerChaosNode(document.querySelector('.tag'), 15, 9, 6, 0.06);
+    registerChaosNode(document.querySelector('h1'), 8, 6, 4, 0.03);
+    registerChaosNode(document.querySelector('.subtitle'), 10, 8, 3, 0.02);
+    registerChaosNodesBySelector('.panel', 24, 16, 10, 0.03);
+    registerChaosNodesBySelector('.tiny', 11, 12, 5, 0.04);
+    registerChaosNodesBySelector('.avatar-grid, .avatar-meta', 16, 10, 4, 0.03);
+    registerChaosNodesBySelector('.voice-wrap, .voice-row, .rps, .rps-duel, .rps-state, .rps-meta, .rps-log', 8, 8, 3, 0.02);
+    registerChaosNodesBySelector('.mining-row, .mine-stats, .mine-console, .mine-hash-line, #mineCount, #mineLog, .mine-control', 13, 9, 4, 0.03);
+    registerChaosNode(loginBtn, 12, 8, 8, 0.08);
+    registerChaosNode(status, 6, 4, 2, 0.02);
+    registerChaosNode(rowFinal, 14, 10, 6, 0.05);
 
     function updateMiningUi() {
       mineBar.style.width = `${Math.min(100, (state.mining.done / state.mining.targetBits) * 100)}%`;
@@ -1211,6 +1619,7 @@
     appendRpsLog('R0: 시범경기 대기 중 (2승하면 통과)');
     updateMiningUi();
     updateStatus('state: 민원 시스템 준비됨', 'warn');
+    startChaosLoop();
   </script>
 </body>
 </html>
