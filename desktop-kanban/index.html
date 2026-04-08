@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Desktop Kanban</title>
+  <style>
+    :root {
+      --bg: #f4f1ea;
+      --paper: rgba(255, 255, 255, 0.7);
+      --ink: #1b1a17;
+      --muted: #5b5548;
+      --line: #1b1a17;
+      --blue: #3d69d8;
+      --green: #199c79;
+      --orange: #ea7a23;
+      --violet: #6e57c8;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      padding: 28px;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(61, 105, 216, 0.18), transparent 32%),
+        radial-gradient(circle at bottom right, rgba(234, 122, 35, 0.15), transparent 36%),
+        linear-gradient(135deg, #f5f0e8, #e8eee7 54%, #eef0f8);
+      font-family: "SF Pro Display", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    }
+
+    main {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 28px;
+      border: 1.5px solid var(--line);
+      background: var(--paper);
+      backdrop-filter: blur(18px);
+      box-shadow: 0 22px 70px rgba(20, 18, 12, 0.14);
+    }
+
+    h1, h2, p, ul {
+      margin: 0;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 4vw, 3.25rem);
+      line-height: 0.95;
+      letter-spacing: -0.05em;
+      margin-bottom: 12px;
+    }
+
+    h2 {
+      font-size: 1rem;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    p, li, code {
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    a {
+      color: var(--ink);
+    }
+
+    code {
+      font-family: "SF Mono", "Menlo", monospace;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      padding: 6px 10px;
+      margin-bottom: 16px;
+      border: 1px solid var(--line);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-top: 22px;
+    }
+
+    .card {
+      padding: 16px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.78);
+    }
+
+    .swatch {
+      display: inline-block;
+      width: 11px;
+      height: 11px;
+      margin-right: 8px;
+      border-radius: 999px;
+      vertical-align: middle;
+    }
+
+    .panel {
+      margin-top: 22px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(27, 26, 23, 0.22);
+    }
+
+    ul {
+      padding-left: 18px;
+    }
+
+    pre {
+      margin: 0;
+      padding: 16px;
+      overflow: auto;
+      border: 1px solid var(--line);
+      background: rgba(27, 26, 23, 0.04);
+      color: var(--ink);
+      font-family: "SF Mono", "Menlo", monospace;
+      line-height: 1.45;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="eyebrow">macOS experiment</div>
+    <h1>Desktop Kanban</h1>
+    <p>Finder Desktop icon positions를 kanban 상태로 해석하고, 반대로 카드 이동이 실제 Desktop icon 위치를 바꾸는 로컬 macOS 오버레이 앱입니다.</p>
+
+    <section class="grid">
+      <article class="card">
+        <h2>Columns</h2>
+        <p><span class="swatch" style="background: var(--blue);"></span>Inbox</p>
+        <p><span class="swatch" style="background: var(--green);"></span>Next</p>
+        <p><span class="swatch" style="background: var(--orange);"></span>Doing</p>
+        <p><span class="swatch" style="background: var(--violet);"></span>Done</p>
+      </article>
+      <article class="card">
+        <h2>Core Behavior</h2>
+        <p>기본은 click-through overlay입니다. 편집 모드에서만 drag and drop을 받고, Finder에서 직접 옮긴 아이콘도 다시 읽어서 상태를 반영합니다.</p>
+      </article>
+      <article class="card">
+        <h2>State</h2>
+        <p>선택한 Desktop 항목만 bookmark로 추적하고, `Done` 진입 시 기록을 남깁니다. 기록과 보드 상태는 Application Support JSON으로 저장됩니다.</p>
+      </article>
+    </section>
+
+    <section class="panel">
+      <h2>Run</h2>
+      <pre><code>cd /Users/ysh/Desktop/fun/aislop/desktop-kanban
+swift build
+swift run DesktopKanban</code></pre>
+    </section>
+
+    <section class="panel">
+      <h2>Notes</h2>
+      <ul>
+        <li>Finder Automation 권한이 필요합니다.</li>
+        <li>Desktop 정렬이 `Sort By: None`이 아니면 아이콘 이동은 차단됩니다.</li>
+        <li>현재 버전은 주 모니터, 현재 Desktop space만 대상으로 합니다.</li>
+      </ul>
+    </section>
+  </main>
+</body>
+</html>
