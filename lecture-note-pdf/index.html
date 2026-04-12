@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lecture Note PDF</title>
+  <style>
+    :root {
+      --bg: #f3ecdd;
+      --card: rgba(255, 255, 255, 0.7);
+      --text: #191512;
+      --muted: #5d544c;
+      --line: rgba(25, 21, 18, 0.14);
+      --accent: #8d4a22;
+      --accent-soft: rgba(141, 74, 34, 0.12);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      padding: 28px;
+      background:
+        radial-gradient(circle at top left, rgba(141, 74, 34, 0.16), transparent 30%),
+        radial-gradient(circle at bottom right, rgba(54, 92, 67, 0.12), transparent 28%),
+        linear-gradient(180deg, #e9deca, var(--bg));
+      color: var(--text);
+      font-family: "Avenir Next", "Apple SD Gothic Neo", sans-serif;
+    }
+    main {
+      max-width: 980px;
+      margin: 0 auto;
+      display: grid;
+      gap: 18px;
+    }
+    .hero,
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: var(--card);
+      box-shadow: 0 18px 40px rgba(39, 27, 17, 0.08);
+      backdrop-filter: blur(8px);
+    }
+    .hero {
+      padding: 28px;
+    }
+    .eyebrow {
+      margin: 0 0 10px;
+      font-size: 0.82rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+    h1, h2 {
+      margin: 0;
+      letter-spacing: -0.03em;
+    }
+    h1 {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      line-height: 1.04;
+    }
+    h2 {
+      font-size: 1.02rem;
+    }
+    p, li {
+      color: var(--muted);
+      line-height: 1.65;
+    }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 22px;
+    }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 11px 16px;
+      border-radius: 999px;
+      text-decoration: none;
+      color: var(--text);
+      border: 1px solid var(--line);
+      background: white;
+      font-weight: 600;
+    }
+    .button.primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fffaf5;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 18px;
+    }
+    .panel {
+      padding: 20px;
+    }
+    ul {
+      margin: 12px 0 0 18px;
+      padding: 0;
+    }
+    a {
+      color: inherit;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <p class="eyebrow">Lecture Note PDF</p>
+      <h1>추상선형대수학 1.1-2.3 원문을 한 권의 PDF로 재구성</h1>
+      <p>원문 표현은 가능한 한 유지하고, 읽기 편한 레이아웃과 절별 연습문제, `★ 중요` 표시, `추가 문제`를 함께 제공한다. HTML 미리보기와 PDF를 함께 제공한다.</p>
+      <div class="actions">
+        <a class="button primary" href="./dist/abstract-linear-algebra-1-1-to-2-3.pdf">PDF 열기</a>
+        <a class="button" href="./dist/abstract-linear-algebra-1-1-to-2-3.html">HTML 미리보기</a>
+        <a class="button" href="./src/study-guide.md">원고 보기</a>
+      </div>
+    </section>
+
+    <section class="grid">
+      <article class="panel">
+        <h2>포함 범위</h2>
+        <ul>
+          <li>1.1 벡터공간, 부분공간, 선형결합</li>
+          <li>1.2 기저의 존재성과 차원</li>
+          <li>1.3 선형변환, 커널, 이미지</li>
+          <li>1.4 몫과 코커널</li>
+          <li>2.1 동형사상</li>
+          <li>2.2 동형정리</li>
+          <li>2.3 직곱, 사영, 쌍대공간</li>
+        </ul>
+      </article>
+
+      <article class="panel">
+        <h2>구성 원칙</h2>
+        <ul>
+          <li>원문 내용을 가능한 한 유지하고 서식만 정리</li>
+          <li>원문 연습문제를 절별로 모두 포함</li>
+          <li>중요 문제는 `★ 중요`, 보강 문제는 `추가 문제`로 분리</li>
+        </ul>
+      </article>
+
+      <article class="panel">
+        <h2>빌드</h2>
+        <p><code>python3 scripts/build.py</code></p>
+        <p><a href="https://dohyeong-kim.github.io/abstract-linear-algebra/frontmatter.html">원문 사이트</a>를 기반으로 작성했고, 산출물은 <code>dist/</code>에 생성된다.</p>
+      </article>
+    </section>
+  </main>
+</body>
+</html>
