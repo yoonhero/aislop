@@ -24,6 +24,24 @@ SECTIONS = [
                 "body": "부분집합 $S_1, S_2 \\subseteq V$에 대하여 $\\operatorname{span}(S_1 \\cup S_2) = \\operatorname{span}(S_1) + \\operatorname{span}(S_2)$임을 증명하시오.",
             }
         ],
+        "challenges": [
+            {
+                "title": "Challenge Problem 1",
+                "body": "부분공간 $U_1,\\dots,U_k \\le V$에 대하여 모든 $i=2,\\dots,k$에 대해 $U_i \\cap (U_1+\\cdots+U_{i-1}) = \\{0\\}$라고 하자. 이때 임의의 $v \\in U_1+\\cdots+U_k$가 $v=u_1+\\cdots+u_k$ 꼴로 유일하게 표현됨을 증명하시오. 역도 증명하시오.",
+            },
+            {
+                "title": "Challenge Problem 2",
+                "body": "부분공간 $U,W \\le V$에 대하여 $U \\cup W$가 부분공간일 필요충분조건이 $U\\subseteq W$ 또는 $W\\subseteq U$임을 증명하시오.",
+            },
+            {
+                "title": "Challenge Problem 3",
+                "body": "유한집합 $S=\\{v_1,\\dots,v_n\\}\\subseteq V$에 대하여 다음이 동치임을 증명하시오. (i) $S$는 선형독립이다. (ii) 모든 $x\\in\\operatorname{span}(S)$는 $x=a_1v_1+\\cdots+a_nv_n$ 꼴로 유일하게 표현된다.",
+            },
+            {
+                "title": "Challenge Problem 4",
+                "body": "함수 $\\phi:U\\times W\\to V$를 $\\phi(u,w)=u+w$로 정의하자. $\\phi$의 상이 $U+W$임을 보이고, $\\phi$가 단사일 필요충분조건이 $U\\cap W=\\{0\\}$임을 증명하시오.",
+            },
+        ],
     },
     {
         "code": "1.2",
@@ -35,6 +53,24 @@ SECTIONS = [
                 "title": "추가 문제 1",
                 "body": "$\\dim(V)=n$인 유한차원 공간에서 $n$개의 벡터가 선형독립이면 기저이고, $n$개의 벡터가 $V$를 생성하면 기저임을 증명하시오.",
             }
+        ],
+        "challenges": [
+            {
+                "title": "Challenge Problem 1",
+                "body": "체 $F$가 무한집합이고 $\\dim(V)=n\\ge 1$이라 하자. 진부분공간 $W_1,\\dots,W_m < V$의 합집합이 $V$ 전체가 될 수 없음을 증명하시오. 이를 이용하여 임의의 유한집합 $S \\subset V$를 포함하지 않는 기저를 잡을 수 있음을 보이시오.",
+            },
+            {
+                "title": "Challenge Problem 2",
+                "body": "$\\dim(V)=n$이고 $U,W\\le V$라 하자. $\\dim(U)+\\dim(W)>n$이면 $U\\cap W\\ne\\{0\\}$임을 증명하시오.",
+            },
+            {
+                "title": "Challenge Problem 3",
+                "body": "$V$가 $n$차원 공간일 때 부분공간의 엄밀한 사슬 $\\{0\\}=V_0 < V_1 < \\cdots < V_k=V$에 대하여 $k\\le n$임을 증명하시오. 또한 $k=n$이면 $\\dim(V_i)=i$임을 보이시오.",
+            },
+            {
+                "title": "Challenge Problem 4",
+                "body": "$S$가 $V$의 생성집합이고 $L$이 선형독립집합이라 하자. $L$의 각 원소를 적절히 선택한 $S$의 원소들과 교환하여 여전히 $V$를 생성하는 집합을 얻을 수 있음을 증명하시오.",
+            },
         ],
     },
     {
@@ -48,6 +84,24 @@ SECTIONS = [
                 "body": "부분공간 $U \\le V$에 대한 제한사상 $T|_U : U \\to W$에 대하여 $\\ker(T|_U)=U\\cap\\ker(T)$, $\\operatorname{im}(T|_U)=T(U)$임을 증명하시오.",
             }
         ],
+        "challenges": [
+            {
+                "title": "Challenge Problem 1",
+                "body": "유한차원 공간 $V$ 위 선형변환 $T:V\\to V$에 대하여 다음이 동치임을 증명하시오. (i) $T^2=T$. (ii) $V=\\ker(T)\\oplus\\operatorname{im}(T)$. (iii) 어떤 기저에서 $T$의 행렬은 $\\begin{bmatrix}I_r & 0 \\\\ 0 & 0\\end{bmatrix}$ 꼴이다.",
+            },
+            {
+                "title": "Challenge Problem 2",
+                "body": "선형사상 $T:V\\to W$에 대하여 다음이 동치임을 증명하시오. (i) $T$는 단사이다. (ii) $V$의 모든 선형독립 유한집합의 상은 선형독립이다.",
+            },
+            {
+                "title": "Challenge Problem 3",
+                "body": "선형사상 $T:V\\to W$에 대하여 $S:W\\to V$가 존재하여 $ST=I_V$가 될 필요충분조건이 $T$가 단사임을 증명하시오. 단, 역방향에서는 기저를 이용하여 $S$를 구성하시오.",
+            },
+            {
+                "title": "Challenge Problem 4",
+                "body": "유한차원 공간 $V$ 위 선형변환 $T:V\\to V$가 $T^2=0$을 만족한다고 하자. 이때 $\\operatorname{im}(T)\\subseteq\\ker(T)$와 $\\operatorname{rank}(T)\\le \\frac{1}{2}\\dim(V)$를 증명하시오.",
+            },
+        ],
     },
     {
         "code": "1.4",
@@ -59,6 +113,24 @@ SECTIONS = [
                 "title": "추가 문제 1",
                 "body": "$V = U \\oplus W$일 때 $\\Phi((u+w)+U)=w$로 정의한 사상 $\\Phi : V/U \\to W$가 well-defined한 동형사상임을 증명하시오.",
             }
+        ],
+        "challenges": [
+            {
+                "title": "Challenge Problem 1",
+                "body": "자연사영 $\\pi:V\\twoheadrightarrow V/W$를 고정하자. 임의의 선형사상 $T:V\\to X$에 대해 $W\\subseteq\\ker(T)$이면 유일한 선형사상 $\\overline{T}:V/W\\to X$가 존재하여 $T=\\overline{T}\\circ\\pi$가 됨을 증명하시오. 이어서 $\\operatorname{Hom}(V/W,X)$와 $\\{S\\in\\operatorname{Hom}(V,X):W\\subseteq\\ker(S)\\}$가 자연스럽게 일대일 대응함을 보이시오.",
+            },
+            {
+                "title": "Challenge Problem 2",
+                "body": "자연사영 $\\pi:V\\to V/W$에 대하여, $W$를 포함하는 $V$의 부분공간들과 $V/W$의 부분공간들 사이에 $U \\mapsto U/W$가 일대일 대응을 준다는 것을 증명하시오.",
+            },
+            {
+                "title": "Challenge Problem 3",
+                "body": "$U\\subseteq W\\subseteq V$라 하자. 사상 $\\Psi:(V/U)/(W/U)\\to V/W$를 $\\Psi((v+U)+(W/U))=v+W$로 정의하자. 이 사상이 well-defined한 동형사상임을 증명하시오.",
+            },
+            {
+                "title": "Challenge Problem 4",
+                "body": "$\\{v_1+W,\\dots,v_n+W\\}$가 $V/W$의 기저이고 $\\{w_1,\\dots,w_m\\}$가 $W$의 기저라 하자. 그러면 $\\{v_1,\\dots,v_n,w_1,\\dots,w_m\\}$가 $V$의 기저임을 증명하시오.",
+            },
         ],
     },
     {
@@ -72,6 +144,24 @@ SECTIONS = [
                 "body": "$V = U \\oplus W$일 때 $P_U(u+w)=u$, $P_W(u+w)=w$로 정의한 두 사상이 well-defined한 선형변환임을 증명하시오.",
             }
         ],
+        "challenges": [
+            {
+                "title": "Challenge Problem 1",
+                "body": "부분공간 $U,W\\le V$와 자연사영 $q:V\\to V/U$를 생각하자. 제한사상 $q|_W:W\\to V/U$가 동형사상일 필요충분조건이 $V=U\\oplus W$임을 증명하시오. 이를 이용하여 유한차원 공간의 모든 몫공간이 어떤 보충부분공간과 동형임을 보이시오.",
+            },
+            {
+                "title": "Challenge Problem 2",
+                "body": "유한차원 공간 $U,W,Z$에 대하여 $U\\oplus Z\\cong W\\oplus Z$이면 $U\\cong W$임을 증명하시오.",
+            },
+            {
+                "title": "Challenge Problem 3",
+                "body": "유한차원 공간 $V,W$와 선형사상 $T:V\\to W$에 대하여 $\\dim(V)=\\dim(W)$이면 다음이 동치임을 증명하시오. (i) $T$는 단사이다. (ii) $T$는 전사이다. (iii) $T$는 동형사상이다.",
+            },
+            {
+                "title": "Challenge Problem 4",
+                "body": "선형변환 $P,Q:V\\to V$가 $P^2=P$, $Q^2=Q$를 만족한다고 하자. $\\operatorname{im}(P)=\\operatorname{im}(Q)$이고 $\\ker(P)=\\ker(Q)$이면 $P=Q$임을 증명하시오.",
+            },
+        ],
     },
     {
         "code": "2.2",
@@ -84,6 +174,24 @@ SECTIONS = [
                 "body": "선형변환 $T:V\\to W$가 전사일 필요충분조건이 $V/\\ker(T) \\cong W$임을 제1동형정리를 이용하여 증명하시오.",
             }
         ],
+        "challenges": [
+            {
+                "title": "Challenge Problem 1",
+                "body": "부분공간 $U,W\\le V$에 대하여 선형사상 $\\Phi:V\\to V/U \\times V/W$, $\\Phi(v)=(v+U, v+W)$를 생각하자. (a) $\\ker(\\Phi)=U\\cap W$임을 증명하시오. (b) 제1동형정리를 적용하여 $V/(U\\cap W)\\cong\\operatorname{im}(\\Phi)$를 증명하시오. (c) $\\operatorname{im}(\\Phi)$를 $V/U \\times V/W$의 부분공간으로 기술하시오.",
+            },
+            {
+                "title": "Challenge Problem 2",
+                "body": "선형사상 $T:V\\to W$와 부분공간 $U\\le V$에 대하여 $U/(U\\cap\\ker T)\\cong T(U)$임을 증명하시오.",
+            },
+            {
+                "title": "Challenge Problem 3",
+                "body": "부분공간 $U,W\\le V$에 대하여 사상 $u+(U\\cap W)\\mapsto u+W$가 $U/(U\\cap W)$에서 $(U+W)/W$로의 well-defined한 동형사상임을 증명하시오.",
+            },
+            {
+                "title": "Challenge Problem 4",
+                "body": "$U\\subseteq W\\subseteq V$라 하자. 사상 $(v+U)+(W/U)\\mapsto v+W$가 $(V/U)/(W/U)$에서 $V/W$로의 well-defined한 동형사상임을 증명하시오.",
+            },
+        ],
     },
     {
         "code": "2.3",
@@ -95,6 +203,24 @@ SECTIONS = [
                 "title": "추가 문제 1",
                 "body": "유한차원 공간 $V, W$의 기저와 쌍대기저를 택했을 때, 선형변환 $T:V\\to W$의 행렬이 $A$이면 쌍대사상 $T^*:W^*\\to V^*$의 행렬이 $A^\\mathsf{T}$임을 증명하시오.",
             }
+        ],
+        "challenges": [
+            {
+                "title": "Challenge Problem 1",
+                "body": "유한차원 공간 $V$ 위 사영 $P:V\\to V$를 잡자. 쌍대사상 $P^*:V^*\\to V^*$도 사영임을 증명하고, $\\operatorname{im}(P^*)=(\\ker P)^0$, $\\ker(P^*)=(\\operatorname{im} P)^0$임을 보이시오. 이어서 $V^*=(\\ker P)^0\\oplus(\\operatorname{im} P)^0$를 증명하시오.",
+            },
+            {
+                "title": "Challenge Problem 2",
+                "body": "유한차원 공간 $V,W$의 기저 $\\beta,\\gamma$와 쌍대기저 $\\beta^*,\\gamma^*$를 잡자. 선형사상 $T:V\\to W$의 행렬이 $[T]_{\\beta}^{\\gamma}=A$이면 $[T^*]_{\\gamma^*}^{\\beta^*}=A^{\\mathsf T}$임을 증명하시오.",
+            },
+            {
+                "title": "Challenge Problem 3",
+                "body": "유한차원 공간에서 선형사상 $T:V\\to W$에 대하여 다음이 성립함을 증명하시오. (i) $T$가 단사이면 $T^*$는 전사이다. (ii) $T$가 전사이면 $T^*$는 단사이다.",
+            },
+            {
+                "title": "Challenge Problem 4",
+                "body": "유한차원 공간 $V$의 부분공간 $U,W\\le V$에 대하여 $(U+W)^0=U^0\\cap W^0$와 $(U\\cap W)^0=U^0+W^0$를 증명하시오.",
+            },
         ],
     },
 ]
@@ -111,9 +237,10 @@ lang: "ko-KR"
 
 이 문서는 김도형 교수님의 웹 강의노트 *추상선형대수학: 벡터공간과 대수학의 원리* 중 `1.1`부터 `2.3`까지를 읽기 좋은 단일 PDF로 재구성한 것이다.
 
-- 편집 원칙: 원문 내용은 가능한 한 유지하고, 서식 정리와 `★ 중요` 표시, `추가 문제`만 덧붙였다.
+- 편집 원칙: 원문 내용은 가능한 한 유지하고, 서식 정리와 `★ 중요`, `추가 문제`, `Challenge Problem`만 덧붙였다.
 - 포함 범위: `1.1`, `1.2`, `1.3`, `1.4`, `2.1`, `2.2`, `2.3`
 - 원문 출처: <https://dohyeong-kim.github.io/abstract-linear-algebra/frontmatter.html>
+- Challenge Problem 참고: <https://anandinstitute.org/pdf/lenearal.pdf>
 - 저작권 및 이용허락: © 2026 김도형, CC BY-SA 4.0  
   국문 안내: <https://creativecommons.org/licenses/by-sa/4.0/deed.ko/>  
   영문 안내: <https://creativecommons.org/licenses/by-sa/4.0/>
@@ -122,6 +249,7 @@ lang: "ko-KR"
 
 - `★ 중요`: 시험 대비나 다음 절 연결상 특히 다시 풀어볼 만한 원문 연습문제
 - `추가 문제`: 원문 본문을 바꾸지 않고, 복습용으로 덧붙인 문제
+- `Challenge Problem`: 지정한 선형대수학 교재를 참고해 새로 작성한 고난도 문제
 
 ## 원문 링크
 
@@ -442,6 +570,12 @@ def convert_plain_to_markdown(section: dict[str, object], text: str) -> str:
         out.extend(["", "## 추가 문제", ""])
         for extra in extras:
             out.extend([f"### {extra['title']}", "", extra["body"], ""])
+
+    challenges = section.get("challenges", [])
+    if challenges:
+        out.extend(["", "## Challenge Problems", ""])
+        for challenge in challenges:
+            out.extend([f"### {challenge['title']}", "", challenge["body"], ""])
 
     return "\n".join(out).strip() + "\n"
 
