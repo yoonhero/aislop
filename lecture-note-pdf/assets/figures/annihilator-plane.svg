@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 420" role="img" aria-labelledby="title desc">
+  <title id="title">Annihilator picture</title>
+  <desc id="desc">A subspace W is drawn as a plane through the origin and a covector in the annihilator is depicted by a normal direction.</desc>
+  <rect width="900" height="420" fill="#fcfaf4"/>
+  <g transform="translate(120 40)">
+    <text x="180" y="30" text-anchor="middle" font-family="Avenir Next, Arial, sans-serif" font-size="28" font-weight="700" fill="#214d3a">W and its annihilator W^0</text>
+    <line x1="40" y1="252" x2="280" y2="252" stroke="#6a6258" stroke-width="3"/>
+    <line x1="160" y1="344" x2="160" y2="90" stroke="#6a6258" stroke-width="3"/>
+    <line x1="160" y1="252" x2="78" y2="146" stroke="#6a6258" stroke-width="3"/>
+    <polygon points="86,176 300,128 248,278 34,326" fill="#dceaf8" stroke="#305ea8" stroke-width="3"/>
+    <line x1="160" y1="252" x2="292" y2="76" stroke="#9b4d1f" stroke-width="5"/>
+    <polygon points="292,76 286,96 272,86" fill="#9b4d1f"/>
+    <circle cx="160" cy="252" r="7" fill="#1d1a17"/>
+    <text x="176" y="246" font-family="Avenir Next, Arial, sans-serif" font-size="20" fill="#1d1a17">0</text>
+    <text x="222" y="214" text-anchor="middle" font-family="Avenir Next, Arial, sans-serif" font-size="22" fill="#305ea8">W</text>
+    <text x="356" y="80" text-anchor="middle" font-family="Avenir Next, Arial, sans-serif" font-size="22" fill="#9b4d1f">f in W^0</text>
+    <text x="358" y="108" text-anchor="middle" font-family="Avenir Next, Arial, sans-serif" font-size="18" fill="#9b4d1f">f(v) = 0 for v in W</text>
+  </g>
+</svg>

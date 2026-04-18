@@ -47,7 +47,10 @@ blockquote,
 pre,
 code,
 .guide-card,
-.guide-strip {
+.guide-strip,
+.challenge-figure,
+.cat-panel,
+.cat-meme {
   break-inside: avoid;
 }
 
@@ -78,6 +81,8 @@ h4 {
   font-family: "Avenir Next", "Apple SD Gothic Neo", sans-serif;
   line-height: 1.2;
   letter-spacing: -0.02em;
+  break-after: avoid-page;
+  page-break-after: avoid;
 }
 
 h1 {
@@ -102,6 +107,8 @@ h3 {
 p,
 li {
   color: var(--ink);
+  orphans: 3;
+  widows: 3;
 }
 
 p {
@@ -254,6 +261,182 @@ blockquote p:last-child {
   font-size: 0.93rem;
 }
 
+.challenge-figure,
+.cat-panel {
+  max-width: 820px;
+  margin: 16px auto 22px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.86), rgba(255, 255, 255, 0.64));
+  box-shadow: 0 10px 28px rgba(55, 36, 18, 0.06);
+  page-break-inside: avoid;
+}
+
+.cat-panel {
+  background:
+    linear-gradient(180deg, rgba(255, 230, 186, 0.32), rgba(255, 255, 255, 0.78)),
+    rgba(255, 255, 255, 0.9);
+}
+
+.cat-meme {
+  max-width: 820px;
+  margin: 16px auto 22px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background:
+    linear-gradient(180deg, rgba(255, 238, 214, 0.42), rgba(255, 255, 255, 0.82)),
+    rgba(255, 255, 255, 0.92);
+  box-shadow: 0 10px 28px rgba(55, 36, 18, 0.08);
+  page-break-inside: avoid;
+}
+
+.cat-meme-stage {
+  position: relative;
+  overflow: hidden;
+  border-radius: 14px;
+}
+
+.cat-meme img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  border-radius: 14px;
+}
+
+.cat-meme-basis img {
+  object-position: center 48%;
+}
+
+.cat-meme-kernel img {
+  object-position: center 58%;
+}
+
+.cat-meme-whiskers img {
+  object-position: 44% 50%;
+}
+
+.cat-meme-quotient img {
+  object-position: center 50%;
+}
+
+.cat-meme-shadow img {
+  object-position: center 44%;
+}
+
+.cat-meme-banner,
+.cat-meme-bubble {
+  position: absolute;
+  font-family: "Avenir Next", "Apple SD Gothic Neo", sans-serif;
+  line-height: 1.35;
+}
+
+.cat-meme-banner {
+  top: 14px;
+  left: 14px;
+  right: 14px;
+  padding: 10px 14px;
+  border-radius: 14px;
+  background: rgba(29, 26, 23, 0.74);
+  color: #fffaf2;
+  font-size: 0.97rem;
+  font-weight: 650;
+  text-wrap: balance;
+}
+
+.cat-meme-bubble {
+  max-width: 44%;
+  padding: 10px 12px;
+  border: 1px solid rgba(29, 26, 23, 0.14);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--ink);
+  font-size: 0.9rem;
+  box-shadow: 0 8px 18px rgba(55, 36, 18, 0.12);
+}
+
+.meme-basis-bubble {
+  right: 18px;
+  bottom: 18px;
+}
+
+.meme-kernel-left {
+  left: 18px;
+  bottom: 18px;
+}
+
+.meme-kernel-right {
+  right: 18px;
+  top: 112px;
+}
+
+.meme-whisker-left {
+  left: 16px;
+  bottom: 18px;
+}
+
+.meme-whisker-right {
+  right: 18px;
+  top: 112px;
+}
+
+.meme-quotient-left {
+  left: 18px;
+  bottom: 18px;
+}
+
+.meme-quotient-right {
+  right: 18px;
+  bottom: 18px;
+}
+
+.meme-shadow-left {
+  left: 18px;
+  bottom: 18px;
+}
+
+.meme-shadow-right {
+  right: 18px;
+  top: 120px;
+}
+
+.challenge-figure img,
+.cat-panel img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 14px;
+}
+
+.cat-photo-panel img {
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+}
+
+.photo-basis img {
+  object-position: center 48%;
+}
+
+.photo-kernel img {
+  object-position: center 58%;
+}
+
+.photo-whiskers img {
+  object-position: 44% 50%;
+}
+
+.challenge-figure figcaption,
+.cat-panel figcaption,
+.cat-meme figcaption {
+  margin-top: 10px;
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
 code {
   padding: 0.08em 0.32em;
   border-radius: 0.32em;
@@ -283,13 +466,35 @@ hr {
   blockquote,
   table,
   .guide-card,
-  .guide-strip {
+  .guide-strip,
+  .challenge-figure,
+  .cat-panel,
+  .cat-meme {
     box-shadow: none;
     background: white;
   }
 
   h2 {
-    break-before: page;
+    break-before: auto;
+    page-break-before: auto;
+  }
+
+  h3,
+  h4,
+  p,
+  li,
+  figure,
+  blockquote,
+  pre,
+  table,
+  .guide-grid,
+  .guide-card,
+  .guide-strip,
+  .challenge-figure,
+  .cat-panel,
+  .cat-meme {
+    break-inside: avoid-page;
+    page-break-inside: avoid;
   }
 }
 
@@ -297,5 +502,17 @@ hr {
   .guide-grid,
   .guide-grid-wide {
     grid-template-columns: 1fr;
+  }
+
+  .cat-meme-bubble {
+    max-width: 55%;
+    font-size: 0.84rem;
+  }
+
+  .meme-kernel-right,
+  .meme-whisker-right,
+  .meme-shadow-right {
+    top: auto;
+    bottom: 84px;
   }
 }

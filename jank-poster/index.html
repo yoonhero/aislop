@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jank Poster</title>
+  <style>
+    :root {
+      --bg: #f8f5ee;
+      --ink: #151515;
+      --muted: #5c5b55;
+      --line: #242424;
+      --mint: #e8f5e4;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 28px;
+      font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+    }
+    main {
+      max-width: 980px;
+      margin: 0 auto;
+    }
+    h1, h2 {
+      margin: 0;
+      font-weight: 500;
+      letter-spacing: 0;
+    }
+    h1 { font-size: 2rem; }
+    h2 { font-size: 1.05rem; margin-bottom: 10px; }
+    p, li { color: var(--muted); line-height: 1.55; }
+    a { color: var(--ink); text-decoration: underline; }
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(280px, 420px);
+      gap: 28px;
+      align-items: start;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 24px;
+      margin-bottom: 22px;
+    }
+    .preview {
+      background: var(--mint);
+      border: 1px solid var(--line);
+      padding: 16px;
+    }
+    .preview img {
+      width: 100%;
+      display: block;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 18px;
+    }
+    section {
+      border-top: 1px solid var(--line);
+      padding-top: 16px;
+      margin-top: 18px;
+    }
+    ul {
+      margin: 8px 0 0 20px;
+      padding: 0;
+    }
+    @media (max-width: 760px) {
+      body { padding: 18px; }
+      .hero { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="hero">
+      <div>
+        <h1>Jank Poster</h1>
+        <p>Goodbye, BOJ 후드티 뒷면 그래픽 작업물입니다. 현재 최종 방향은 복잡한 포스터가 아니라, 민트 블록과 Jank 캐릭터, 세그먼트 트리/DP 아이콘만 남긴 클린 백프린트입니다.</p>
+        <ul>
+          <li><a href="./final/jank-hoodie-back-goodbye-boj-fixed-icon-balance.png">최종 PNG</a></li>
+          <li><a href="./final/jank-hoodie-back-goodbye-boj-fixed-icon-balance-transparent.png">투명 프린트 PNG</a></li>
+          <li><a href="./final/jank-hoodie-back-goodbye-boj-fixed-icon-balance-mockup.png">후드티 목업 PNG</a></li>
+          <li><a href="./character-development/poster-process.md">제작 프로세스</a></li>
+        </ul>
+      </div>
+      <div class="preview">
+        <img src="./final/jank-hoodie-back-goodbye-boj-fixed-icon-balance.png" alt="Goodbye BOJ Jank hoodie back graphic" />
+      </div>
+    </div>
+
+    <div class="grid">
+      <section>
+        <h2>Final</h2>
+        <ul>
+          <li><a href="./final/">현재 추천 산출물</a></li>
+          <li><a href="./final/jank-hoodie-back-goodbye-boj-fixed-icon-balance-transparent.png">프린트용 투명 PNG</a></li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Process</h2>
+        <ul>
+          <li><a href="./process/goodbye-boj/">Goodbye BOJ 반복 작업</a></li>
+          <li><a href="./process/earlier-posters/">초기 포스터 탐색</a></li>
+          <li><a href="./generated-output/imagegen/">추가 생성/출력 파일</a></li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Character</h2>
+        <ul>
+          <li><a href="./character-development/uploaded-character-analysis.md">캐릭터 분석</a></li>
+          <li><a href="./character-development/evaluation.md">평가 기록</a></li>
+          <li><a href="./character-development/19-uploaded-reference-character-base.png">캐릭터 베이스</a></li>
+        </ul>
+      </section>
+    </div>
+  </main>
+</body>
+</html>

@@ -1,0 +1,40 @@
+Challenge Problem Source Index
+Reference PDF: https://anandinstitute.org/pdf/lenearal.pdf
+Saved: 2026-04-13
+
+1.1 벡터공간, 부분공간, 선형결합
+- Challenge Problem 1: Section 1.3, Exercise 8, PDF p. 32, printed p. 20
+- Challenge Problem 2: Section 1.3, Exercise 9, PDF p. 32, printed p. 20
+- Challenge Problem 3: Section 1.6, Exercise 33, PDF p. 70, printed p. 58
+
+1.2 기저의 존재성과 차원
+- Challenge Problem 1: Section 1.7, Exercise 4, PDF p. 74, printed p. 62
+- Challenge Problem 2: Section 1.7, Exercise 5, PDF p. 74, printed p. 62
+- Challenge Problem 3: Section 1.7, Exercise 6, PDF p. 74, printed p. 62
+- Challenge Problem 4: Section 1.7, Exercise 7, PDF p. 74, printed p. 62
+
+1.3 선형변환, 커널, 이미지
+- Challenge Problem 1: Section 2.1, Exercise 17, PDF p. 88, printed p. 76
+- Challenge Problem 2: Section 2.1, Exercise 20, PDF p. 88, printed p. 76
+- Challenge Problem 3: Section 2.1, Exercise 21, PDF p. 88, printed p. 76
+- Challenge Problem 4: Section 2.1, Exercise 23, PDF p. 88, printed p. 76
+
+1.4 몫과 코커널
+- Challenge Problem 1: Section 1.6, Exercise 34, PDF p. 70, printed p. 58
+- Challenge Problem 2: Section 1.6, Exercise 35, PDF p. 70, printed p. 58
+
+2.1 동형사상
+- Challenge Problem 1: Section 2.4, Exercise 15, PDF p. 120, printed p. 108
+- Challenge Problem 2: Section 2.4, Exercise 16, PDF p. 120, printed p. 108
+- Challenge Problem 3: Section 2.4, Exercise 17, PDF p. 120, printed p. 108
+- Challenge Problem 4: Section 2.4, Exercise 20, PDF p. 120, printed p. 108
+
+2.2 동형정리
+- Challenge Problem 1: Section 2.4, Exercise 16, PDF p. 120, printed p. 108
+- Challenge Problem 2: Section 2.4, Exercise 21, PDF p. 120, printed p. 108
+
+2.3 직곱, 사영, 쌍대공간
+- Challenge Problem 1: Section 2.6, Exercise 13(e), PDF p. 138, printed p. 126
+- Challenge Problem 2: Section 2.6, Exercise 14, PDF p. 138, printed p. 126
+- Challenge Problem 3: Section 2.6, Exercise 15, PDF p. 139, printed p. 127
+- Challenge Problem 4: Section 2.6, Exercise 20, PDF p. 139, printed p. 127

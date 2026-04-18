@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 420" role="img" aria-labelledby="title desc">
+  <title id="title">Kernel plane of a linear functional</title>
+  <desc id="desc">A plane through the origin is shown as the kernel of a nonzero linear functional, together with a normal direction.</desc>
+  <rect width="900" height="420" fill="#fcfaf4"/>
+  <g transform="translate(120 46)">
+    <text x="160" y="28" text-anchor="middle" font-family="Avenir Next, Arial, sans-serif" font-size="28" font-weight="700" fill="#214d3a">ker(T) in R^3</text>
+    <line x1="40" y1="250" x2="280" y2="250" stroke="#6a6258" stroke-width="3"/>
+    <line x1="160" y1="340" x2="160" y2="90" stroke="#6a6258" stroke-width="3"/>
+    <line x1="160" y1="250" x2="70" y2="140" stroke="#6a6258" stroke-width="3"/>
+    <polygon points="80,170 290,120 240,270 30,320" fill="#d7eadf" stroke="#214d3a" stroke-width="3"/>
+    <line x1="160" y1="250" x2="290" y2="70" stroke="#305ea8" stroke-width="5"/>
+    <polygon points="290,70 284,90 271,80" fill="#305ea8"/>
+    <circle cx="160" cy="250" r="7" fill="#1d1a17"/>
+    <text x="176" y="244" font-family="Avenir Next, Arial, sans-serif" font-size="20" fill="#1d1a17">0</text>
+    <text x="220" y="214" text-anchor="middle" font-family="Avenir Next, Arial, sans-serif" font-size="22" fill="#214d3a">ker(T)</text>
+    <text x="370" y="76" text-anchor="middle" font-family="Avenir Next, Arial, sans-serif" font-size="22" fill="#305ea8">normal direction</text>
+  </g>
+</svg>

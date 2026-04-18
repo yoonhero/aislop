@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 420" role="img" aria-labelledby="title desc">
+  <title id="title">Subspace versus shifted plane</title>
+  <desc id="desc">A plane through the origin is contrasted with a shifted plane that does not pass through the origin.</desc>
+  <rect width="900" height="420" fill="#fcfaf4"/>
+  <g transform="translate(70 46)">
+    <text x="150" y="20" text-anchor="middle" font-family="Avenir Next, Arial, sans-serif" font-size="26" font-weight="700" fill="#214d3a">Plane through 0</text>
+    <text x="570" y="20" text-anchor="middle" font-family="Avenir Next, Arial, sans-serif" font-size="26" font-weight="700" fill="#8c4a21">Shifted plane</text>
+
+    <g transform="translate(0 40)">
+      <line x1="40" y1="240" x2="260" y2="240" stroke="#6a6258" stroke-width="3"/>
+      <line x1="150" y1="320" x2="150" y2="80" stroke="#6a6258" stroke-width="3"/>
+      <line x1="150" y1="240" x2="50" y2="130" stroke="#6a6258" stroke-width="3"/>
+      <polygon points="90,110 250,150 210,250 50,210" fill="#cfe8dc" stroke="#214d3a" stroke-width="3"/>
+      <circle cx="150" cy="240" r="7" fill="#214d3a"/>
+      <text x="160" y="235" font-family="Avenir Next, Arial, sans-serif" font-size="20" fill="#214d3a">0</text>
+      <text x="204" y="186" text-anchor="middle" font-family="Avenir Next, Arial, sans-serif" font-size="22" fill="#214d3a">W</text>
+    </g>
+
+    <g transform="translate(420 40)">
+      <line x1="40" y1="240" x2="260" y2="240" stroke="#6a6258" stroke-width="3"/>
+      <line x1="150" y1="320" x2="150" y2="80" stroke="#6a6258" stroke-width="3"/>
+      <line x1="150" y1="240" x2="50" y2="130" stroke="#6a6258" stroke-width="3"/>
+      <polygon points="105,80 265,120 225,220 65,180" fill="#f2d7be" stroke="#8c4a21" stroke-width="3"/>
+      <circle cx="150" cy="240" r="7" fill="#8c4a21"/>
+      <text x="160" y="235" font-family="Avenir Next, Arial, sans-serif" font-size="20" fill="#8c4a21">0</text>
+      <text x="222" y="152" text-anchor="middle" font-family="Avenir Next, Arial, sans-serif" font-size="22" fill="#8c4a21">W + v</text>
+    </g>
+  </g>
+</svg>
