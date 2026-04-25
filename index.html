@@ -3,61 +3,334 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Project Home</title>
+  <title>AISLOP LAB</title>
   <style>
     :root {
-      --bg: #ffffff;
-      --line: #222;
-      --text: #111;
-      --muted: #555;
+      --void: #101014;
+      --ink: #f4f0c8;
+      --acid: #9dff4f;
+      --spark: #ff4fd8;
+      --tube: #39d6ff;
+      --rust: #ff9b38;
+      --steel: #7b829c;
+      --shade: #272736;
+      --cut: 4px;
     }
+
     * { box-sizing: border-box; }
+
     body {
       margin: 0;
-      padding: 24px;
-      font-family: ui-sans-serif, -apple-system, "Segoe UI", Roboto, sans-serif;
-      background: var(--bg);
-      color: var(--text);
+      min-height: 100vh;
+      color: var(--ink);
+      background:
+        linear-gradient(#1a1a24 2px, transparent 2px),
+        linear-gradient(90deg, #1a1a24 2px, transparent 2px),
+        radial-gradient(circle at 24% 18%, #253821 0 7%, transparent 8%),
+        radial-gradient(circle at 78% 26%, #3b1835 0 8%, transparent 9%),
+        var(--void);
+      background-size: 24px 24px, 24px 24px, auto, auto, auto;
+      font-family: "Courier New", ui-monospace, SFMono-Regular, Menlo, monospace;
+      image-rendering: pixelated;
     }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background: repeating-linear-gradient(0deg, #0000 0 6px, #0004 7px 8px);
+      mix-blend-mode: multiply;
+    }
+
     main {
-      max-width: 780px;
+      width: min(1040px, calc(100% - 28px));
       margin: 0 auto;
-      border: 1px solid var(--line);
-      padding: 20px;
+      padding: 28px 0 34px;
     }
-    h1, h2, h3 {
-      margin: 0 0 10px;
-      font-weight: 600;
+
+    .lab {
+      border: var(--cut) solid var(--ink);
+      background: #161620;
+      box-shadow: 8px 8px 0 #000, inset 0 0 0 var(--cut) #34344a;
     }
-    h1 { font-size: 1.5rem; }
-    h2 { font-size: 1.05rem; margin-top: 18px; }
-    p, li { color: var(--muted); }
-    ul { margin: 8px 0 0 18px; }
-    a {
-      color: var(--text);
-      text-decoration: underline;
+
+    header {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 22px;
+      padding: 24px;
+      border-bottom: var(--cut) solid var(--ink);
     }
-    .panel {
-      border-top: 1px solid var(--line);
-      margin-top: 16px;
-      padding-top: 12px;
+
+    .kicker {
+      display: inline-block;
+      margin-bottom: 14px;
+      padding: 6px 10px;
+      color: var(--void);
+      background: var(--acid);
+      box-shadow: 4px 4px 0 #000;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      color: var(--acid);
+      font-size: clamp(2rem, 8vw, 5.7rem);
+      line-height: 0.88;
+      letter-spacing: 0;
+      text-shadow: 4px 0 0 var(--spark), 8px 8px 0 #000;
+    }
+
+    .intro {
+      max-width: 34rem;
+      margin: 18px 0 0;
+      color: #d8d2a8;
+      line-height: 1.65;
+      font-size: 1rem;
+    }
+
+    .machine {
+      align-self: stretch;
+      min-height: 300px;
+      position: relative;
+      border: var(--cut) solid var(--steel);
+      background:
+        linear-gradient(90deg, #0000 0 48%, #222235 48% 52%, #0000 52%),
+        linear-gradient(#29293c 0 58%, #11111a 58%);
+      box-shadow: inset 0 0 0 var(--cut) #0a0a10, 6px 6px 0 #000;
+      overflow: hidden;
+    }
+
+    .machine::before,
+    .machine::after {
+      content: "";
+      position: absolute;
+      image-rendering: pixelated;
+    }
+
+    .machine::before {
+      width: 92px;
+      height: 176px;
+      left: 34px;
+      bottom: 34px;
+      background:
+        linear-gradient(var(--tube) 0 0) 28px 18px / 36px 104px,
+        linear-gradient(#e9fbff 0 0) 38px 34px / 16px 64px,
+        linear-gradient(var(--acid) 0 0) 20px 124px / 52px 18px,
+        linear-gradient(var(--steel) 0 0) 8px 146px / 76px 18px,
+        linear-gradient(var(--ink) 0 0) 20px 0 / 52px 18px,
+        linear-gradient(var(--ink) 0 0) 12px 164px / 68px 12px;
+      background-repeat: no-repeat;
+      filter: drop-shadow(5px 5px 0 #000);
+    }
+
+    .machine::after {
+      width: 156px;
+      height: 132px;
+      right: 28px;
+      bottom: 44px;
+      background:
+        linear-gradient(var(--spark) 0 0) 64px 0 / 28px 28px,
+        linear-gradient(var(--acid) 0 0) 32px 32px / 92px 24px,
+        linear-gradient(var(--tube) 0 0) 44px 64px / 68px 44px,
+        linear-gradient(var(--rust) 0 0) 0 104px / 156px 28px,
+        linear-gradient(#000 0 0) 52px 76px / 12px 12px,
+        linear-gradient(#000 0 0) 92px 76px / 12px 12px;
+      background-repeat: no-repeat;
+      filter: drop-shadow(5px 5px 0 #000);
+    }
+
+    .meter {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      display: grid;
+      grid-template-columns: repeat(5, 18px);
+      gap: 8px;
+    }
+
+    .meter i {
+      width: 18px;
+      height: 18px;
+      background: var(--shade);
+      box-shadow: inset 0 0 0 3px #09090e;
+    }
+
+    .meter i:nth-child(1),
+    .meter i:nth-child(3),
+    .meter i:nth-child(5) { background: var(--acid); }
+    .meter i:nth-child(2) { background: var(--spark); }
+
+    .pipe {
+      position: absolute;
+      left: 128px;
+      top: 58px;
+      width: 154px;
+      height: 18px;
+      background: var(--rust);
+      box-shadow: 0 32px 0 var(--tube), 0 64px 0 var(--acid), 5px 5px 0 #000;
+    }
+
+    .shelves {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      border-top: var(--cut) solid var(--ink);
+    }
+
+    .specimen {
+      min-height: 210px;
+      padding: 18px;
+      color: var(--ink);
+      background: #1d1d2a;
+      border-right: var(--cut) solid var(--ink);
+      text-decoration: none;
+    }
+
+    .specimen:last-child { border-right: 0; }
+    .specimen:hover,
+    .specimen:focus-visible {
+      outline: 0;
+      background: #29293c;
+      color: var(--acid);
+    }
+
+    .id {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--tube);
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    .sprite {
+      display: block;
+      width: 60px;
+      height: 60px;
+      margin: 22px 0 18px;
+      background:
+        linear-gradient(var(--acid) 0 0) 0 0 / 12px 12px,
+        linear-gradient(var(--acid) 0 0) 12px 0 / 12px 12px,
+        linear-gradient(var(--acid) 0 0) 24px 0 / 12px 12px,
+        linear-gradient(var(--spark) 0 0) 36px 0 / 12px 12px,
+        linear-gradient(var(--acid) 0 0) 0 12px / 12px 12px,
+        linear-gradient(#000 0 0) 12px 12px / 12px 12px,
+        linear-gradient(var(--acid) 0 0) 24px 12px / 12px 12px,
+        linear-gradient(var(--spark) 0 0) 36px 12px / 12px 12px,
+        linear-gradient(var(--spark) 0 0) 48px 12px / 12px 12px,
+        linear-gradient(var(--tube) 0 0) 0 24px / 12px 12px,
+        linear-gradient(var(--acid) 0 0) 12px 24px / 12px 12px,
+        linear-gradient(var(--acid) 0 0) 24px 24px / 12px 12px,
+        linear-gradient(var(--acid) 0 0) 36px 24px / 12px 12px,
+        linear-gradient(var(--tube) 0 0) 0 36px / 12px 12px,
+        linear-gradient(var(--tube) 0 0) 12px 36px / 12px 12px,
+        linear-gradient(var(--rust) 0 0) 24px 36px / 12px 12px,
+        linear-gradient(var(--rust) 0 0) 36px 36px / 12px 12px,
+        linear-gradient(var(--steel) 0 0) 12px 48px / 12px 12px,
+        linear-gradient(var(--steel) 0 0) 36px 48px / 12px 12px;
+      background-repeat: no-repeat;
+      filter: drop-shadow(5px 5px 0 #000);
+    }
+
+    .specimen:nth-child(2) .sprite { filter: hue-rotate(70deg); }
+    .specimen:nth-child(3) .sprite { filter: hue-rotate(150deg); }
+    .specimen:nth-child(4) .sprite { filter: hue-rotate(230deg); }
+
+    h2 {
+      margin: 0 0 12px;
+      color: inherit;
+      font-size: 1rem;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    p {
+      margin: 0;
+      color: #bbb58d;
+      line-height: 1.55;
+      font-size: 0.92rem;
+    }
+
+    footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 14px 18px;
+      color: var(--void);
+      background: var(--ink);
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    @media (max-width: 760px) {
+      main { width: min(100% - 20px, 520px); padding-top: 14px; }
+      header { grid-template-columns: 1fr; padding: 18px; }
+      .machine { min-height: 240px; }
+      .pipe { left: 92px; width: 120px; }
+      .shelves { grid-template-columns: 1fr; }
+      .specimen {
+        min-height: 0;
+        border-right: 0;
+        border-bottom: var(--cut) solid var(--ink);
+      }
+      .specimen:last-child { border-bottom: 0; }
+      .sprite { transform: scale(0.8); transform-origin: left top; margin-bottom: 8px; }
+      footer { flex-direction: column; }
     }
   </style>
 </head>
-  <body>
+<body>
   <main>
-    <h1>Project Home</h1>
-    <p>현재 프로젝트 루트에서 존재하는 경로만 표시합니다.</p>
+    <div class="lab">
+      <header>
+        <div>
+          <span class="kicker">useless invention facility</span>
+          <h1>AISLOP<br />LAB</h1>
+          <p class="intro">CODEX 산업 노동자와 함께 쓸모없는 실험을 배양하는 8bit 지하 연구소. 각 표본은 독립된 데모 페이지로 바로 연결된다.</p>
+        </div>
+        <div class="machine" aria-hidden="true">
+          <div class="meter"><i></i><i></i><i></i><i></i><i></i></div>
+          <div class="pipe"></div>
+        </div>
+      </header>
 
-    <section class="panel">
-      <h2>프로젝트 목록</h2>
-      <ul>
-        <li><a href="./desktop-kanban/">/desktop-kanban</a></li>
-        <li><a href="./jank-poster/">/jank-poster</a></li>
-        <li><a href="./lecture-note-pdf/">/lecture-note-pdf</a></li>
-        <li><a href="./worst-login-ui/">/worst-login-ui</a></li>
-      </ul>
-    </section>
+      <section class="shelves" aria-label="프로젝트 목록">
+        <a class="specimen" href="./desktop-kanban/">
+          <span class="id">SLOT 01 <span>RUN</span></span>
+          <span class="sprite" aria-hidden="true"></span>
+          <h2>desktop-kanban</h2>
+          <p>바탕화면을 실험용 보드로 바꾸는 macOS 표본.</p>
+        </a>
+        <a class="specimen" href="./jank-poster/">
+          <span class="id">SLOT 02 <span>VIEW</span></span>
+          <span class="sprite" aria-hidden="true"></span>
+          <h2>jank-poster</h2>
+          <p>의도적으로 삐걱대는 포스터 제작 기록과 결과물.</p>
+        </a>
+        <a class="specimen" href="./lecture-note-pdf/">
+          <span class="id">SLOT 03 <span>READ</span></span>
+          <span class="sprite" aria-hidden="true"></span>
+          <h2>lecture-note-pdf</h2>
+          <p>강의 노트를 웹과 PDF 사이에서 증류하는 장치.</p>
+        </a>
+        <a class="specimen" href="./worst-login-ui/">
+          <span class="id">SLOT 04 <span>TEST</span></span>
+          <span class="sprite" aria-hidden="true"></span>
+          <h2>worst-login-ui</h2>
+          <p>최악의 로그인 경험을 격리 보관한 위험 샘플.</p>
+        </a>
+      </section>
+
+      <footer>
+        <span>ROOT ./INDEX.HTML</span>
+        <span>STATUS: UNREASONABLY ALIVE</span>
+      </footer>
+    </div>
   </main>
 </body>
 </html>
