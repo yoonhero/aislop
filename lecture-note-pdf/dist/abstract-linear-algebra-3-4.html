@@ -1,0 +1,3273 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ko-KR" xml:lang="ko-KR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="김도형 원문 재구성 / Codex 편집" />
+  <meta name="dcterms.date" content="2026-04-27" />
+  <title>추상선형대수학 3-4장 교과서화 노트</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <link rel="stylesheet" href="../assets/study-guide.css" />
+  <script
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">추상선형대수학 3-4장 교과서화 노트</h1>
+<p class="author">김도형 원문 재구성 / Codex 편집</p>
+<p class="date">2026-04-27</p>
+</header>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#안내" id="toc-안내">안내</a>
+<ul>
+<li><a href="#표시" id="toc-표시">표시</a></li>
+<li><a href="#원문-링크" id="toc-원문-링크">원문 링크</a></li>
+</ul></li>
+<li><a href="#고윳값-고유벡터-대각화"
+id="toc-고윳값-고유벡터-대각화">3.1 고윳값, 고유벡터, 대각화</a>
+<ul>
+<li><a href="#소절-3.1.1-고윳값-고유벡터-그리고-고유공간"
+id="toc-소절-3.1.1-고윳값-고유벡터-그리고-고유공간">소절 3.1.1 고윳값,
+고유벡터, 그리고 고유공간</a>
+<ul>
+<li><a href="#정의-3.1.1.-고윳값과-고유벡터."
+id="toc-정의-3.1.1.-고윳값과-고유벡터.">정의 3.1.1. 고윳값과
+고유벡터.</a></li>
+<li><a href="#예시-3.1.2.-항등변환과-영변환의-고윳값."
+id="toc-예시-3.1.2.-항등변환과-영변환의-고윳값.">예시 3.1.2. 항등변환과
+영변환의 고윳값.</a></li>
+<li><a href="#정의-3.1.3.-고유공간." id="toc-정의-3.1.3.-고유공간.">정의
+3.1.3. 고유공간.</a></li>
+<li><a href="#예시-3.1.4.-닮음변환의-고유공간."
+id="toc-예시-3.1.4.-닮음변환의-고유공간.">예시 3.1.4. 닮음변환의
+고유공간.</a></li>
+<li><a href="#명제-3.1.5." id="toc-명제-3.1.5.">명제 3.1.5.</a></li>
+<li><a href="#예시-3.1.6.-다항식-공간에서의-고유공간."
+id="toc-예시-3.1.6.-다항식-공간에서의-고유공간.">예시 3.1.6. 다항식
+공간에서의 고유공간.</a></li>
+<li><a href="#명제-3.1.7." id="toc-명제-3.1.7.">명제 3.1.7.</a></li>
+<li><a href="#예시-3.1.8.-미분-작용소의-고유공간-불변성."
+id="toc-예시-3.1.8.-미분-작용소의-고유공간-불변성.">예시 3.1.8. 미분
+작용소의 고유공간 불변성.</a></li>
+</ul></li>
+<li><a href="#소절-3.1.2-고유벡터의-선형독립성"
+id="toc-소절-3.1.2-고유벡터의-선형독립성">소절 3.1.2 고유벡터의
+선형독립성</a>
+<ul>
+<li><a href="#정리-3.1.9." id="toc-정리-3.1.9.">정리 3.1.9.</a></li>
+<li><a href="#예시-3.1.10.-반사-변환의-고유벡터."
+id="toc-예시-3.1.10.-반사-변환의-고유벡터.">예시 3.1.10. 반사 변환의
+고유벡터.</a></li>
+</ul></li>
+<li><a href="#소절-3.1.3-선형변환의-대각화와-행렬의-대각화"
+id="toc-소절-3.1.3-선형변환의-대각화와-행렬의-대각화">소절 3.1.3
+선형변환의 대각화와 행렬의 대각화</a>
+<ul>
+<li><a href="#정의-3.1.11.-선형변환의-대각화."
+id="toc-정의-3.1.11.-선형변환의-대각화.">정의 3.1.11. 선형변환의
+대각화.</a></li>
+<li><a href="#보조설명-3.1.12.-대각화-정의에서-v의-차원."
+id="toc-보조설명-3.1.12.-대각화-정의에서-v의-차원.">보조설명 3.1.12.
+대각화 정의에서 <span class="math inline">\(V\)</span>의 차원.</a></li>
+<li><a href="#예시-3.1.13.-항등변환의-대각화."
+id="toc-예시-3.1.13.-항등변환의-대각화.">예시 3.1.13. 항등변환의
+대각화.</a></li>
+<li><a href="#정의-3.1.14.-행렬의-대각화."
+id="toc-정의-3.1.14.-행렬의-대각화.">정의 3.1.14. 행렬의
+대각화.</a></li>
+<li><a href="#예시-3.1.15.-대칭-행렬의-대각화."
+id="toc-예시-3.1.15.-대칭-행렬의-대각화.">예시 3.1.15. 대칭 행렬의
+대각화.</a></li>
+<li><a href="#예시-3.1.16.-무한차원-공간에서의-대각화."
+id="toc-예시-3.1.16.-무한차원-공간에서의-대각화.">예시 3.1.16. 무한차원
+공간에서의 대각화.</a></li>
+<li><a href="#정의-3.1.17.-행렬표현."
+id="toc-정의-3.1.17.-행렬표현.">정의 3.1.17. 행렬표현.</a></li>
+<li><a href="#예시-3.1.18.-선형변환의-행렬표현."
+id="toc-예시-3.1.18.-선형변환의-행렬표현.">예시 3.1.18. 선형변환의
+행렬표현.</a></li>
+<li><a href="#명제-3.1.19." id="toc-명제-3.1.19.">명제 3.1.19.</a></li>
+<li><a href="#예시-3.1.20.-선형변환의-합성과-행렬곱."
+id="toc-예시-3.1.20.-선형변환의-합성과-행렬곱.">예시 3.1.20. 선형변환의
+합성과 행렬곱.</a></li>
+<li><a href="#정리-3.1.21.-대각화가능성을-행렬로-표현."
+id="toc-정리-3.1.21.-대각화가능성을-행렬로-표현.">정리 3.1.21.
+대각화가능성을 행렬로 표현.</a></li>
+<li><a href="#예시-3.1.22.-구체적인-선형변환의-대각화."
+id="toc-예시-3.1.22.-구체적인-선형변환의-대각화.">예시 3.1.22. 구체적인
+선형변환의 대각화.</a></li>
+</ul></li>
+<li><a href="#연습문제-3.1.4-고윳값-고유벡터-대각화-연습문제"
+id="toc-연습문제-3.1.4-고윳값-고유벡터-대각화-연습문제">연습문제 3.1.4
+고윳값, 고유벡터, 대각화 연습문제</a>
+<ul>
+<li><a href="#구체적인-선형변환의-고윳값과-고유공간."
+id="toc-구체적인-선형변환의-고윳값과-고유공간.">1. 구체적인 선형변환의
+고윳값과 고유공간.</a></li>
+<li><a href="#중요-2.-영-고윳값과-단사성."
+id="toc-중요-2.-영-고윳값과-단사성.">★ 중요 2. 영 고윳값과
+단사성.</a></li>
+<li><a href="#고윳값의-거듭제곱." id="toc-고윳값의-거듭제곱.">3.
+고윳값의 거듭제곱.</a></li>
+<li><a href="#중요-4.-다항식-공간에서의-고유공간."
+id="toc-중요-4.-다항식-공간에서의-고유공간.">★ 중요 4. 다항식 공간에서의
+고유공간.</a></li>
+<li><a href="#중요-5.-역변환의-고윳값."
+id="toc-중요-5.-역변환의-고윳값.">★ 중요 5. 역변환의 고윳값.</a></li>
+<li><a href="#교환-가능한-선형변환과-불변공간."
+id="toc-교환-가능한-선형변환과-불변공간.">6. 교환 가능한 선형변환과
+불변공간.</a></li>
+<li><a href="#중요-7.-멱영-작용소의-고윳값."
+id="toc-중요-7.-멱영-작용소의-고윳값.">★ 중요 7. 멱영 작용소의
+고윳값.</a></li>
+<li><a href="#서로-다른-고윳값과-대각화."
+id="toc-서로-다른-고윳값과-대각화.">8. 서로 다른 고윳값과
+대각화.</a></li>
+<li><a href="#좌측-이동-작용소의-고윳값."
+id="toc-좌측-이동-작용소의-고윳값.">9. 좌측 이동 작용소의
+고윳값.</a></li>
+</ul></li>
+<li><a href="#추가-문제" id="toc-추가-문제">추가 문제</a>
+<ul>
+<li><a href="#추가-문제-1" id="toc-추가-문제-1">추가 문제 1</a></li>
+<li><a href="#추가-문제-2" id="toc-추가-문제-2">추가 문제 2</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#행렬식과-특성다항식" id="toc-행렬식과-특성다항식">3.2
+행렬식과 특성다항식</a>
+<ul>
+<li><a href="#소절-3.2.1-다중선형함수와-교대형식"
+id="toc-소절-3.2.1-다중선형함수와-교대형식">소절 3.2.1 다중선형함수와
+교대형식</a>
+<ul>
+<li><a href="#정의-3.2.1.-다중선형함수."
+id="toc-정의-3.2.1.-다중선형함수.">정의 3.2.1. 다중선형함수.</a></li>
+<li><a href="#예시-3.2.2.-외적으로-정의된-이중선형함수."
+id="toc-예시-3.2.2.-외적으로-정의된-이중선형함수.">예시 3.2.2. 외적으로
+정의된 이중선형함수.</a></li>
+<li><a href="#정의-3.2.3.-교대형식." id="toc-정의-3.2.3.-교대형식.">정의
+3.2.3. 교대형식.</a></li>
+<li><a href="#예시-3.2.4.-2차원-교대형식."
+id="toc-예시-3.2.4.-2차원-교대형식.">예시 3.2.4. 2차원
+교대형식.</a></li>
+<li><a href="#예시-3.2.6.-반대칭성의-확인."
+id="toc-예시-3.2.6.-반대칭성의-확인.">예시 3.2.6. 반대칭성의
+확인.</a></li>
+</ul></li>
+<li><a href="#소절-3.2.2-행렬식의-정의와-특성화"
+id="toc-소절-3.2.2-행렬식의-정의와-특성화">소절 3.2.2 행렬식의 정의와
+특성화</a>
+<ul>
+<li><a href="#정리-3.2.7.-행렬식의-존재성과-유일성."
+id="toc-정리-3.2.7.-행렬식의-존재성과-유일성.">정리 3.2.7. 행렬식의
+존재성과 유일성.</a></li>
+<li><a href="#정의-3.2.8.-행렬식." id="toc-정의-3.2.8.-행렬식.">정의
+3.2.8. 행렬식.</a></li>
+<li><a href="#예시-3.2.9.-22-행렬의-행렬식."
+id="toc-예시-3.2.9.-22-행렬의-행렬식.">예시 3.2.9. 2×2 행렬의
+행렬식.</a></li>
+<li><a href="#명제-3.2.10.-행렬식의-곱셈-성질."
+id="toc-명제-3.2.10.-행렬식의-곱셈-성질.">명제 3.2.10. 행렬식의 곱셈
+성질.</a></li>
+<li><a href="#예시-3.2.11.-가역행렬의-행렬식."
+id="toc-예시-3.2.11.-가역행렬의-행렬식.">예시 3.2.11. 가역행렬의
+행렬식.</a></li>
+</ul></li>
+<li><a href="#소절-3.2.3-특성다항식" id="toc-소절-3.2.3-특성다항식">소절
+3.2.3 특성다항식</a>
+<ul>
+<li><a href="#정의-3.2.12.-특성다항식."
+id="toc-정의-3.2.12.-특성다항식.">정의 3.2.12. 특성다항식.</a></li>
+<li><a href="#예시-3.2.13.-특성다항식의-계산."
+id="toc-예시-3.2.13.-특성다항식의-계산.">예시 3.2.13. 특성다항식의
+계산.</a></li>
+<li><a href="#정리-3.2.14.-고윳값과-특성다항식의-근."
+id="toc-정리-3.2.14.-고윳값과-특성다항식의-근.">정리 3.2.14. 고윳값과
+특성다항식의 근.</a></li>
+<li><a href="#예시-3.2.15.-특성다항식의-근과-고윳값."
+id="toc-예시-3.2.15.-특성다항식의-근과-고윳값.">예시 3.2.15.
+특성다항식의 근과 고윳값.</a></li>
+</ul></li>
+<li><a href="#소절-3.2.4-특성다항식을-이용한-대각화-필요조건"
+id="toc-소절-3.2.4-특성다항식을-이용한-대각화-필요조건">소절 3.2.4
+특성다항식을 이용한 대각화 필요조건</a>
+<ul>
+<li><a href="#정의-3.2.16.-대수적-중복도와-기하적-중복도."
+id="toc-정의-3.2.16.-대수적-중복도와-기하적-중복도.">정의 3.2.16. 대수적
+중복도와 기하적 중복도.</a></li>
+<li><a href="#예시-3.2.17.-대수적-중복도와-기하적-중복도의-비교."
+id="toc-예시-3.2.17.-대수적-중복도와-기하적-중복도의-비교.">예시 3.2.17.
+대수적 중복도와 기하적 중복도의 비교.</a></li>
+<li><a href="#명제-3.2.18.-중복도의-대소-관계."
+id="toc-명제-3.2.18.-중복도의-대소-관계.">명제 3.2.18. 중복도의 대소
+관계.</a></li>
+<li><a href="#정리-3.2.19.-대각화의-필요조건."
+id="toc-정리-3.2.19.-대각화의-필요조건.">정리 3.2.19. 대각화의
+필요조건.</a></li>
+<li><a href="#예시-3.2.20.-대각화-불가능한-행렬."
+id="toc-예시-3.2.20.-대각화-불가능한-행렬.">예시 3.2.20. 대각화 불가능한
+행렬.</a></li>
+</ul></li>
+<li><a href="#연습문제-3.2.5-연습문제"
+id="toc-연습문제-3.2.5-연습문제">연습문제 3.2.5 연습문제</a>
+<ul>
+<li><a href="#중요-1.-이중선형성-보이기."
+id="toc-중요-1.-이중선형성-보이기.">★ 중요 1. 이중선형성
+보이기.</a></li>
+<li><a href="#비가역성과-영-고윳값." id="toc-비가역성과-영-고윳값.">2.
+비가역성과 영 고윳값.</a></li>
+<li><a href="#중요-3.-대수적-중복도와-기하적-중복도의-범위."
+id="toc-중요-3.-대수적-중복도와-기하적-중복도의-범위.">★ 중요 3. 대수적
+중복도와 기하적 중복도의 범위.</a></li>
+<li><a href="#미분연산자의-대각화-가능성."
+id="toc-미분연산자의-대각화-가능성.">4. 미분연산자의 대각화
+가능성.</a></li>
+<li><a href="#상삼각행렬의-행렬식." id="toc-상삼각행렬의-행렬식.">5.
+상삼각행렬의 행렬식.</a></li>
+<li><a href="#중요-6.-역행렬의-특성다항식."
+id="toc-중요-6.-역행렬의-특성다항식.">★ 중요 6. 역행렬의
+특성다항식.</a></li>
+<li><a href="#닮음-행렬의-특성다항식."
+id="toc-닮음-행렬의-특성다항식.">7. 닮음 행렬의 특성다항식.</a></li>
+<li><a href="#중요-8.-중근을-가지는-대각화-가능한-행렬."
+id="toc-중요-8.-중근을-가지는-대각화-가능한-행렬.">★ 중요 8. 중근을
+가지는 대각화 가능한 행렬.</a></li>
+<li><a href="#블록-상삼각행렬의-특성다항식."
+id="toc-블록-상삼각행렬의-특성다항식.">9. 블록 상삼각행렬의
+특성다항식.</a></li>
+<li><a href="#회전변환의-특성다항식과-확장체."
+id="toc-회전변환의-특성다항식과-확장체.">10. 회전변환의 특성다항식과
+확장체.</a></li>
+</ul></li>
+<li><a href="#추가-문제-3" id="toc-추가-문제-3">추가 문제</a>
+<ul>
+<li><a href="#추가-문제-1-1" id="toc-추가-문제-1-1">추가 문제 1</a></li>
+<li><a href="#추가-문제-2-1" id="toc-추가-문제-2-1">추가 문제 2</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#케일리-해밀턴-정리와-최소다항식"
+id="toc-케일리-해밀턴-정리와-최소다항식">3.3 케일리-해밀턴 정리와
+최소다항식</a>
+<ul>
+<li><a href="#소절-3.3.1-수반행렬과-크라메르-공식"
+id="toc-소절-3.3.1-수반행렬과-크라메르-공식">소절 3.3.1 수반행렬과
+크라메르 공식</a>
+<ul>
+<li><a href="#정의-3.3.1.-수반행렬." id="toc-정의-3.3.1.-수반행렬.">정의
+3.3.1. 수반행렬.</a></li>
+<li><a href="#정리-3.3.2.-수반행렬-항등식."
+id="toc-정리-3.3.2.-수반행렬-항등식.">정리 3.3.2. 수반행렬
+항등식.</a></li>
+<li><a href="#예시-3.3.3.-22-행렬의-수반행렬."
+id="toc-예시-3.3.3.-22-행렬의-수반행렬.">예시 3.3.3. 2×2 행렬의
+수반행렬.</a></li>
+<li><a href="#정리-3.3.4.-크라메르-공식."
+id="toc-정리-3.3.4.-크라메르-공식.">정리 3.3.4. 크라메르 공식.</a></li>
+<li><a href="#예시-3.3.5.-크라메르-공식을-이용한-연립방정식-풀이."
+id="toc-예시-3.3.5.-크라메르-공식을-이용한-연립방정식-풀이.">예시 3.3.5.
+크라메르 공식을 이용한 연립방정식 풀이.</a></li>
+</ul></li>
+<li><a href="#소절-3.3.2-케일리-해밀턴-정리"
+id="toc-소절-3.3.2-케일리-해밀턴-정리">소절 3.3.2 케일리-해밀턴 정리</a>
+<ul>
+<li><a href="#정리-3.3.6.-케일리-해밀턴-정리."
+id="toc-정리-3.3.6.-케일리-해밀턴-정리.">정리 3.3.6. 케일리-해밀턴
+정리.</a></li>
+<li><a href="#예시-3.3.7.-22-행렬의-케일리-해밀턴-정리."
+id="toc-예시-3.3.7.-22-행렬의-케일리-해밀턴-정리.">예시 3.3.7. 2×2
+행렬의 케일리-해밀턴 정리.</a></li>
+</ul></li>
+<li><a href="#소절-3.3.3-최소다항식의-정의와-인수-성질"
+id="toc-소절-3.3.3-최소다항식의-정의와-인수-성질">소절 3.3.3
+최소다항식의 정의와 인수 성질</a>
+<ul>
+<li><a href="#정의-3.3.8.-최소다항식."
+id="toc-정의-3.3.8.-최소다항식.">정의 3.3.8. 최소다항식.</a></li>
+<li><a href="#예시-3.3.10.-항등행렬의-최소다항식."
+id="toc-예시-3.3.10.-항등행렬의-최소다항식.">예시 3.3.10. 항등행렬의
+최소다항식.</a></li>
+<li><a href="#명제-3.3.11.-최소다항식의-나눗셈-성질."
+id="toc-명제-3.3.11.-최소다항식의-나눗셈-성질.">명제 3.3.11.
+최소다항식의 나눗셈 성질.</a></li>
+<li><a href="#예시-3.3.12.-최소다항식의-인수-결정."
+id="toc-예시-3.3.12.-최소다항식의-인수-결정.">예시 3.3.12. 최소다항식의
+인수 결정.</a></li>
+<li><a href="#정리-3.3.13.-고윳값과-최소다항식의-근."
+id="toc-정리-3.3.13.-고윳값과-최소다항식의-근.">정리 3.3.13. 고윳값과
+최소다항식의 근.</a></li>
+<li><a href="#예시-3.3.14.-비슷한-고윳값을-가진-행렬들의-최소다항식."
+id="toc-예시-3.3.14.-비슷한-고윳값을-가진-행렬들의-최소다항식.">예시
+3.3.14. 비슷한 고윳값을 가진 행렬들의 최소다항식.</a></li>
+</ul></li>
+<li><a href="#연습문제-3.3.4-연습문제"
+id="toc-연습문제-3.3.4-연습문제">연습문제 3.3.4 연습문제</a>
+<ul>
+<li><a href="#중요-1.-다항식-속-행렬."
+id="toc-중요-1.-다항식-속-행렬.">★ 중요 1. 다항식 속 행렬.</a></li>
+<li><a href="#중요-2.-영고윳값과-단사성."
+id="toc-중요-2.-영고윳값과-단사성.">★ 중요 2. 영고윳값과
+단사성.</a></li>
+<li><a href="#대각행렬의-최소다항식." id="toc-대각행렬의-최소다항식.">3.
+대각행렬의 최소다항식.</a></li>
+<li><a href="#역행렬과-최소다항식." id="toc-역행렬과-최소다항식.">4.
+역행렬과 최소다항식.</a></li>
+<li><a href="#중요-5.-유사-행렬과-최소다항식."
+id="toc-중요-5.-유사-행렬과-최소다항식.">★ 중요 5. 유사 행렬과
+최소다항식.</a></li>
+<li><a href="#최소다항식과-고윳값." id="toc-최소다항식과-고윳값.">6.
+최소다항식과 고윳값.</a></li>
+<li><a href="#중요-7.-다항식의-최대공약수."
+id="toc-중요-7.-다항식의-최대공약수.">★ 중요 7. 다항식의
+최대공약수.</a></li>
+<li><a href="#특성다항식과-최소다항식."
+id="toc-특성다항식과-최소다항식.">8. 특성다항식과 최소다항식.</a></li>
+<li><a href="#블록-상삼각행렬의-최소다항식."
+id="toc-블록-상삼각행렬의-최소다항식.">9. 블록 상삼각행렬의
+최소다항식.</a></li>
+<li><a href="#직합-분해." id="toc-직합-분해.">10. 직합 분해.</a></li>
+</ul></li>
+<li><a href="#추가-문제-4" id="toc-추가-문제-4">추가 문제</a>
+<ul>
+<li><a href="#추가-문제-1-2" id="toc-추가-문제-1-2">추가 문제 1</a></li>
+<li><a href="#추가-문제-2-2" id="toc-추가-문제-2-2">추가 문제 2</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#삼각화와-조르당-표준형"
+id="toc-삼각화와-조르당-표준형">3.4 삼각화와 조르당 표준형</a>
+<ul>
+<li><a href="#소절-3.4.1-몫공간을-이용한-삼각화"
+id="toc-소절-3.4.1-몫공간을-이용한-삼각화">소절 3.4.1 몫공간을 이용한
+삼각화</a>
+<ul>
+<li><a href="#정의-3.4.1.-삼각화." id="toc-정의-3.4.1.-삼각화.">정의
+3.4.1. 삼각화.</a></li>
+<li><a href="#예시-3.4.2.-다항식-공간에서의-삼각화."
+id="toc-예시-3.4.2.-다항식-공간에서의-삼각화.">예시 3.4.2. 다항식
+공간에서의 삼각화.</a></li>
+<li><a href="#정리-3.4.3.-삼각화의-필요충분조건."
+id="toc-정리-3.4.3.-삼각화의-필요충분조건.">정리 3.4.3. 삼각화의
+필요충분조건.</a></li>
+<li><a href="#예시-3.4.4.-실수와-복소수에서의-삼각화-가능성."
+id="toc-예시-3.4.4.-실수와-복소수에서의-삼각화-가능성.">예시 3.4.4.
+실수와 복소수에서의 삼각화 가능성.</a></li>
+</ul></li>
+<li><a href="#소절-3.4.2-일반화된-고유공간-분해"
+id="toc-소절-3.4.2-일반화된-고유공간-분해">소절 3.4.2 일반화된 고유공간
+분해</a>
+<ul>
+<li><a href="#정의-3.4.5.-일반화된-고유벡터와-일반화된-고유공간."
+id="toc-정의-3.4.5.-일반화된-고유벡터와-일반화된-고유공간.">정의 3.4.5.
+일반화된 고유벡터와 일반화된 고유공간.</a></li>
+<li><a href="#예시-3.4.6.-일반화된-고유공간의-예."
+id="toc-예시-3.4.6.-일반화된-고유공간의-예.">예시 3.4.6. 일반화된
+고유공간의 예.</a></li>
+<li><a href="#정리-3.4.7.-소분해-정리."
+id="toc-정리-3.4.7.-소분해-정리.">정리 3.4.7. 소분해 정리.</a></li>
+<li><a href="#예시-3.4.8.-소분해-정리의-응용."
+id="toc-예시-3.4.8.-소분해-정리의-응용.">예시 3.4.8. 소분해 정리의
+응용.</a></li>
+</ul></li>
+<li><a href="#소절-3.4.3-조르당-표준형"
+id="toc-소절-3.4.3-조르당-표준형">소절 3.4.3 조르당 표준형</a>
+<ul>
+<li><a href="#정의-3.4.9.-조르당-블록과-조르당-행렬."
+id="toc-정의-3.4.9.-조르당-블록과-조르당-행렬.">정의 3.4.9. 조르당
+블록과 조르당 행렬.</a></li>
+<li><a href="#예시-3.4.10.-조르당-블록의-예."
+id="toc-예시-3.4.10.-조르당-블록의-예.">예시 3.4.10. 조르당 블록의
+예.</a></li>
+<li><a href="#정리-3.4.11.-조르당-표준형-정리."
+id="toc-정리-3.4.11.-조르당-표준형-정리.">정리 3.4.11. 조르당 표준형
+정리.</a></li>
+<li><a href="#예시-3.4.12.-조르당-표준형의-결정."
+id="toc-예시-3.4.12.-조르당-표준형의-결정.">예시 3.4.12. 조르당 표준형의
+결정.</a></li>
+</ul></li>
+<li><a href="#연습문제-3.4.4-연습문제"
+id="toc-연습문제-3.4.4-연습문제">연습문제 3.4.4 연습문제</a>
+<ul>
+<li><a href="#중요-1.-실수체에서의-삼각화-불가능성."
+id="toc-중요-1.-실수체에서의-삼각화-불가능성.">★ 중요 1. 실수체에서의
+삼각화 불가능성.</a></li>
+<li><a href="#조르당-블록의-거듭제곱."
+id="toc-조르당-블록의-거듭제곱.">2. 조르당 블록의 거듭제곱.</a></li>
+<li><a href="#중요-3.-고유벡터와-일반화된-고유벡터."
+id="toc-중요-3.-고유벡터와-일반화된-고유벡터.">★ 중요 3. 고유벡터와
+일반화된 고유벡터.</a></li>
+<li><a href="#중요-4.-몫공간의-선형변환-정의의-타당성."
+id="toc-중요-4.-몫공간의-선형변환-정의의-타당성.">★ 중요 4. 몫공간의
+선형변환 정의의 타당성.</a></li>
+<li><a href="#삼각화의-귀납적-증명." id="toc-삼각화의-귀납적-증명.">5.
+삼각화의 귀납적 증명.</a></li>
+<li><a href="#중요-6.-최소다항식과-조르당-블록의-크기."
+id="toc-중요-6.-최소다항식과-조르당-블록의-크기.">★ 중요 6. 최소다항식과
+조르당 블록의 크기.</a></li>
+<li><a href="#행렬과-전치행렬의-닮음성."
+id="toc-행렬과-전치행렬의-닮음성.">7. 행렬과 전치행렬의 닮음성.</a></li>
+<li><a href="#조르당-표준형의-결정." id="toc-조르당-표준형의-결정.">8.
+조르당 표준형의 결정.</a></li>
+<li><a href="#멱영-작용소의-삼각화." id="toc-멱영-작용소의-삼각화.">9.
+멱영 작용소의 삼각화.</a></li>
+</ul></li>
+<li><a href="#추가-문제-5" id="toc-추가-문제-5">추가 문제</a>
+<ul>
+<li><a href="#추가-문제-1-3" id="toc-추가-문제-1-3">추가 문제 1</a></li>
+<li><a href="#추가-문제-2-3" id="toc-추가-문제-2-3">추가 문제 2</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#텐서곱" id="toc-텐서곱">4.1 텐서곱</a>
+<ul>
+<li><a href="#소절-4.1.1-텐서곱과-보편성질"
+id="toc-소절-4.1.1-텐서곱과-보편성질">소절 4.1.1 텐서곱과 보편성질</a>
+<ul>
+<li><a href="#정의-4.1.1.-텐서곱의-보편성질."
+id="toc-정의-4.1.1.-텐서곱의-보편성질.">정의 4.1.1. 텐서곱의
+보편성질.</a></li>
+<li><a href="#예시-4.1.2.-스칼라-곱셈과-텐서곱."
+id="toc-예시-4.1.2.-스칼라-곱셈과-텐서곱.">예시 4.1.2. 스칼라 곱셈과
+텐서곱.</a></li>
+</ul></li>
+<li><a href="#소절-4.1.2-텐서곱의-유일성과-차원"
+id="toc-소절-4.1.2-텐서곱의-유일성과-차원">소절 4.1.2 텐서곱의 유일성과
+차원</a>
+<ul>
+<li><a href="#정리-4.1.3.-텐서곱의-유일성."
+id="toc-정리-4.1.3.-텐서곱의-유일성.">정리 4.1.3. 텐서곱의
+유일성.</a></li>
+<li><a href="#정리-4.1.4.-텐서곱의-존재성."
+id="toc-정리-4.1.4.-텐서곱의-존재성.">정리 4.1.4. 텐서곱의
+존재성.</a></li>
+<li><a href="#정리-4.1.6.-텐서곱의-기저와-차원."
+id="toc-정리-4.1.6.-텐서곱의-기저와-차원.">정리 4.1.6. 텐서곱의 기저와
+차원.</a></li>
+<li><a href="#예시-4.1.7.-표준-텐서곱의-기저."
+id="toc-예시-4.1.7.-표준-텐서곱의-기저.">예시 4.1.7. 표준 텐서곱의
+기저.</a></li>
+</ul></li>
+<li><a href="#소절-4.1.3-선형변환-공간의-텐서곱-표현"
+id="toc-소절-4.1.3-선형변환-공간의-텐서곱-표현">소절 4.1.3 선형변환
+공간의 텐서곱 표현</a>
+<ul>
+<li><a href="#정리-4.1.8.-선형변환-공간의-텐서곱-표현."
+id="toc-정리-4.1.8.-선형변환-공간의-텐서곱-표현.">정리 4.1.8. 선형변환
+공간의 텐서곱 표현.</a></li>
+<li><a href="#예시-4.1.9.-선형변환과-행렬-표현."
+id="toc-예시-4.1.9.-선형변환과-행렬-표현.">예시 4.1.9. 선형변환과 행렬
+표현.</a></li>
+</ul></li>
+<li><a href="#연습문제-4.1.4-연습문제"
+id="toc-연습문제-4.1.4-연습문제">연습문제 4.1.4 연습문제</a>
+<ul>
+<li><a href="#중요-1.-스칼라와의-텐서곱."
+id="toc-중요-1.-스칼라와의-텐서곱.">★ 중요 1. 스칼라와의
+텐서곱.</a></li>
+<li><a href="#중요-2.-텐서곱-공간의-차원."
+id="toc-중요-2.-텐서곱-공간의-차원.">★ 중요 2. 텐서곱 공간의
+차원.</a></li>
+<li><a href="#스칼라-배수와-텐서곱." id="toc-스칼라-배수와-텐서곱.">3.
+스칼라 배수와 텐서곱.</a></li>
+<li><a href="#중요-4.-텐서곱의-교환성."
+id="toc-중요-4.-텐서곱의-교환성.">★ 중요 4. 텐서곱의 교환성.</a></li>
+<li><a href="#중요-5.-체와의-텐서곱." id="toc-중요-5.-체와의-텐서곱.">★
+중요 5. 체와의 텐서곱.</a></li>
+<li><a href="#분해-불가능한-텐서." id="toc-분해-불가능한-텐서.">6. 분해
+불가능한 텐서.</a></li>
+<li><a href="#텐서곱의-함수-정의." id="toc-텐서곱의-함수-정의.">7.
+텐서곱의 함수 정의.</a></li>
+<li><a href="#행렬-공간과-텐서곱." id="toc-행렬-공간과-텐서곱.">8. 행렬
+공간과 텐서곱.</a></li>
+<li><a href="#텐서곱의-결합성." id="toc-텐서곱의-결합성.">9. 텐서곱의
+결합성.</a></li>
+<li><a href="#대각합과-텐서곱." id="toc-대각합과-텐서곱.">10. 대각합과
+텐서곱.</a></li>
+</ul></li>
+<li><a href="#추가-문제-6" id="toc-추가-문제-6">추가 문제</a>
+<ul>
+<li><a href="#추가-문제-1-4" id="toc-추가-문제-1-4">추가 문제 1</a></li>
+<li><a href="#추가-문제-2-4" id="toc-추가-문제-2-4">추가 문제 2</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#실수에서-복소수로의-확장"
+id="toc-실수에서-복소수로의-확장">4.2 실수에서 복소수로의 확장</a>
+<ul>
+<li><a href="#소절-4.2.1-확장체" id="toc-소절-4.2.1-확장체">소절 4.2.1
+확장체</a>
+<ul>
+<li><a href="#정의-4.2.1.-확장체." id="toc-정의-4.2.1.-확장체.">정의
+4.2.1. 확장체.</a></li>
+<li><a href="#예시-4.2.2.-확장체의-예시."
+id="toc-예시-4.2.2.-확장체의-예시.">예시 4.2.2. 확장체의 예시.</a></li>
+</ul></li>
+<li><a href="#소절-4.2.2-스칼라-확장"
+id="toc-소절-4.2.2-스칼라-확장">소절 4.2.2 스칼라 확장</a>
+<ul>
+<li><a href="#정의-4.2.3.-스칼라-확장."
+id="toc-정의-4.2.3.-스칼라-확장.">정의 4.2.3. 스칼라 확장.</a></li>
+<li><a href="#정리-4.2.4.-기저와-차원의-보존."
+id="toc-정리-4.2.4.-기저와-차원의-보존.">정리 4.2.4. 기저와 차원의
+보존.</a></li>
+<li><a href="#예시-4.2.5.-다항식-공간의-스칼라-확장."
+id="toc-예시-4.2.5.-다항식-공간의-스칼라-확장.">예시 4.2.5. 다항식
+공간의 스칼라 확장.</a></li>
+</ul></li>
+<li><a href="#소절-4.2.3-선형변환의-확장"
+id="toc-소절-4.2.3-선형변환의-확장">소절 4.2.3 선형변환의 확장</a>
+<ul>
+<li><a href="#명제-4.2.6.-선형변환-공간과-스칼라-확장의-가환성."
+id="toc-명제-4.2.6.-선형변환-공간과-스칼라-확장의-가환성.">명제 4.2.6.
+선형변환 공간과 스칼라 확장의 가환성.</a></li>
+<li><a href="#예시-4.2.7.-선형변환-공간의-스칼라-확장."
+id="toc-예시-4.2.7.-선형변환-공간의-스칼라-확장.">예시 4.2.7. 선형변환
+공간의 스칼라 확장.</a></li>
+</ul></li>
+<li><a href="#연습문제-4.2.4-연습문제"
+id="toc-연습문제-4.2.4-연습문제">연습문제 4.2.4 연습문제</a>
+<ul>
+<li><a href="#중요-1.-텐서곱-공간의-차원."
+id="toc-중요-1.-텐서곱-공간의-차원.">★ 중요 1. 텐서곱 공간의
+차원.</a></li>
+<li><a href="#중요-2.-켤레선형-대합의-판별."
+id="toc-중요-2.-켤레선형-대합의-판별.">★ 중요 2. 켤레선형 대합의
+판별.</a></li>
+<li><a href="#중요-3.-스칼라-확장의-차원."
+id="toc-중요-3.-스칼라-확장의-차원.">★ 중요 3. 스칼라 확장의
+차원.</a></li>
+<li><a href="#스칼라-확장과-직합." id="toc-스칼라-확장과-직합.">4.
+스칼라 확장과 직합.</a></li>
+<li><a href="#중요-5.-유도된-사상의-선형성."
+id="toc-중요-5.-유도된-사상의-선형성.">★ 중요 5. 유도된 사상의
+선형성.</a></li>
+<li><a href="#스칼라-확장-후-행렬표현의-불변성."
+id="toc-스칼라-확장-후-행렬표현의-불변성.">6. 스칼라 확장 후 행렬표현의
+불변성.</a></li>
+<li><a href="#대각합과-행렬식의-불변성."
+id="toc-대각합과-행렬식의-불변성.">7. 대각합과 행렬식의 불변성.</a></li>
+<li><a href="#실수-구조의-고정원소-공간."
+id="toc-실수-구조의-고정원소-공간.">8. 실수 구조의 고정원소
+공간.</a></li>
+</ul></li>
+<li><a href="#추가-문제-7" id="toc-추가-문제-7">추가 문제</a>
+<ul>
+<li><a href="#추가-문제-1-5" id="toc-추가-문제-1-5">추가 문제 1</a></li>
+<li><a href="#추가-문제-2-5" id="toc-추가-문제-2-5">추가 문제 2</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+<h1 id="안내">안내</h1>
+<p>이 문서는 김도형 교수님의 웹 강의노트 <em>추상선형대수학: 벡터공간과
+대수학의 원리</em> 중 <code>3.1</code>부터 <code>4.2</code>까지를 후속
+교과서처럼 읽히도록 재구성한 것이다.</p>
+<ul>
+<li>편집 원칙: 원문 흐름은 보존하고, 장별 관점, <code>★ 중요</code>,
+<code>추가 문제</code>, 수치선형대수 사이드바를 덧붙였다.</li>
+<li>포함 범위: <code>3.1</code>, <code>3.2</code>, <code>3.3</code>,
+<code>3.4</code>, <code>4.1</code>, <code>4.2</code></li>
+<li>원문 출처: <a
+href="https://dohyeong-kim.github.io/abstract-linear-algebra/frontmatter.html"
+class="uri">https://dohyeong-kim.github.io/abstract-linear-algebra/frontmatter.html</a></li>
+<li>수치선형대수 참고: <a
+href="https://github.com/fastai/numerical-linear-algebra"
+class="uri">https://github.com/fastai/numerical-linear-algebra</a></li>
+<li>저작권 및 이용허락: 김도형 원문은 CC BY-SA 4.0으로 배포된다. fast.ai
+자료는 원문 링크를 통해 참고하고, 이 문서에서는 개념적 연결만
+요약한다.</li>
+</ul>
+<h2 id="표시">표시</h2>
+<ul>
+<li><code>★ 중요</code>: 다음 절과 계산 문제로 이어지는 핵심 원문
+연습문제</li>
+<li><code>추가 문제</code>: 추상 이론을 계산, 알고리즘, 응용과 연결하기
+위해 덧붙인 문제</li>
+<li><code>Numerical Aside</code>: fast.ai Computational Linear
+Algebra에서 얻을 수 있는 잡다하지만 유용한 계산 관점</li>
+</ul>
+<h2 id="원문-링크">원문 링크</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>절</th>
+<th>링크</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>3.1</td>
+<td><a
+href="https://dohyeong-kim.github.io/abstract-linear-algebra/03-01-eigen.html"
+class="uri">https://dohyeong-kim.github.io/abstract-linear-algebra/03-01-eigen.html</a></td>
+</tr>
+<tr>
+<td>3.2</td>
+<td><a
+href="https://dohyeong-kim.github.io/abstract-linear-algebra/03-02-char.html"
+class="uri">https://dohyeong-kim.github.io/abstract-linear-algebra/03-02-char.html</a></td>
+</tr>
+<tr>
+<td>3.3</td>
+<td><a
+href="https://dohyeong-kim.github.io/abstract-linear-algebra/03-03-cayley.html"
+class="uri">https://dohyeong-kim.github.io/abstract-linear-algebra/03-03-cayley.html</a></td>
+</tr>
+<tr>
+<td>3.4</td>
+<td><a
+href="https://dohyeong-kim.github.io/abstract-linear-algebra/03-04-triangulation-and-jordan.html"
+class="uri">https://dohyeong-kim.github.io/abstract-linear-algebra/03-04-triangulation-and-jordan.html</a></td>
+</tr>
+<tr>
+<td>4.1</td>
+<td><a
+href="https://dohyeong-kim.github.io/abstract-linear-algebra/04-01-tensor-product.html"
+class="uri">https://dohyeong-kim.github.io/abstract-linear-algebra/04-01-tensor-product.html</a></td>
+</tr>
+<tr>
+<td>4.2</td>
+<td><a
+href="https://dohyeong-kim.github.io/abstract-linear-algebra/04-02-real-to-complex.html"
+class="uri">https://dohyeong-kim.github.io/abstract-linear-algebra/04-02-real-to-complex.html</a></td>
+</tr>
+</tbody>
+</table>
+<div class="guide-strip">
+<div class="guide-pill">
+고유공간
+</div>
+<div class="guide-arrow">
+→
+</div>
+<div class="guide-pill">
+특성다항식
+</div>
+<div class="guide-arrow">
+→
+</div>
+<div class="guide-pill">
+최소다항식
+</div>
+<div class="guide-arrow">
+→
+</div>
+<div class="guide-pill">
+조르당
+</div>
+<div class="guide-arrow">
+→
+</div>
+<div class="guide-pill">
+텐서곱
+</div>
+<div class="guide-arrow">
+→
+</div>
+<div class="guide-pill">
+복소화
+</div>
+</div>
+<h1 id="고윳값-고유벡터-대각화">3.1 고윳값, 고유벡터, 대각화</h1>
+<div class="guide-grid">
+<div class="guide-card guide-card-accent">
+<div class="guide-kicker">
+Section Lens
+</div>
+<div class="guide-title">
+고유벡터는 선형변환이 방향을 바꾸지 못하는 축이다.
+</div>
+<p>
+본문을 읽을 때는 정의보다 먼저 이 절이 어떤 불변량을 보존하고 압축하는지
+붙잡는다.
+</p>
+</div>
+<div class="guide-card">
+<div class="guide-kicker">
+Numerical Aside
+</div>
+<p>
+fast.ai의 PageRank 단원은 고유벡터를 큰 그래프에서 반복으로 찾아내는
+중요도로 읽게 해 준다. 추상식 <code>Av = λv</code>가 링크 행렬의
+정상상태를 찾는 알고리즘이 된다.
+</p>
+</div>
+</div>
+<h2 id="소절-3.1.1-고윳값-고유벡터-그리고-고유공간">소절 3.1.1 고윳값,
+고유벡터, 그리고 고유공간</h2>
+<h3 id="정의-3.1.1.-고윳값과-고유벡터.">정의 3.1.1. 고윳값과
+고유벡터.</h3>
+<p>고윳값:eigenvalue</p>
+<p>임의의 체 <span class="math inline">\(\mathbb{F}\)</span> 상의
+벡터공간 <span class="math inline">\(V\)</span>와 선형변환 <span
+class="math inline">\(T: V \to V\)</span>에 대하여, 다음을 만족하는
+영벡터가 아닌 벡터 <span class="math inline">\(v \in V\)</span>가 존재할
+때, 스칼라 <span class="math inline">\(\lambda \in \mathbb{F}\)</span>를
+<span class="math inline">\(T\)</span>의 고윳값이라 한다.</p>
+<p><span class="math display">\[\begin{equation*} T(v) = \lambda v
+\end{equation*}\]</span></p>
+<p>이때 벡터 <span class="math inline">\(v\)</span>를 고윳값 <span
+class="math inline">\(\lambda\)</span>에 대응하는 <span
+class="math inline">\(T\)</span>의 고유벡터라 한다.</p>
+<p>고유벡터:eigenvector</p>
+<h3 id="예시-3.1.2.-항등변환과-영변환의-고윳값.">예시 3.1.2. 항등변환과
+영변환의 고윳값.</h3>
+<p>항등변환 <span class="math inline">\(I: V \to V\)</span> (<span
+class="math inline">\(I(v) = v\)</span>)를 생각합시다. 임의의 영이 아닌
+벡터 <span class="math inline">\(v \in V\)</span>에 대하여 <span
+class="math inline">\(I(v) = 1 \cdot v\)</span>이므로, 모든 영이 아닌
+벡터가 고유벡터이며 스칼라 <span class="math inline">\(1\)</span>이
+유일한 고윳값이 됩니다. 영변환 <span class="math inline">\(0: V
+\to V\)</span>의 경우에는 <span class="math inline">\(0(v) = 0 \cdot
+v\)</span>이므로 <span class="math inline">\(0\)</span>이 유일한
+고윳값이 됩니다.</p>
+<h3 id="정의-3.1.3.-고유공간.">정의 3.1.3. 고유공간.</h3>
+<p>선형변환 <span class="math inline">\(T: V \to V\)</span>와 어떤
+스칼라 <span class="math inline">\(\lambda \in \mathbb{F}\)</span>에
+대하여, 고윳값 방정식을 만족하는 모든 벡터들의 집합을 <span
+class="math inline">\(E_\lambda\)</span>라 표기하고 이를 <span
+class="math inline">\(\lambda\)</span>에 대응하는 고유공간이라 한다.
+즉,</p>
+<p><span class="math display">\[\begin{equation*} E_\lambda = \{ v \in V
+\mid T(v) = \lambda v \}
+\end{equation*}\]</span></p>
+<p>이다.</p>
+<p>고유공간:eigenspace</p>
+<h3 id="예시-3.1.4.-닮음변환의-고유공간.">예시 3.1.4. 닮음변환의
+고유공간.</h3>
+<p><span class="math inline">\(V = \mathbb{F}^2\)</span>에서 선형변환
+<span class="math inline">\(T(x, y) = (2x, 2y)\)</span>를 생각합시다.
+스칼라 <span class="math inline">\(\lambda = 2\)</span>에 대하여
+고유공간 <span class="math inline">\(E_2\)</span>를 구해보면, <span
+class="math inline">\(T(x,y) =
+2(x,y)\)</span>를 만족하는 모든 벡터의 집합이므로 <span
+class="math inline">\(E_2 = \mathbb{F}^2\)</span> 전체 공간이 됩니다.
+반면 스칼라 <span class="math inline">\(\lambda = 3\)</span>에 대해서는
+<span class="math inline">\(T(x,y) =
+3(x,y)\)</span>를 만족하는 벡터가 오직 <span
+class="math inline">\((0,0)\)</span>뿐이므로 <span
+class="math inline">\(E_3 =
+\{(0,0)\}\)</span>입니다. (영벡터만 포함하는 경우 3은 고윳값이
+아닙니다.)</p>
+<h3 id="명제-3.1.5.">명제 3.1.5.</h3>
+<p>임의의 선형변환 <span class="math inline">\(T: V \to V\)</span>와
+스칼라 <span class="math inline">\(\lambda \in \mathbb{F}\)</span>에
+대하여, 고유공간 <span class="math inline">\(E_\lambda\)</span>는 <span
+class="math inline">\(V\)</span>의 부분공간이다.</p>
+<p><strong>증명.</strong></p>
+<p><span class="math inline">\(T(0) = 0 = \lambda 0\)</span>이므로
+영벡터 <span class="math inline">\(0 \in E_\lambda\)</span>입니다.
+따라서 <span class="math inline">\(E_\lambda\)</span>는 공집합이
+아닙니다. 임의의 <span class="math inline">\(u, v \in
+E_\lambda\)</span>와 스칼라 <span class="math inline">\(c \in
+\mathbb{F}\)</span>에 대하여, <span class="math inline">\(T\)</span>의
+선형성에 의해 다음이 성립합니다.</p>
+<p><span class="math display">\[\begin{equation*} T(cu + v) = cT(u) +
+T(v) = c(\lambda u) + \lambda v =
+\lambda(cu + v) \end{equation*}\]</span></p>
+<p>따라서 <span class="math inline">\(cu + v \in
+E_\lambda\)</span>이므로, 덧셈과 스칼라 곱에 대해 닫혀 있습니다.
+그러므로 <span class="math inline">\(E_\lambda\)</span>는
+부분공간입니다. <span class="math inline">\(\blacksquare\)</span></p>
+<h3 id="예시-3.1.6.-다항식-공간에서의-고유공간.">예시 3.1.6. 다항식
+공간에서의 고유공간.</h3>
+<p>공간 <span class="math inline">\(V = \mathbb{F}[x]_{\le
+2}\)</span>에서 선형변환 <span class="math inline">\(T: V \to
+V\)</span>를 <span class="math inline">\(T(p(x)) = x
+p&#39;(x)\)</span>로 정의합시다. <span class="math inline">\(\lambda =
+1\)</span>에 대한 고유공간 <span class="math inline">\(E_1\)</span>을
+구해봅시다. 어떤 <span class="math inline">\(p(x) = a_0 + a_1 x + a_2
+x^2\)</span>에 대하여 <span class="math inline">\(x
+p&#39;(x) = p(x)\)</span>가 성립한다고 하면, 양변을 전개하여 <span
+class="math inline">\(a_1 x + 2a_2 x^2 =
+a_0 + a_1 x + a_2 x^2\)</span>을 얻습니다. 계수를 비교하면 <span
+class="math inline">\(a_0 = 0\text{,}\)</span> <span
+class="math inline">\(a_1 = a_1\text{,}\)</span> <span
+class="math inline">\(2a_2 = a_2\)</span>이므로 <span
+class="math inline">\(a_0 = 0, a_2 = 0\)</span>입니다. 조건을 만족하는
+다항식은 오직 <span class="math inline">\(a_1 x\)</span> 형태뿐이므로,
+고유공간 <span class="math inline">\(E_1 =
+\text{span}\{x\}\)</span>라는 1차원 부분공간이 됩니다.</p>
+<h3 id="명제-3.1.7.">명제 3.1.7.</h3>
+<p>선형변환 <span class="math inline">\(T: V \to V\)</span>와 고윳값
+<span class="math inline">\(\lambda \in \mathbb{F}\)</span>에 대하여,
+고유공간 <span class="math inline">\(E_\lambda\)</span>는 <span
+class="math inline">\(T\)</span>-불변공간이다.</p>
+<p><strong>증명.</strong></p>
+<p>임의의 <span class="math inline">\(v \in E_\lambda\)</span>를
+택합시다. 고유공간의 정의에 의해 <span class="math inline">\(T(v) =
+\lambda v\)</span>입니다. 명제 3.1.5에 의해 <span
+class="math inline">\(E_\lambda\)</span>는 <span
+class="math inline">\(V\)</span>의 부분공간이므로 스칼라 곱에 대해 닫혀
+있습니다. 따라서 스칼라 <span class="math inline">\(\lambda\)</span>에
+대하여 <span class="math inline">\(T(v) = \lambda v \in
+E_\lambda\)</span>가 성립합니다. 이는 <span
+class="math inline">\(T(E_\lambda) \subseteq E_\lambda\)</span>임을
+의미하므로 <span class="math inline">\(E_\lambda\)</span>는 <span
+class="math inline">\(T\)</span>-불변공간입니다. <span
+class="math inline">\(\blacksquare\)</span></p>
+<h3 id="예시-3.1.8.-미분-작용소의-고유공간-불변성.">예시 3.1.8. 미분
+작용소의 고유공간 불변성.</h3>
+<p>예시 3.1.6의 예제에서 다룬 선형변환 <span
+class="math inline">\(T(p(x)) = x p&#39;(x)\)</span>와 고유공간 <span
+class="math inline">\(E_1 = \text{span}\{x\}\)</span>를 다시 생각합시다.
+임의의 다항식 <span class="math inline">\(cx \in
+E_1\)</span> (<span class="math inline">\(c \in \mathbb{F}\)</span>)에
+<span class="math inline">\(T\)</span>를 작용시키면 <span
+class="math inline">\(T(cx) = x(c) =
+cx\)</span>가 됩니다. 구한 결과 <span
+class="math inline">\(cx\)</span>는 다시 <span
+class="math inline">\(E_1\)</span>의 원소입니다. 즉, <span
+class="math inline">\(E_1\)</span>에 속한 벡터는 <span
+class="math inline">\(T\)</span>에 의해 변환된 후에도 여전히 <span
+class="math inline">\(E_1\)</span> 안에 머무르며, 이는 <span
+class="math inline">\(E_1\)</span>이 <span
+class="math inline">\(T\)</span>-불변공간임을 구체적으로 보여줍니다.</p>
+<h2 id="소절-3.1.2-고유벡터의-선형독립성">소절 3.1.2 고유벡터의
+선형독립성</h2>
+<p>서로 다른 고윳값에 대응하는 고유벡터들은 공간 내에서 서로 독립적인
+방향을 지시합니다.</p>
+<h3 id="정리-3.1.9.">정리 3.1.9.</h3>
+<p>선형변환 <span class="math inline">\(T: V \to V\)</span>에 대하여,
+<span class="math inline">\(\lambda_1, \lambda_2, \dots,
+\lambda_m\)</span>이 서로 다른 고윳값이라 하자. 각 <span
+class="math inline">\(\lambda_i\)</span>에 대응하는 고유벡터를 <span
+class="math inline">\(v_i\)</span>라 할 때, 집합 <span
+class="math inline">\(\{v_1, v_2, \dots, v_m\}\)</span>은
+선형독립이다.</p>
+<p><strong>증명.</strong></p>
+<p>수학적 귀납법을 사용하여 증명합니다. <span
+class="math inline">\(m=1\)</span>일 때, 고유벡터의 정의상 <span
+class="math inline">\(v_1 \neq 0\)</span>이므로 선형독립입니다. <span
+class="math inline">\(m-1\)</span>개의 고유벡터 집합이 선형독립이라고
+가정하고, 집합 <span class="math inline">\(\{v_1, \dots,
+v_m\}\)</span>이 선형종속이라고 가정해 봅시다. 가정에 의해 어떤 스칼라
+<span class="math inline">\(c_1, \dots, c_m\)</span>이 존재하여 다음을
+만족하되, 모든 <span class="math inline">\(c_i\)</span>가 0인 것은
+아닙니다.</p>
+<p><span class="math display">\[\begin{equation*} c_1 v_1 + c_2 v_2 +
+\dots + c_m v_m = 0 \quad
+\text{--- (1)} \end{equation*}\]</span></p>
+<p>귀납법의 가정에 의해 <span class="math inline">\(\{v_1, \dots,
+v_{m-1}\}\)</span>은 선형독립이므로 반드시 <span
+class="math inline">\(c_m \neq 0\)</span>이어야 합니다. 식 (1)의 양변에
+선형변환 <span class="math inline">\(T\)</span>를 적용하면:</p>
+<p><span class="math display">\[\begin{equation*} c_1 \lambda_1 v_1 +
+c_2 \lambda_2 v_2 + \dots + c_m
+\lambda_m v_m = 0 \quad \text{--- (2)} \end{equation*}\]</span></p>
+<p>식 (1)의 양변에 <span class="math inline">\(\lambda_m\)</span>을
+곱하면:</p>
+<p><span class="math display">\[\begin{equation*} c_1 \lambda_m v_1 +
+c_2 \lambda_m v_2 + \dots + c_m
+\lambda_m v_m = 0 \quad \text{--- (3)} \end{equation*}\]</span></p>
+<p>식 (2)에서 식 (3)을 빼면:</p>
+<p><span class="math display">\[\begin{equation*} c_1(\lambda_1 -
+\lambda_m)v_1 + c_2(\lambda_2 -
+\lambda_m)v_2 + \dots + c_{m-1}(\lambda_{m-1} - \lambda_m)v_{m-1} = 0
+\end{equation*}\]</span></p>
+<p>집합 <span class="math inline">\(\{v_1, \dots, v_{m-1}\}\)</span>이
+선형독립이므로, 모든 <span class="math inline">\(i \in \{1,
+\dots, m-1\}\)</span>에 대하여 <span class="math inline">\(c_i(\lambda_i
+- \lambda_m) = 0\)</span>입니다. 고윳값들이 모두 다르므로 <span
+class="math inline">\(\lambda_i - \lambda_m \neq 0\)</span>이며,
+결과적으로 <span class="math inline">\(c_i = 0\)</span>이 됩니다. 이를
+식 (1)에 대입하면 <span class="math inline">\(c_m v_m =
+0\)</span>이 되고, <span class="math inline">\(v_m \neq 0\)</span>이므로
+<span class="math inline">\(c_m = 0\)</span>이 되어 모든 스칼라가 0이
+됩니다. 이는 선형종속이라는 가정에 모순입니다. 따라서 집합 <span
+class="math inline">\(\{v_1,
+\dots, v_m\}\)</span>은 선형독립입니다. <span
+class="math inline">\(\blacksquare\)</span></p>
+<h3 id="예시-3.1.10.-반사-변환의-고유벡터.">예시 3.1.10. 반사 변환의
+고유벡터.</h3>
+<p><span class="math inline">\(\mathbb{F}^2\)</span> 위에서 <span
+class="math inline">\(T(x,y) = (y, x)\)</span>로 정의된 선형변환을
+생각합시다. 체의 표수가 2가 아니라고 가정합니다. <span
+class="math inline">\(T(v) = \lambda v\)</span>를 풀면 <span
+class="math inline">\(x = \lambda^2 x\)</span>가 되어 고윳값은 <span
+class="math inline">\(1\)</span>과 <span
+class="math inline">\(-1\)</span>입니다. <span
+class="math inline">\(\lambda=1\)</span>에 대한 고유벡터는 <span
+class="math inline">\((1, 1)\text{,}\)</span> <span
+class="math inline">\(\lambda=-1\)</span>에 대한 고유벡터는 <span
+class="math inline">\((1, -1)\)</span>입니다. 정리 3.1.9에 의해 <span
+class="math inline">\(\{(1,1), (1,-1)\}\)</span>은 서로 다른 고윳값에
+대응하므로 선형독립임을 알 수 있습니다.</p>
+<h2 id="소절-3.1.3-선형변환의-대각화와-행렬의-대각화">소절 3.1.3
+선형변환의 대각화와 행렬의 대각화</h2>
+<p>선형변환은 벡터공간 자체에 작용하는 추상적인 사상이며, 행렬은 특정
+기저를 선택했을 때 그 작용을 숫자의 배열로 구체화한 것입니다. 대각화의
+개념 역시 이 두 층위에서 분리되어 정의되나, 본질적으로 동일합니다.</p>
+<h3 id="정의-3.1.11.-선형변환의-대각화.">정의 3.1.11. 선형변환의
+대각화.</h3>
+<p>벡터공간 <span class="math inline">\(V\)</span> 상의 선형변환 <span
+class="math inline">\(T: V \to V\)</span>에 대하여, <span
+class="math inline">\(V\)</span>의 기저 <span
+class="math inline">\(\mathcal{B}\)</span>가 <span
+class="math inline">\(T\)</span>의 고유벡터들로만 구성될 수 있을 때,
+선형변환 <span class="math inline">\(T\)</span>를 대각화 가능하다고
+한다.</p>
+<p>대각화 가능한:diagonalizable</p>
+<h3 id="보조설명-3.1.12.-대각화-정의에서-v의-차원.">보조설명 3.1.12.
+대각화 정의에서 <span class="math inline">\(V\)</span>의 차원.</h3>
+<p>정의 3.1.11의 벡터공간은 무한차원일 수 있습니다. 우리는 보통 유한차원
+벡터공간에서 대각화 가능성을 논의하지만, 무한차원 공간에서도 대각화
+개념은 유효합니다.</p>
+<h3 id="예시-3.1.13.-항등변환의-대각화.">예시 3.1.13. 항등변환의
+대각화.</h3>
+<p>예시 3.1.2의 예제에서 본 항등변환 <span
+class="math inline">\(I\)</span>를 생각합시다. <span
+class="math inline">\(V\)</span>의 임의의 기저를 선택하더라도 그 기저
+벡터들은 모두 고윳값 1에 대응하는 고유벡터입니다. 따라서 고유벡터로
+이루어진 기저가 항시 존재하므로 <span class="math inline">\(I\)</span>는
+자명하게 대각화 가능한 선형변환입니다.</p>
+<h3 id="정의-3.1.14.-행렬의-대각화.">정의 3.1.14. 행렬의 대각화.</h3>
+<p><span class="math inline">\(n \times n\)</span> 행렬 <span
+class="math inline">\(A \in M_{n \times n}(\mathbb{F})\)</span>에
+대하여, 어떤 가역행렬 <span class="math inline">\(Q \in M_{n \times
+n}(\mathbb{F})\)</span>가 존재하여 행렬곱 <span
+class="math inline">\(Q^{-1}A Q\)</span>가 대각행렬이 될 때, 행렬 <span
+class="math inline">\(A\)</span>를 대각화 가능하다고 한다.</p>
+<h3 id="예시-3.1.15.-대칭-행렬의-대각화.">예시 3.1.15. 대칭 행렬의
+대각화.</h3>
+<p><span class="math inline">\(A = \begin{pmatrix} 0 &amp; 1 \\ 1 &amp;
+0 \end{pmatrix}\)</span>라 합시다. 만약 <span class="math inline">\(Q
+= \begin{pmatrix} 1 &amp; 1 \\ 1 &amp; -1 \end{pmatrix}\)</span>를
+선택하면, <span class="math inline">\(Q^{-1} =
+\frac{1}{-2}\begin{pmatrix} -1 &amp; -1 \\ -1 &amp; 1 \end{pmatrix} =
+\begin{pmatrix} 1/2 &amp; 1/2 \\ 1/2 &amp; -1/2
+\end{pmatrix}\)</span>입니다. 직접 계산해보면 <span
+class="math inline">\(Q^{-1}A Q = \begin{pmatrix} 1 &amp; 0 \\ 0 &amp;
+-1
+\end{pmatrix}\)</span>이 되어 대각행렬이 됩니다. 따라서 <span
+class="math inline">\(A\)</span>는 대각화 가능한 행렬입니다.</p>
+<h3 id="예시-3.1.16.-무한차원-공간에서의-대각화.">예시 3.1.16. 무한차원
+공간에서의 대각화.</h3>
+<p>체 <span class="math inline">\(\mathbb{F}\)</span> 상의 다항식 공간
+<span class="math inline">\(V = \mathbb{F}[x]\)</span>에서 선형작용소
+<span class="math inline">\(T(p(x)) = p(2x)\)</span>를 정의하자. <span
+class="math inline">\(T(x^k) = 2^k x^k\)</span>이므로, 모든 음이 아닌
+정수 <span class="math inline">\(k\)</span>에 대하여 <span
+class="math inline">\(2^k\)</span>는 고윳값이며 고유공간은 <span
+class="math inline">\(E_{2^k} =
+\text{span}\{x^k\}\)</span>이다. 공간 <span
+class="math inline">\(V\)</span>의 표준기저가 <span
+class="math inline">\(\{1, x, x^2,
+\dots\}\)</span>이므로, <span class="math inline">\(V =
+\bigoplus_{k=0}^\infty E_{2^k}\)</span>가 성립한다. 명제 3.1.7에 의해
+<span class="math inline">\(T\)</span>는 대각화 가능한
+선형작용소이다.</p>
+<p>순서기저란</p>
+<p>순서기저:ordered basis</p>
+<p>벡터공간의 기저에 순서가 부여된 것을 말합니다. 통상 순서기저 <span
+class="math inline">\(\alpha\)</span>의 원소는 자연수 첨자를 이용해
+<span class="math inline">\(v_1,\cdots,v_n\)</span> 등으로 표기하고 그
+순서는 첨자 수의 순서를 따릅니다.</p>
+<h3 id="정의-3.1.17.-행렬표현.">정의 3.1.17. 행렬표현.</h3>
+<p>체 <span class="math inline">\(\mathbb{F}\)</span> 상의 유한차원
+벡터공간 <span class="math inline">\(V, W\)</span>와 선형변환 <span
+class="math inline">\(T: V \to
+W\)</span>를 합시다. <span class="math inline">\(V\)</span>와 <span
+class="math inline">\(W\)</span>의 순서기저를 각각 <span
+class="math inline">\(\alpha = \{v_1, \dots,
+v_n\}\text{,}\)</span> <span class="math inline">\(\beta = \{w_1, \dots,
+w_m\}\)</span>이라 합시다. 기저 <span
+class="math inline">\(\alpha\)</span>와 <span
+class="math inline">\(\beta\)</span>에 대한 <span
+class="math inline">\(T\)</span>의 행렬표현을 <span
+class="math inline">\([T]_\alpha^\beta\)</span>로 표기하며, 이는 <span
+class="math inline">\(j\)</span>번째 열벡터가 <span
+class="math inline">\(T(v_j)\)</span>의 기저 <span
+class="math inline">\(\beta\)</span>에 대한 좌표벡터인 <span
+class="math inline">\(m \times n\)</span> 행렬로 정의됩니다. 즉, 행렬
+<span class="math inline">\(A =
+[T]_\alpha^\beta\)</span>의 각 성분 <span class="math inline">\(A_{ij}
+\in \mathbb{F}\)</span>는 다음 방정식을 통해 유일하게 결정됩니다.</p>
+<p><span class="math display">\[\begin{equation*} T(v_j) = \sum_{i=1}^m
+A_{ij} w_i \quad (1 \le j \le n)
+\end{equation*}\]</span></p>
+<p>행렬표현:matrix representation</p>
+<h3 id="예시-3.1.18.-선형변환의-행렬표현.">예시 3.1.18. 선형변환의
+행렬표현.</h3>
+<p>선형변환 <span class="math inline">\(T: \mathbb{F}^2 \to
+\mathbb{F}^3\)</span>가 <span class="math inline">\(T(x,y) = (x+y, x-y,
+2x)\)</span>로 주어진다고 하자. <span
+class="math inline">\(\mathbb{F}^2\)</span>의 기저를 <span
+class="math inline">\(\alpha = \{e_1,
+e_2\}\text{,}\)</span> <span
+class="math inline">\(\mathbb{F}^3\)</span>의 기저를 <span
+class="math inline">\(\beta = \{f_1, f_2,
+f_3\}\)</span>인 표준기저로 선택하자.</p>
+<p><span class="math display">\[\begin{equation*} T(e_1) = T(1,0) = (1,
+1, 2) = 1f_1 + 1f_2 + 2f_3
+\end{equation*}\]</span></p>
+<p><span class="math display">\[\begin{equation*} T(e_2) = T(0,1) = (1,
+-1, 0) = 1f_1 - 1f_2 + 0f_3
+\end{equation*}\]</span></p>
+<p>따라서 기저 <span class="math inline">\(\alpha, \beta\)</span>에 대한
+<span class="math inline">\(T\)</span>의 행렬표현은 다음과 같다.</p>
+<p><span class="math display">\[\begin{equation*} [T]_\alpha^\beta =
+\begin{pmatrix} 1 &amp; 1 \\ 1 &amp; -1 \\
+2 &amp; 0 \end{pmatrix} \end{equation*}\]</span></p>
+<h3 id="명제-3.1.19.">명제 3.1.19.</h3>
+<p>체 <span class="math inline">\(\mathbb{F}\)</span> 상의 유한차원
+벡터공간 <span class="math inline">\(V, W, Z\)</span>와 순서기저 <span
+class="math inline">\(\alpha, \beta, \gamma\)</span>가 각각 주어졌다고
+하자. 두 선형변환 <span class="math inline">\(T: V \to
+W\)</span>와 <span class="math inline">\(S: W \to Z\)</span>에 대하여
+다음 등식이 성립한다.</p>
+<p><span class="math display">\[\begin{equation*} [S \circ
+T]_\alpha^\gamma = [S]_\beta^\gamma
+[T]_\alpha^\beta \end{equation*}\]</span></p>
+<p><strong>증명.</strong></p>
+<p>각 공간의 기저를 <span class="math inline">\(\alpha = \{v_1, \dots,
+v_n\}\text{,}\)</span> <span class="math inline">\(\beta =
+\{w_1, \dots, w_m\}\text{,}\)</span> <span class="math inline">\(\gamma
+= \{z_1, \dots, z_l\}\)</span>이라 하자. <span class="math inline">\(A =
+[T]_\alpha^\beta\text{,}\)</span> <span class="math inline">\(B =
+[S]_\beta^\gamma\)</span>라 두면, 행렬표현의 정의에 의해 다음이
+성립한다.</p>
+<p><span class="math display">\[\begin{equation*} T(v_j) = \sum_{k=1}^m
+A_{kj} w_k \quad (1 \le j \le n)
+\end{equation*}\]</span></p>
+<p><span class="math display">\[\begin{equation*} S(w_k) = \sum_{i=1}^l
+B_{ik} z_i \quad (1 \le k \le m)
+\end{equation*}\]</span></p>
+<p>합성변환 <span class="math inline">\(S \circ T\)</span>를 기저 벡터
+<span class="math inline">\(v_j\)</span>에 작용시킨 결과를 <span
+class="math inline">\(\gamma\)</span>에 대해 전개해 보자. <span
+class="math inline">\(S\)</span>의 선형성에 의해 다음을 얻는다.</p>
+<p><span class="math display">\[\begin{equation*} (S \circ T)(v_j) =
+S(T(v_j)) = S\left(\sum_{k=1}^m
+A_{kj} w_k\right) = \sum_{k=1}^m A_{kj} S(w_k)
+\end{equation*}\]</span></p>
+<p><span class="math display">\[\begin{equation*} = \sum_{k=1}^m A_{kj}
+\left(\sum_{i=1}^l B_{ik}
+z_i\right) = \sum_{i=1}^l \left(\sum_{k=1}^m B_{ik} A_{kj}\right) z_i
+\end{equation*}\]</span></p>
+<p>괄호 안의 식 <span class="math inline">\(\sum_{k=1}^m B_{ik}
+A_{kj}\)</span>는 행렬곱 <span class="math inline">\(BA\)</span>의 <span
+class="math inline">\((i,j)\)</span> 성분과 정확히 일치한다. 행렬표현은
+유일하므로 <span class="math inline">\([S \circ
+T]_\alpha^\gamma = BA = [S]_\beta^\gamma [T]_\alpha^\beta\)</span>가
+성립한다. <span class="math inline">\(\blacksquare\)</span></p>
+<h3 id="예시-3.1.20.-선형변환의-합성과-행렬곱.">예시 3.1.20. 선형변환의
+합성과 행렬곱.</h3>
+<p>공간 <span class="math inline">\(V = \mathbb{F}[x]_{\le 2}, W =
+\mathbb{F}[x]_{\le 1}, Z =
+\mathbb{F}^2\)</span>에 대하여 선형변환 <span
+class="math inline">\(T(p(x)) = p&#39;(x)\)</span>와 <span
+class="math inline">\(S(q(x)) =
+(q(0), q(1))\)</span>을 생각하자. 기저를 <span
+class="math inline">\(\alpha = \{1, x, x^2\}\text{,}\)</span> <span
+class="math inline">\(\beta = \{1, x\}\text{,}\)</span> <span
+class="math inline">\(\gamma = \{(1,0), (0,1)\}\)</span>로 둔다. 먼저
+<span class="math inline">\(T\)</span>의 행렬표현을 구하면 <span
+class="math inline">\(T(1)=0, T(x)=1, T(x^2)=2x\)</span>이므로 <span
+class="math inline">\([T]_\alpha^\beta = \begin{pmatrix} 0 &amp; 1 &amp;
+0 \\ 0 &amp; 0 &amp; 2
+\end{pmatrix}\)</span>이다. <span class="math inline">\(S\)</span>의
+행렬표현을 구하면 <span class="math inline">\(S(1)=(1,1),
+S(x)=(0,1)\)</span>이므로 <span class="math inline">\([S]_\beta^\gamma =
+\begin{pmatrix} 1 &amp; 0 \\ 1 &amp; 1
+\end{pmatrix}\)</span>이다. 두 행렬을 곱하면 다음과 같다.</p>
+<p><span class="math display">\[\begin{equation*} [S]_\beta^\gamma
+[T]_\alpha^\beta = \begin{pmatrix} 1
+&amp; 0 \\ 1 &amp; 1 \end{pmatrix} \begin{pmatrix} 0 &amp; 1 &amp; 0 \\
+0 &amp; 0 &amp; 2
+\end{pmatrix} = \begin{pmatrix} 0 &amp; 1 &amp; 0 \\ 0 &amp; 1 &amp; 2
+\end{pmatrix}
+\end{equation*}\]</span></p>
+<p>이제 합성변환 <span class="math inline">\((S \circ T)(p(x)) =
+S(p&#39;(x))\)</span>를 직접 <span
+class="math inline">\(\alpha\)</span>의 기저에 작용시켜 행렬표현을
+구해보자.</p>
+<p><span class="math display">\[\begin{equation*} (S \circ T)(1) = S(0)
+= (0,0) \end{equation*}\]</span></p>
+<p><span class="math display">\[\begin{equation*} (S \circ T)(x) = S(1)
+= (1,1) \end{equation*}\]</span></p>
+<p><span class="math display">\[\begin{equation*} (S \circ T)(x^2) =
+S(2x) = (0,2) \end{equation*}\]</span></p>
+<p>이를 기저 <span class="math inline">\(\gamma\)</span>에 대한 열벡터로
+나열하면 행렬 <span class="math inline">\(\begin{pmatrix} 0 &amp;
+1 &amp; 0 \\ 0 &amp; 1 &amp; 2 \end{pmatrix}\)</span>을 얻으며, 이는
+앞서 구한 행렬의 곱과 일치함을 확인할 수 있다.</p>
+<h3 id="정리-3.1.21.-대각화가능성을-행렬로-표현.">정리 3.1.21.
+대각화가능성을 행렬로 표현.</h3>
+<p>유한차원 벡터공간 <span class="math inline">\(V\)</span> 상의
+선형변환 <span class="math inline">\(T\)</span>와, 임의로 주어진 기저
+<span class="math inline">\(\alpha\)</span>에 대한 행렬 표현 <span
+class="math inline">\(A = [T]_\alpha\)</span>를 생각하자. 선형변환 <span
+class="math inline">\(T\)</span>가 대각화 가능한 것과 행렬 <span
+class="math inline">\(A\)</span>가 대각화 가능한 것은 동치이다.</p>
+<p><strong>증명.</strong></p>
+<p>(<span class="math inline">\(\implies\)</span>) <span
+class="math inline">\(T\)</span>가 대각화 가능하다고 가정합시다.
+정의 3.1.11에 의해 <span class="math inline">\(T\)</span>의 고유벡터들로
+이루어진 기저 <span class="math inline">\(\beta = \{v_1, \dots,
+v_n\}\)</span>이 존재합니다. 각 <span
+class="math inline">\(v_i\)</span>에 대해 <span
+class="math inline">\(T(v_i) = \lambda_i v_i\)</span>입니다. 이 기저
+<span class="math inline">\(\beta\)</span>에 대한 <span
+class="math inline">\(T\)</span>의 행렬 표현 <span
+class="math inline">\([T]_\beta\)</span>는 대각성분이 <span
+class="math inline">\(\lambda_i\)</span>인 대각행렬 <span
+class="math inline">\(D\)</span>가 됩니다. 행렬 표현의 기저 변환 공식에
+의해, <span class="math inline">\(\beta\)</span>에서 <span
+class="math inline">\(\alpha\)</span>로의 기저 변환 행렬을 <span
+class="math inline">\(Q =
+[I]_\beta^\alpha\)</span>라 하면 <span class="math inline">\([T]_\beta =
+Q^{-1}[T]_\alpha Q\)</span>가 성립합니다. 즉, <span
+class="math inline">\(D = Q^{-1}A Q\)</span>이므로 가역행렬 <span
+class="math inline">\(Q\)</span>가 존재하여 <span
+class="math inline">\(A\)</span>는 대각화 가능한 행렬입니다. (<span
+class="math inline">\(\impliedby\)</span>) <span class="math inline">\(A
+= [T]_\alpha\)</span>가 대각화 가능하다고 가정합시다. 정의 3.1.14에 의해
+<span class="math inline">\(D = Q^{-1}A Q\)</span>를 만족하는 대각행렬
+<span class="math inline">\(D\)</span>와 가역행렬 <span
+class="math inline">\(Q\)</span>가 존재합니다. <span
+class="math inline">\(Q\)</span>의 각 열벡터를 기저 <span
+class="math inline">\(\alpha\)</span>에 대한 좌표벡터로 가지는 <span
+class="math inline">\(V\)</span>의 새로운 벡터들의 집합을 <span
+class="math inline">\(\beta = \{u_1, \dots, u_n\}\)</span>이라 합시다.
+<span class="math inline">\(Q\)</span>가 가역이므로 <span
+class="math inline">\(\beta\)</span>는 <span
+class="math inline">\(V\)</span>의 기저가 되며, 기저 변환 행렬 <span
+class="math inline">\(Q =
+[I]_\beta^\alpha\)</span>가 됩니다. 다시 기저 변환 공식에 의해 <span
+class="math inline">\([T]_\beta =
+Q^{-1}[T]_\alpha Q = D\)</span>가 성립합니다. 행렬 <span
+class="math inline">\([T]_\beta\)</span>가 대각행렬이라는 것은 곧 <span
+class="math inline">\(\beta\)</span>의 모든 기저 벡터 <span
+class="math inline">\(u_i\)</span>가 <span class="math inline">\(T(u_i)
+=
+\lambda_i u_i\)</span>를 만족한다는 의미이므로, <span
+class="math inline">\(\beta\)</span>는 고유벡터들로 이루어진 기저입니다.
+따라서 <span class="math inline">\(T\)</span>는 대각화 가능합니다. <span
+class="math inline">\(\blacksquare\)</span></p>
+<h3 id="예시-3.1.22.-구체적인-선형변환의-대각화.">예시 3.1.22. 구체적인
+선형변환의 대각화.</h3>
+<p>선형변환 <span class="math inline">\(T(x,y) = (y,x)\)</span>의
+표준기저 <span class="math inline">\(\alpha = \{e_1, e_2\}\)</span>에
+대한 행렬은 <span class="math inline">\(A = \begin{pmatrix} 0 &amp; 1 \\
+1 &amp; 0 \end{pmatrix}\)</span>입니다. 예시 3.1.10에서 구한 고유벡터
+기저 <span class="math inline">\(\beta = \{(1,1), (1,-1)\}\)</span>를
+취합시다. 변환 행렬 <span class="math inline">\(Q = [I]_\beta^\alpha =
+\begin{pmatrix} 1 &amp; 1 \\ 1
+&amp; -1 \end{pmatrix}\)</span>이며, 이 기저를 통한 좌표 변환 결과
+대각행렬 <span class="math inline">\(D =
+\begin{pmatrix} 1 &amp; 0 \\ 0 &amp; -1 \end{pmatrix}\)</span>을
+얻습니다. 기저를 바꾸어 선형변환의 작용을 대각화하는 행위가, 대수적으로
+행렬 <span class="math inline">\(A\)</span>에 변환행렬 <span
+class="math inline">\(Q\)</span>를 곱하여 <span class="math inline">\(D
+= Q^{-1}A Q\)</span>를 만드는 행위와 일치함을 확인할 수 있습니다.</p>
+<h2 id="연습문제-3.1.4-고윳값-고유벡터-대각화-연습문제">연습문제 3.1.4
+고윳값, 고유벡터, 대각화 연습문제</h2>
+<h3 id="구체적인-선형변환의-고윳값과-고유공간.">1. 구체적인 선형변환의
+고윳값과 고유공간.</h3>
+<p>선형변환 <span class="math inline">\(T: \mathbb{F}^2 \to
+\mathbb{F}^2\)</span>가 <span class="math inline">\(T(x,y) = (2x,
+2y)\)</span>로 주어진다. <span class="math inline">\(T\)</span>의
+고윳값과 고유공간을 정의에 입각하여 직접 구하시오.</p>
+<h3 id="중요-2.-영-고윳값과-단사성.">★ 중요 2. 영 고윳값과 단사성.</h3>
+<p>체 <span class="math inline">\(\mathbb{F}\)</span> 상의 벡터공간
+<span class="math inline">\(V\)</span>와 선형변환 <span
+class="math inline">\(T: V \to V\)</span>에 대하여, 스칼라 <span
+class="math inline">\(0 \in \mathbb{F}\)</span>이 <span
+class="math inline">\(T\)</span>의 고윳값이 될 필요충분조건은 <span
+class="math inline">\(T\)</span>가 단사가 아님을 증명하시오.</p>
+<h3 id="고윳값의-거듭제곱.">3. 고윳값의 거듭제곱.</h3>
+<p>선형변환 <span class="math inline">\(T\)</span>의 고유벡터 <span
+class="math inline">\(v\)</span>가 고윳값 <span
+class="math inline">\(\lambda\)</span>에 대응할 때, 임의의 자연수 <span
+class="math inline">\(m\)</span>에 대하여 <span
+class="math inline">\(T^m(v) = \lambda^m v\)</span>임을 수학적
+귀납법으로 증명하시오.</p>
+<h3 id="중요-4.-다항식-공간에서의-고유공간.">★ 중요 4. 다항식 공간에서의
+고유공간.</h3>
+<p>다항식 공간 <span class="math inline">\(V = \mathbb{F}[x]_{\le
+2}\)</span>에서 선형변환 <span class="math inline">\(T(p(x)) = x
+p&#39;(x)\)</span>의 모든 고윳값과 각 고유공간의 기저를 구하시오.
+(표수가 2인 경우를 잊지 말고 고려하시오.)</p>
+<h3 id="중요-5.-역변환의-고윳값.">★ 중요 5. 역변환의 고윳값.</h3>
+<p>역변환이 존재하는 선형변환 <span class="math inline">\(T: V \to
+V\)</span>에 대하여 스칼라 <span
+class="math inline">\(\lambda\)</span>가 <span
+class="math inline">\(T\)</span>의 고윳값이라 하자. <span
+class="math inline">\(\lambda \neq 0\)</span>임을 보이고, <span
+class="math inline">\(\lambda^{-1}\)</span>이 역변환 <span
+class="math inline">\(T^{-1}\)</span>의 고윳값이 됨을 증명하시오.</p>
+<h3 id="교환-가능한-선형변환과-불변공간.">6. 교환 가능한 선형변환과
+불변공간.</h3>
+<p>선형변환 <span class="math inline">\(T, S: V \to V\)</span>가
+교환법칙(<span class="math inline">\(TS = ST\)</span>)을 만족한다. <span
+class="math inline">\(T\)</span>의 특정 고윳값 <span
+class="math inline">\(\lambda\)</span>에 대응하는 고유공간 <span
+class="math inline">\(E_\lambda\)</span>가 <span
+class="math inline">\(S\)</span>-불변공간임을 증명하시오.</p>
+<h3 id="중요-7.-멱영-작용소의-고윳값.">★ 중요 7. 멱영 작용소의
+고윳값.</h3>
+<p>벡터공간 <span class="math inline">\(V\)</span> 상의 선형변환 <span
+class="math inline">\(T\)</span>가 어떤 자연수 <span
+class="math inline">\(m\)</span>에 대해 <span class="math inline">\(T^m
+=
+0\)</span>을 만족하는 멱영 작용소라고 하자. <span
+class="math inline">\(T\)</span>가 가질 수 있는 유일한 고윳값은 <span
+class="math inline">\(0\)</span>뿐임을 증명하시오.</p>
+<h3 id="서로-다른-고윳값과-대각화.">8. 서로 다른 고윳값과 대각화.</h3>
+<p><span class="math inline">\(n\)</span>차원 벡터공간 <span
+class="math inline">\(V\)</span> 상의 선형변환 <span
+class="math inline">\(T\)</span>가 서로 다른 <span
+class="math inline">\(n\)</span>개의 고윳값을 가진다면, <span
+class="math inline">\(T\)</span>는 대각화 가능함을 고유벡터의
+선형독립성을 이용하여 증명하시오.</p>
+<h3 id="좌측-이동-작용소의-고윳값.">9. 좌측 이동 작용소의 고윳값.</h3>
+<p>체 <span class="math inline">\(\mathbb{F}\)</span> 상의 무한 수열
+공간 <span class="math inline">\(V =
+\mathbb{F}^{\mathbb{N}}\)</span>에서 좌측 이동 작용소 <span
+class="math inline">\(L(a_1, a_2, \dots) =
+(a_2, a_3, \dots)\)</span>를 정의하자. 체 <span
+class="math inline">\(\mathbb{F}\)</span>의 모든 원소가 <span
+class="math inline">\(L\)</span>의 고윳값이 됨을 증명하고, 각 고윳값에
+대응하는 고유공간의 차원을 구하시오.</p>
+<h2 id="추가-문제">추가 문제</h2>
+<h3 id="추가-문제-1">추가 문제 1</h3>
+<p>유한차원 복소벡터공간의 선형변환 <span
+class="math inline">\(T\)</span>가 서로 다른 <span
+class="math inline">\(n\)</span>개의 고윳값을 가지면 대각화 가능함을
+증명하시오.</p>
+<h3 id="추가-문제-2">추가 문제 2</h3>
+<p>PageRank의 power method를 <span class="math inline">\(Av=\lambda
+v\)</span> 문제로 해석하고, 확률행렬에서 지배적 고유벡터가 갖는 의미를
+설명하시오.</p>
+<h1 id="행렬식과-특성다항식">3.2 행렬식과 특성다항식</h1>
+<div class="guide-grid">
+<div class="guide-card guide-card-accent">
+<div class="guide-kicker">
+Section Lens
+</div>
+<div class="guide-title">
+행렬식은 부피 스케일이고, 특성다항식은 고유값을 찾기 위한 압축된
+지문이다.
+</div>
+<p>
+본문을 읽을 때는 정의보다 먼저 이 절이 어떤 불변량을 보존하고 압축하는지
+붙잡는다.
+</p>
+</div>
+<div class="guide-card">
+<div class="guide-kicker">
+Numerical Aside
+</div>
+<p>
+계산에서는 행렬식 자체보다 분해법과 안정성이 중요하다. fast.ai는 LU,
+pivoting, block multiplication을 통해 공식과 실제 계산의 차이를 보여
+준다.
+</p>
+</div>
+</div>
+<p>행렬식은 정사각행렬이나 선형변환의 가역성을 판별하고, 부피의 변화율을
+측정하며, 고윳값을 계산하는 핵심적인 대수적 도구입니다. 이 절에서는 서로
+다른 벡터공간들의 곱 위에서 정의되는 일반적인 다중선형함수의
+개념으로부터 출발하여 행렬식을 특정하고, 이를 바탕으로 특성다항식을
+도입하며, 대각화 가능한 필요조건을 확립합니다.</p>
+<h2 id="소절-3.2.1-다중선형함수와-교대형식">소절 3.2.1 다중선형함수와
+교대형식</h2>
+<p>가장 일반적인 형태의 다중선형함수는 여러 개의 (서로 다를 수 있는)
+벡터공간들에서 벡터를 하나씩 가져와 새로운 벡터를 만들어내는 함수로서,
+각각의 입력 슬롯에 대해 선형성을 보존합니다.</p>
+<h3 id="정의-3.2.1.-다중선형함수.">정의 3.2.1. 다중선형함수.</h3>
+<p>체 <span class="math inline">\(\mathbb{F}\)</span> 상의 <span
+class="math inline">\(n\)</span>개의 벡터공간 <span
+class="math inline">\(V_1, V_2, \dots, V_n\)</span>과 공역 벡터공간
+<span class="math inline">\(W\)</span>에 대하여, 함수 <span
+class="math inline">\(D: V_1 \times V_2 \times \dots
+\times V_n \to W\)</span>가 각 변수에 대하여 선형성을 만족할 때, 이를
+다중선형함수라고 합니다.</p>
+<p>다중선형함수:multilinear function</p>
+<p>즉, 임의의 <span class="math inline">\(1 \le i \le n\)</span>과
+스칼라 <span class="math inline">\(c \in \mathbb{F}\text{,}\)</span>
+벡터 <span class="math inline">\(v_i, u_i \in V_i\)</span>에 대하여
+(나머지 변수들은 고정된 상태에서) 다음이 성립합니다.</p>
+<p><span class="math display">\[\begin{equation*} D(v_1, \dots, v_{i-1},
+cv_i + u_i, v_{i+1}, \dots,
+v_n) = cD(v_1, \dots, v_{i-1}, v_i, v_{i+1}, \dots, v_n) + D(v_1, \dots,
+v_{i-1}, u_i, v_{i+1}, \dots, v_n) \end{equation*}\]</span></p>
+<h3 id="예시-3.2.2.-외적으로-정의된-이중선형함수.">예시 3.2.2. 외적으로
+정의된 이중선형함수.</h3>
+<p>서로 다른 차원을 가지는 두 벡터공간 <span class="math inline">\(V_1 =
+\mathbb{F}^m\text{,}\)</span> <span class="math inline">\(V_2
+= \mathbb{F}^n\)</span>과 공역 <span class="math inline">\(W = M_{m
+\times n}(\mathbb{F})\)</span>를 생각하자. 두 열벡터 <span
+class="math inline">\(u \in \mathbb{F}^m, v \in \mathbb{F}^n\)</span>에
+대하여 <span class="math inline">\(D(u, v)
+= u v^T\)</span>로 정의된 함수는 첫 번째 변수 <span
+class="math inline">\(u\)</span>와 두 번째 변수 <span
+class="math inline">\(v\)</span> 각각에 대하여 행렬 곱셈의 분배법칙을
+만족하므로 이중선형함수이다.</p>
+<p>이중선형함수:bilinear function</p>
+<p>다중선형함수 중에서도 정의역의 벡터공간들이 모두 같은 특수한
+경우(<span class="math inline">\(V_1
+= V_2 = \dots = V_n = V\)</span>)이자 공역이 스칼라 체(<span
+class="math inline">\(W = \mathbb{F}\)</span>)인 경우에 집중합니다.
+이때, 관습적으로 함수 대신 “형식”이라는 용어를 사용합니다.</p>
+<h3 id="정의-3.2.3.-교대형식.">정의 3.2.3. 교대형식.</h3>
+<p>체 <span class="math inline">\(\mathbb{F}\)</span>로 매핑되는
+다중선형함수 <span class="math inline">\(D: V \times \dots \times V
+\to \mathbb{F}\)</span>에 대하여, 인접한 두 인수가 같을 때 함수의 값이
+항등적으로 0이 되면, 즉 임의의 <span class="math inline">\(i\)</span>에
+대하여 <span class="math inline">\(v_i = v_{i+1}\)</span>일 때 <span
+class="math inline">\(D(v_1, \dots, v_n) = 0\)</span>이면, <span
+class="math inline">\(D\)</span>를 교대형식이라고 합니다.</p>
+<p>교대형식: alternating form</p>
+<h3 id="예시-3.2.4.-2차원-교대형식.">예시 3.2.4. 2차원 교대형식.</h3>
+<p><span class="math inline">\(V = \mathbb{F}^2\)</span>라 합시다. 두
+열벡터 <span class="math inline">\(v_1 = (x_1, y_1)^T, v_2 =
+(x_2, y_2)^T\)</span>를 받아 <span class="math inline">\(D(v_1, v_2) =
+x_1 y_2 - x_2 y_1\)</span>을 계산하는 함수를 생각합시다. 만약 <span
+class="math inline">\(v_1 = v_2\)</span>라면 <span
+class="math inline">\(D(v_1, v_1) = x_1 y_1 - x_1
+y_1 = 0\)</span>이므로 이는 교대형식입니다.</p>
+<p>보조정리 3.2.5. 교대형식의 반대칭성.</p>
+<p><span class="math inline">\(D\)</span>가 교대형식이면, 임의의 두
+인접한 인수의 자리를 바꿀 때 함수의 부호가 반대로 바뀐다. 즉, <span
+class="math inline">\(D(\dots, v_i, v_{i+1}, \dots) = -D(\dots,
+v_{i+1}, v_i, \dots)\)</span>가 성립한다.</p>
+<p><strong>증명.</strong></p>
+<p><span class="math inline">\(D\)</span>가 교대형식이고 다중선형임을
+합시다. <span class="math inline">\(i\)</span>번째와 <span
+class="math inline">\(i+1\)</span>번째 인수에 벡터 <span
+class="math inline">\(v_i + v_{i+1}\)</span>을 대입합시다.</p>
+<p><span class="math display">\[\begin{equation*} 0 = D(\dots, v_i +
+v_{i+1}, v_i + v_{i+1}, \dots)
+\end{equation*}\]</span></p>
+<p>다중선형성에 의해 우변을 전개하면 다음과 같습니다.</p>
+<p><span class="math display">\[\begin{equation*} 0 = D(\dots, v_i, v_i,
+\dots) + D(\dots, v_i, v_{i+1},
+\dots) + D(\dots, v_{i+1}, v_i, \dots) + D(\dots, v_{i+1}, v_{i+1},
+\dots) \end{equation*}\]</span></p>
+<p>교대형식의 정의에 의해 첫 번째 항과 네 번째 항은 0입니다. 따라서</p>
+<p><span class="math display">\[\begin{equation*} 0 = D(\dots, v_i,
+v_{i+1}, \dots) + D(\dots, v_{i+1},
+v_i, \dots) \end{equation*}\]</span></p>
+<p>이므로 <span class="math inline">\(D(\dots, v_i, v_{i+1}, \dots) =
+-D(\dots, v_{i+1}, v_i,
+\dots)\)</span>가 성립합니다.</p>
+<h3 id="예시-3.2.6.-반대칭성의-확인.">예시 3.2.6. 반대칭성의 확인.</h3>
+<p>예시 3.2.4의 <span class="math inline">\(D(v_1, v_2) = x_1 y_2 - x_2
+y_1\)</span>에서 인수의 순서를 바꾸어 <span class="math inline">\(D(v_2,
+v_1)\)</span>을 계산합니다 <span class="math inline">\(x_2 y_1 - x_1 y_2
+= -(x_1 y_2 -
+x_2 y_1) = -D(v_1, v_2)\)</span>가 됨을 확인할 수 있습니다.</p>
+<h2 id="소절-3.2.2-행렬식의-정의와-특성화">소절 3.2.2 행렬식의 정의와
+특성화</h2>
+<p>행렬식은 <span class="math inline">\(n \times n\)</span> 행렬의
+열벡터들을 입력으로 받아 스칼라를 출력하는 교대형식입니다. 행렬식의
+기초적 성질을 유도하기 위해 필요한 치환에 관련된 사실들은 부록을
+참조하십시오.</p>
+<h3 id="정리-3.2.7.-행렬식의-존재성과-유일성.">정리 3.2.7. 행렬식의
+존재성과 유일성.</h3>
+<p><span class="math inline">\(n \times n\)</span> 행렬의 각 열벡터를
+변수로 받는 함수 <span class="math inline">\(D: \mathbb{F}^n
+\times \dots \times \mathbb{F}^n \to \mathbb{F}\)</span> 중에서 다음 세
+가지 성질을 모두 만족하는 함수는 유일하게 존재한다.</p>
+<ul>
+<li><p>다중선형성: 각 열벡터에 대하여 선형이다.</p></li>
+<li><p>교대성: 인접한 두 열벡터가 같으면 값은 0이다.</p></li>
+<li><p>정규화: <span class="math inline">\(D(e_1, \dots, e_n) =
+1\)</span>이다. (단, <span class="math inline">\(e_i\)</span>는
+표준기저벡터)</p></li>
+</ul>
+<p><strong>증명.</strong></p>
+<p>“유일성”: 함수 <span class="math inline">\(D\)</span>가 위 세 성질을
+만족한다고 가정하자. 행렬 <span class="math inline">\(A\)</span>의 <span
+class="math inline">\(j\)</span>번째 열벡터를 <span
+class="math inline">\(v_j\)</span>라 하고, 이를 표준기저들의 선형결합
+<span class="math inline">\(v_j =
+\sum_{i=1}^n A_{ij} e_i\)</span>로 표현하자. 다중선형성을 반복 적용하면
+<span class="math inline">\(D(A)
+= D(v_1, \dots, v_n)\)</span>는 다음과 같이 전개된다.</p>
+<p><span class="math display">\[\begin{equation*} D(A) = \sum_{i_1=1}^n
+\dots \sum_{i_n=1}^n A_{i_1 1}
+\dots A_{i_n n} D(e_{i_1}, \dots, e_{i_n}) \end{equation*}\]</span></p>
+<p>교대성(및 반대칭성)에 의해 인덱스 <span class="math inline">\(i_1,
+\dots, i_n\)</span> 중 중복되는 것이 하나라도 있으면 <span
+class="math inline">\(D(e_{i_1}, \dots, e_{i_n}) = 0\)</span>이다.
+따라서 중복이 없는 경우, 즉 인덱스가 <span class="math inline">\(1,
+\dots, n\)</span>의 순열 <span class="math inline">\(\sigma\)</span>를
+이루는 경우만 남는다.</p>
+<p><span class="math display">\[\begin{equation*} D(A) = \sum_{\sigma
+\in S_n} A_{\sigma(1) 1} \dots
+A_{\sigma(n) n} D(e_{\sigma(1)}, \dots, e_{\sigma(n)})
+\end{equation*}\]</span></p>
+<p>반대칭성을 적용하여 순열 <span
+class="math inline">\(\sigma\)</span>를 항등순열로 되돌리려면 부호 함수
+<span class="math inline">\(\text{sgn}(\sigma)\)</span>가 곱해진다.</p>
+<p><span class="math display">\[\begin{equation*} D(A) = \sum_{\sigma
+\in S_n} \text{sgn}(\sigma)
+A_{\sigma(1) 1} \dots A_{\sigma(n) n} D(e_1, \dots, e_n)
+\end{equation*}\]</span></p>
+<p>정규화 조건에 의해 <span class="math inline">\(D(e_1, \dots, e_n) =
+1\)</span>이므로, <span class="math inline">\(D(A)\)</span>의 값은 행렬
+<span class="math inline">\(A\)</span>의 성분들에 의해 유일하게
+결정된다.</p>
+<p>“존재성”: 위 전개 과정에서 유도된 식 <span class="math inline">\(D(A)
+= \sum_{\sigma \in S_n}
+\text{sgn}(\sigma) A_{\sigma(1) 1} \dots A_{\sigma(n) n}\)</span>으로
+함수를 정의하면, 이 함수가 다중선형성, 교대성, 정규화를 모두 만족함을
+대수적으로 검증할 수 있다. <span
+class="math inline">\(\blacksquare\)</span></p>
+<h3 id="정의-3.2.8.-행렬식.">정의 3.2.8. 행렬식.</h3>
+<p>정리정리 3.2.7에서 특성화된 유일한 함수 <span
+class="math inline">\(D(A)\)</span>를 행렬 <span
+class="math inline">\(A\)</span>의 행렬식이라 하고, <span
+class="math inline">\(\det(A)\)</span>로 표기한다.</p>
+<h3 id="예시-3.2.9.-22-행렬의-행렬식.">예시 3.2.9. 2×2 행렬의
+행렬식.</h3>
+<p><span class="math inline">\(A = \begin{pmatrix} a &amp; b \\ c &amp;
+d \end{pmatrix}\)</span>의 행렬식을 계산하자. 열벡터 <span
+class="math inline">\(v_1 = a e_1 + c e_2, v_2 = b e_1 + d
+e_2\)</span>이다.</p>
+<p><span class="math inline">\(\det(A) = \det(a e_1 + c e_2, b e_1 + d
+e_2)\)</span></p>
+<p><span class="math inline">\(= ab \det(e_1, e_1) + ad \det(e_1, e_2) +
+cb \det(e_2, e_1) + cd
+\det(e_2, e_2)\)</span></p>
+<p>교대성에 의해 <span class="math inline">\(\det(e_1, e_1) = \det(e_2,
+e_2) = 0\)</span>이고, 반대칭성에 의해 <span
+class="math inline">\(\det(e_2, e_1) = -\det(e_1, e_2)\)</span>이다.
+정규화에 의해 <span class="math inline">\(\det(e_1,
+e_2) = 1\)</span>이므로, <span class="math inline">\(\det(A) = ad -
+bc\)</span>이다.</p>
+<h3 id="명제-3.2.10.-행렬식의-곱셈-성질.">명제 3.2.10. 행렬식의 곱셈
+성질.</h3>
+<p>두 행렬 <span class="math inline">\(A, B \in M_{n \times
+n}(\mathbb{F})\)</span>에 대하여, <span class="math inline">\(\det(AB) =
+\det(A)\det(B)\)</span>가 성립한다.</p>
+<p><strong>증명.</strong></p>
+<p>행렬 <span class="math inline">\(B\)</span>가 가역이 아니라고
+가정하자. 그러면 <span class="math inline">\(AB\)</span> 역시 가역이
+아니므로 두 행렬의 열벡터들은 모두 선형종속이다. 선형종속인 열벡터들의
+다중선형 교대형식 값은 항시 0이므로 <span class="math inline">\(\det(AB)
+= 0\)</span>이고 <span class="math inline">\(\det(B) =
+0\)</span>이다. 따라서 <span class="math inline">\(0 = 0\)</span>으로
+등식이 성립한다.</p>
+<p>행렬 <span class="math inline">\(B\)</span>가 가역이라 가정하자(<span
+class="math inline">\(\det(B) \neq 0\)</span>). 새로운 함수 <span
+class="math inline">\(f:
+M_{n \times n}(\mathbb{F}) \to \mathbb{F}\)</span>를 <span
+class="math inline">\(f(A) =
+\frac{\det(AB)}{\det(B)}\)</span>로 정의하자. 함수 <span
+class="math inline">\(f\)</span>가 인접한 열이 같은 행렬에서 0을
+반환하고 각 열에 대해 다중선형성을 만족함은 행렬곱의 성질과 행렬식의
+선형성으로부터 즉각적으로 유도된다. 또한 <span
+class="math inline">\(f(I) =
+\frac{\det(B)}{\det(B)} = 1\)</span>이므로 정규화 조건도 만족한다.
+정리정리 3.2.7의 행렬식의 유일성에 의해 <span class="math inline">\(f(A)
+= \det(A)\)</span>가 되어야만 한다. 따라서 <span
+class="math inline">\(\det(AB) = \det(A)\det(B)\)</span>이다. <span
+class="math inline">\(\blacksquare\)</span></p>
+<h3 id="예시-3.2.11.-가역행렬의-행렬식.">예시 3.2.11. 가역행렬의
+행렬식.</h3>
+<p><span class="math inline">\(\det(I) = \det(A A^{-1}) =
+\det(A)\det(A^{-1}) = 1\)</span>이므로, 가역행렬 <span
+class="math inline">\(A\)</span>에 대하여 <span
+class="math inline">\(\det(A^{-1}) = \frac{1}{\det(A)}\)</span>가
+성립함을 직관적으로 확인할 수 있다.</p>
+<h2 id="소절-3.2.3-특성다항식">소절 3.2.3 특성다항식</h2>
+<h3 id="정의-3.2.12.-특성다항식.">정의 3.2.12. 특성다항식.</h3>
+<p>유한차원 벡터공간 <span class="math inline">\(V\)</span> 상의
+선형변환 <span class="math inline">\(T\)</span>와 그 행렬표현 <span
+class="math inline">\(A \in M_{n
+\times n}(\mathbb{F})\)</span>를 생각하자. 새로운 변수 <span
+class="math inline">\(x\)</span>에 대하여 다항식환 <span
+class="math inline">\(\mathbb{F}[x]\)</span>의 원소로 정의되는 다항식
+<span class="math inline">\(p_T(x) = \det(xI - A)\)</span>를 변환 <span
+class="math inline">\(T\)</span> (또는 행렬 <span
+class="math inline">\(A\)</span>)의 특성다항식이라고 한다.</p>
+<h3 id="예시-3.2.13.-특성다항식의-계산.">예시 3.2.13. 특성다항식의
+계산.</h3>
+<p><span class="math inline">\(A = \begin{pmatrix} 2 &amp; 1 \\ 0 &amp;
+3 \end{pmatrix}\)</span>의 특성다항식을 구하자.</p>
+<p><span class="math inline">\(xI - A = \begin{pmatrix} x-2 &amp; -1 \\
+0 &amp; x-3 \end{pmatrix}\)</span></p>
+<p><span class="math inline">\(p_A(x) = \det(xI - A) = (x-2)(x-3) -
+(-1)(0) = x^2 - 5x + 6\)</span>이다.</p>
+<h3 id="정리-3.2.14.-고윳값과-특성다항식의-근.">정리 3.2.14. 고윳값과
+특성다항식의 근.</h3>
+<p>스칼라 <span class="math inline">\(\lambda \in \mathbb{F}\)</span>가
+선형변환 <span class="math inline">\(T\)</span>의 고윳값이 될
+필요충분조건은 특성다항식의 근, 즉 <span
+class="math inline">\(p_T(\lambda) = 0\)</span>이 되는 것이다.</p>
+<p><strong>증명.</strong></p>
+<p><span class="math inline">\(\lambda\)</span>가 고윳값일
+필요충분조건은 <span class="math inline">\(T(v) = \lambda v\)</span>를
+만족하는 영이 아닌 벡터 <span class="math inline">\(v\)</span>가
+존재하는 것이다. 이는 식 <span class="math inline">\((\lambda I - T)(v)
+=
+0\)</span>과 동치이며, 변환 <span class="math inline">\(\lambda I -
+T\)</span>가 단사가 아님을 의미한다. 유한차원 공간에서 선형변환이 단사가
+아닌 것은 그 행렬표현 <span class="math inline">\(\lambda I -
+A\)</span>가 비가역인 것과 동치이며, 행렬이 비가역일 필요충분조건은 그
+행렬식이 0인 것이다. 따라서 <span class="math inline">\(\det(\lambda I -
+A) = p_T(\lambda) = 0\)</span>이다. <span
+class="math inline">\(\blacksquare\)</span></p>
+<h3 id="예시-3.2.15.-특성다항식의-근과-고윳값.">예시 3.2.15.
+특성다항식의 근과 고윳값.</h3>
+<p>예시 3.2.13의 행렬 <span class="math inline">\(A\)</span>에서
+특성다항식 <span class="math inline">\(p_A(x) = (x-2)(x-3)\)</span>의
+근은 2와 3이다. 정리정리 3.2.14에 따라 행렬 <span
+class="math inline">\(A\)</span>의 고윳값은 오직 2와 3뿐이다.</p>
+<h2 id="소절-3.2.4-특성다항식을-이용한-대각화-필요조건">소절 3.2.4
+특성다항식을 이용한 대각화 필요조건</h2>
+<h3 id="정의-3.2.16.-대수적-중복도와-기하적-중복도.">정의 3.2.16. 대수적
+중복도와 기하적 중복도.</h3>
+<p>선형변환 <span class="math inline">\(T\)</span>의 고윳값 <span
+class="math inline">\(\lambda\)</span>에 대하여, 다항식 <span
+class="math inline">\(p_T(x)\)</span>가 인수로 가지는 <span
+class="math inline">\((x-\lambda)\)</span>의 최대 거듭제곱 횟수 <span
+class="math inline">\(m\)</span>을 <span
+class="math inline">\(\lambda\)</span>의 대수적 중복도라 한다. 한편,
+<span class="math inline">\(\lambda\)</span>에 대응하는 고유공간 <span
+class="math inline">\(E_\lambda\)</span>의 차원 <span
+class="math inline">\(\dim(E_\lambda)\)</span>를 <span
+class="math inline">\(\lambda\)</span>의 기하적 중복도라 한다.</p>
+<h3 id="예시-3.2.17.-대수적-중복도와-기하적-중복도의-비교.">예시 3.2.17.
+대수적 중복도와 기하적 중복도의 비교.</h3>
+<p><span class="math inline">\(A = \begin{pmatrix} 2 &amp; 1 \\ 0 &amp;
+2 \end{pmatrix}\)</span>의 특성다항식은 <span
+class="math inline">\(p_A(x) = (x-2)^2\)</span>이다. 고윳값 2의 대수적
+중복도는 2이다. 고유공간 <span class="math inline">\(E_2\)</span>를
+구하기 위해 <span class="math inline">\((2I - A)v = 0\)</span>을 풀면
+<span class="math inline">\(v = (x_1, 0)^T\)</span> 형태만 가능하므로
+<span class="math inline">\(\dim(E_2) = 1\)</span>이다. 따라서 기하적
+중복도는 1이다.</p>
+<h3 id="명제-3.2.18.-중복도의-대소-관계.">명제 3.2.18. 중복도의 대소
+관계.</h3>
+<p>임의의 고윳값 <span class="math inline">\(\lambda\)</span>에 대하여,
+그 기하적 중복도는 대수적 중복도보다 작거나 같다.</p>
+<p><strong>증명.</strong></p>
+<p>고윳값 <span class="math inline">\(\lambda_0\)</span>의 기하적
+중복도를 <span class="math inline">\(k\)</span>라 하자. 고유공간 <span
+class="math inline">\(E_{\lambda_0}\)</span>의 기저 <span
+class="math inline">\(\{v_1, \dots, v_k\}\)</span>를 선택하고, 이를
+확장하여 <span class="math inline">\(V\)</span>의 전체 기저 <span
+class="math inline">\(\beta\)</span>를 구성한다. 기저 <span
+class="math inline">\(\beta\)</span>에 대한 <span
+class="math inline">\(T\)</span>의 행렬표현은 다음과 같은 블록
+상삼각행렬 형태를 지닌다.</p>
+<p><span class="math display">\[\begin{equation*} [T]_\beta =
+\begin{pmatrix} \lambda_0 I_k &amp; B \\ 0 &amp; C
+\end{pmatrix} \end{equation*}\]</span></p>
+<p>특성다항식은 기저 선택과 무관하므로 위 블록 행렬을 이용해 계산할 수
+있다.</p>
+<p><span class="math display">\[\begin{equation*} p_T(x) =
+\det\begin{pmatrix} (x-\lambda_0)I_k &amp; -B \\
+0 &amp; xI_{n-k} - C \end{pmatrix} = \det((x-\lambda_0)I_k)
+\det(xI_{n-k} -
+C) = (x-\lambda_0)^k p_C(x) \end{equation*}\]</span></p>
+<p>다항식 <span class="math inline">\(p_T(x)\)</span>가 적어도 인자
+<span class="math inline">\((x-\lambda_0)^k\)</span>를 포함하므로,
+대수적 중복도는 최소한 <span class="math inline">\(k\)</span> 이상이다.
+<span class="math inline">\(\blacksquare\)</span></p>
+<h3 id="정리-3.2.19.-대각화의-필요조건.">정리 3.2.19. 대각화의
+필요조건.</h3>
+<p>유한차원 벡터공간 <span class="math inline">\(V\)</span> 상의
+선형변환 <span class="math inline">\(T\)</span>가 대각화 가능하면,
+특성다항식 <span class="math inline">\(p_T(x)\)</span>는 <span
+class="math inline">\(\mathbb{F}\)</span> 위에서 일차식의 곱으로 완전히
+분해되고, 각각의 고윳값에 대하여 기하적 중복도와 대수적 중복도가 정확히
+일치한다.</p>
+<p><strong>증명.</strong></p>
+<p><span class="math inline">\(T\)</span>가 대각화 가능하므로,
+고유벡터들로만 구성된 <span class="math inline">\(V\)</span>의 기저
+<span class="math inline">\(\beta\)</span>가 존재한다. 기저 <span
+class="math inline">\(\beta\)</span>에 대한 <span
+class="math inline">\(T\)</span>의 행렬표현 <span
+class="math inline">\(A =
+[T]_\beta\)</span>는 대각행렬이며, 대각성분들은 고윳값 <span
+class="math inline">\(\lambda_1, \dots,
+\lambda_n\)</span>이다.</p>
+<p><span class="math inline">\(A\)</span>의 특성다항식을 계산하면 <span
+class="math inline">\(p_T(x) = \det(xI - A) =
+(x-\lambda_1)\dots(x-\lambda_n)\)</span>이다. 이는 특성다항식이 일차식의
+곱으로 완전히 분해됨을 증명한다.</p>
+<p>동일한 고윳값 <span class="math inline">\(\lambda\)</span>가
+대각성분에 나타나는 횟수를 <span class="math inline">\(m\)</span>이라
+하면 이는 명백히 대수적 중복도이다. 행렬 <span
+class="math inline">\(A\)</span>가 대각행렬이므로 변환 <span
+class="math inline">\(\lambda I - T\)</span>의 행렬표현은 대각성분 중
+<span class="math inline">\(m\)</span>개가 0이고 나머지는 0이 아닌
+대각행렬이 된다. 따라서 이 변환의 핵(고유공간 <span
+class="math inline">\(E_\lambda\)</span>)의 차원은 정확히 <span
+class="math inline">\(m\)</span>이 되어 기하적 중복도와 대수적 중복도가
+일치한다. <span class="math inline">\(\blacksquare\)</span></p>
+<h3 id="예시-3.2.20.-대각화-불가능한-행렬.">예시 3.2.20. 대각화 불가능한
+행렬.</h3>
+<p>명제명제 3.2.18의 예제에서 본 행렬 <span class="math inline">\(A =
+\begin{pmatrix} 2 &amp; 1 \\ 0 &amp; 2
+\end{pmatrix}\)</span>는 고윳값 2에 대해 대수적 중복도는 2이지만 기하적
+중복도는 1이었다. 두 중복도가 일치하지 않으므로 정리정리 3.2.19의 대각화
+필요조건을 위반하며, 따라서 이 행렬은 대각화 불가능하다.</p>
+<h2 id="연습문제-3.2.5-연습문제">연습문제 3.2.5 연습문제</h2>
+<h3 id="중요-1.-이중선형성-보이기.">★ 중요 1. 이중선형성 보이기.</h3>
+<p>체 <span class="math inline">\(\mathbb{F}\)</span> 상의 벡터공간
+<span class="math inline">\(V_1 = \mathbb{F}^m\text{,}\)</span> <span
+class="math inline">\(V_2 =
+\mathbb{F}^n\)</span>과 행렬 공간 <span class="math inline">\(W = M_{m
+\times n}(\mathbb{F})\)</span>에 대하여, 함수 <span
+class="math inline">\(f: V_1 \times V_2 \to W\)</span>를 <span
+class="math inline">\(f(u, v) = u v^T\)</span> (단, <span
+class="math inline">\(u, v\)</span>는 열벡터)로 정의하자. <span
+class="math inline">\(f\)</span>가 일반화된 다중선형함수(이중선형함수)의
+정의를 만족함을 증명하시오.</p>
+<h3 id="비가역성과-영-고윳값.">2. 비가역성과 영 고윳값.</h3>
+<p>행렬 <span class="math inline">\(A\)</span>가 비가역일 필요충분조건은
+스칼라 0이 <span class="math inline">\(A\)</span>의 고윳값이 되는 것임을
+특성다항식의 상수항 성질을 이용하여 증명하시오.</p>
+<h3 id="중요-3.-대수적-중복도와-기하적-중복도의-범위.">★ 중요 3. 대수적
+중복도와 기하적 중복도의 범위.</h3>
+<p>주어진 행렬 <span class="math inline">\(A \in M_{3 \times
+3}(\mathbb{F})\)</span>의 특성다항식이 <span
+class="math inline">\(p_A(x)
+= (x-1)^2(x+2)\)</span>일 때, 고윳값 1의 대수적 중복도와 가능한 기하적
+중복도의 범위를 명시하시오.</p>
+<h3 id="미분연산자의-대각화-가능성.">4. 미분연산자의 대각화 가능성.</h3>
+<p>다항식 공간 <span class="math inline">\(V = \mathbb{F}[x]_{\le
+2}\)</span>에서 미분연산자 <span class="math inline">\(D(p(x)) =
+p&#39;(x)\)</span>의 기저 <span class="math inline">\(\{1, x,
+x^2\}\)</span>에 대한 특성다항식을 구하고, 정리 정리 3.2.19을 바탕으로
+<span class="math inline">\(D\)</span>가 대각화 가능한지 판별하시오.</p>
+<h3 id="상삼각행렬의-행렬식.">5. 상삼각행렬의 행렬식.</h3>
+<p>상삼각행렬의 행렬식이 주대각성분들의 곱이 됨을 행렬식의 다중선형성과
+교대성을 이용하여 귀납적으로 증명하시오.</p>
+<h3 id="중요-6.-역행렬의-특성다항식.">★ 중요 6. 역행렬의
+특성다항식.</h3>
+<p>역행렬이 존재하는 행렬 <span class="math inline">\(A\)</span>에
+대하여, <span class="math inline">\(A^{-1}\)</span>의 특성다항식 <span
+class="math inline">\(p_{A^{-1}}(x)\)</span>를 <span
+class="math inline">\(A\)</span>의 특성다항식 <span
+class="math inline">\(p_A(x)\)</span>를 이용하여 표현하시오.</p>
+<h3 id="닮음-행렬의-특성다항식.">7. 닮음 행렬의 특성다항식.</h3>
+<p>두 행렬 <span class="math inline">\(A, B\)</span>가 닮음 관계에
+있으면(즉, 가역행렬 <span class="math inline">\(P\)</span>에 대해 <span
+class="math inline">\(B =
+P^{-1}AP\)</span>) 서로 같은 특성다항식을 가짐을 명제 명제 3.2.10를 통해
+증명하시오.</p>
+<h3 id="중요-8.-중근을-가지는-대각화-가능한-행렬.">★ 중요 8. 중근을
+가지는 대각화 가능한 행렬.</h3>
+<p><span class="math inline">\(\mathbb{F}\)</span> 상에서 대각화
+가능하지만 특성다항식이 중근을 가지는 <span class="math inline">\(3
+\times 3\)</span> 행렬의 구체적인 예시를 하나 제시하고 그 이유를
+설명하시오.</p>
+<h3 id="블록-상삼각행렬의-특성다항식.">9. 블록 상삼각행렬의
+특성다항식.</h3>
+<p><span class="math inline">\(n \times n\)</span> 블록 상삼각행렬 <span
+class="math inline">\(M = \begin{pmatrix} A &amp; B \\ 0 &amp; C
+\end{pmatrix}\)</span> (단, <span class="math inline">\(A, C\)</span>는
+각각 정사각행렬)이 주어졌을 때, <span class="math inline">\(M\)</span>의
+특성다항식이 <span class="math inline">\(p_M(x) =
+p_A(x)p_C(x)\)</span>가 됨을 정리 정리 3.2.7의 존재성 부분을 바탕으로
+엄밀하게 증명하시오.</p>
+<h3 id="회전변환의-특성다항식과-확장체.">10. 회전변환의 특성다항식과
+확장체.</h3>
+<p>체 <span class="math inline">\(\mathbb{F} = \mathbb{R}\)</span>
+위에서 <span class="math inline">\(A = \begin{pmatrix} 0 &amp; -1 \\ 1
+&amp; 0 \end{pmatrix}\)</span>의 특성다항식을 구하시오. 이 특성다항식이
+<span class="math inline">\(\mathbb{R}\)</span> 위에서 일차식으로
+분해되지 않음을 보이고, 만약 체를 <span class="math inline">\(\mathbb{F}
+= \mathbb{C}\)</span>로 확장한다면 기하적 중복도와 대수적 중복도가
+어떻게 변화하는지 논증하여 대각화 가능성을 비교 분석하시오.</p>
+<h2 id="추가-문제-3">추가 문제</h2>
+<h3 id="추가-문제-1-1">추가 문제 1</h3>
+<p><span class="math inline">\(2\times2\)</span> 행렬 <span
+class="math inline">\(A\)</span>에 대하여 <span
+class="math inline">\(p_A(t)=t^2-\operatorname{tr}(A)t+\det(A)\)</span>임을
+직접 계산하시오.</p>
+<h3 id="추가-문제-2-1">추가 문제 2</h3>
+<p>수치계산에서 <span class="math inline">\(\det(A)=0\)</span> 판정보다
+조건수나 분해법이 더 신뢰되는 이유를 예시와 함께 설명하시오.</p>
+<h1 id="케일리-해밀턴-정리와-최소다항식">3.3 케일리-해밀턴 정리와
+최소다항식</h1>
+<div class="guide-grid">
+<div class="guide-card guide-card-accent">
+<div class="guide-kicker">
+Section Lens
+</div>
+<div class="guide-title">
+케일리-해밀턴은 행렬이 자기 특성다항식을 만족한다는 압축 법칙이다.
+</div>
+<p>
+본문을 읽을 때는 정의보다 먼저 이 절이 어떤 불변량을 보존하고 압축하는지
+붙잡는다.
+</p>
+</div>
+<div class="guide-card">
+<div class="guide-kicker">
+Numerical Aside
+</div>
+<p>
+행렬다항식은 Krylov 방법, power method, Arnoldi iteration의 언어와
+맞닿아 있다. 큰 행렬에서는 벡터에 반복 적용하며 정보를 뽑아낸다.
+</p>
+</div>
+</div>
+<p>이 절에서는 특성방정식 내용을 심화하여 케일리-해밀턴 정리와
+최소다항식에 대해 알아봅니다. 그 과정에서 사용될 수반행렬과 크라메르
+공식에 대해 먼저 알아봅시다.</p>
+<h2 id="소절-3.3.1-수반행렬과-크라메르-공식">소절 3.3.1 수반행렬과
+크라메르 공식</h2>
+<p>크라메르 공식과 수반행렬앞서 케일리-해밀턴 정리의 증명에서 핵심적인
+역할을 하게 될 수반행렬 항등식은, 행렬식의 여인수 전개를 활용하여
+역행렬과 연립일차방정식의 해를 명시적인 공식으로 표현할 수 있게
+해줍니다.</p>
+<h3 id="정의-3.3.1.-수반행렬.">정의 3.3.1. 수반행렬.</h3>
+<p>체 <span class="math inline">\(\mathbb{F}\)</span> 상의 행렬 <span
+class="math inline">\(A \in M_{n \times n}(\mathbb{F})\)</span>에
+대하여, <span class="math inline">\(A\)</span>의 <span
+class="math inline">\(i\)</span>행과 <span
+class="math inline">\(j\)</span>열을 제거한 <span
+class="math inline">\((n-1) \times (n-1)\)</span> 부분행렬의 행렬식을
+<span class="math inline">\(M_{ij}\)</span>라 하자. 이때 <span
+class="math inline">\(C_{ij} = (-1)^{i+j}
+M_{ij}\)</span>를 성분 <span class="math inline">\(A_{ij}\)</span>에
+대한 여인수라 한다. 여인수들을 성분으로 하는 행렬의 전치행렬을 <span
+class="math inline">\(A\)</span>의 수반행렬이라 하고 <span
+class="math inline">\(\text{adj}(A)\)</span>로 표기한다. 즉, <span
+class="math inline">\(\text{adj}(A)\)</span>의 <span
+class="math inline">\(i\)</span>행 <span
+class="math inline">\(j\)</span>열 성분은 <span
+class="math inline">\(C_{ji}\)</span>이다.</p>
+<h3 id="정리-3.3.2.-수반행렬-항등식.">정리 3.3.2. 수반행렬 항등식.</h3>
+<p>임의의 정사각행렬 <span class="math inline">\(A \in M_{n \times
+n}(\mathbb{F})\)</span>에 대하여 다음 등식이 성립한다.</p>
+<p><span class="math display">\[\begin{equation*} A \text{adj}(A) =
+\text{adj}(A) A = \det(A) I
+\end{equation*}\]</span></p>
+<p><strong>증명.</strong></p>
+<p>행렬곱 <span class="math inline">\(A \text{adj}(A)\)</span>의 <span
+class="math inline">\((i, j)\)</span> 성분을 계산해 보자. 행렬곱의
+정의와 수반행렬의 정의에 의해 이 성분은 다음과 같이 전개된다.</p>
+<p><span class="math display">\[\begin{equation*} \sum_{k=1}^n A_{ik}
+(\text{adj}(A))_{kj} =
+\sum_{k=1}^n A_{ik} C_{jk} \end{equation*}\]</span></p>
+<p>만약 <span class="math inline">\(i = j\)</span>라면, 위 식은 행렬
+<span class="math inline">\(A\)</span>의 <span
+class="math inline">\(i\)</span>번째 행에 대한 여인수 전개와 정확히
+일치하므로 그 값은 <span class="math inline">\(\det(A)\)</span>가
+된다.</p>
+<p>만약 <span class="math inline">\(i \neq j\)</span>라면, 위 식은 행렬
+<span class="math inline">\(A\)</span>에서 <span
+class="math inline">\(j\)</span>번째 행을 <span
+class="math inline">\(i\)</span>번째 행의 복사본으로 대체하여 만든
+새로운 행렬의 <span class="math inline">\(j\)</span>번째 행에 대한
+여인수 전개와 같다. 이 새로운 행렬은 똑같은 행을 두 개 가지게 되므로
+교대성에 의해 행렬식은 항등적으로 0이 된다.</p>
+<p>따라서 <span class="math inline">\(A \text{adj}(A)\)</span>의
+대각성분은 모두 <span class="math inline">\(\det(A)\)</span>이고 나머지
+성분은 모두 0이 되어 <span class="math inline">\(\det(A) I\)</span>가
+된다. 우측 곱인 <span class="math inline">\(\text{adj}(A) A\)</span>
+역시 열에 대한 여인수 전개를 통해 동일하게 증명된다.</p>
+<h3 id="예시-3.3.3.-22-행렬의-수반행렬.">예시 3.3.3. 2×2 행렬의
+수반행렬.</h3>
+<p>행렬 <span class="math inline">\(A = \begin{pmatrix} a &amp; b \\ c
+&amp; d \end{pmatrix}\)</span>의 수반행렬을 구해보자. <span
+class="math inline">\(C_{11} = d\text{,}\)</span> <span
+class="math inline">\(C_{12} = -c\text{,}\)</span> <span
+class="math inline">\(C_{21} =
+-b\text{,}\)</span> <span class="math inline">\(C_{22} =
+a\)</span>이므로, 이를 행렬로 구성하고 전치하면 <span
+class="math inline">\(\text{adj}(A) = \begin{pmatrix} d &amp; -b \\ -c
+&amp; a \end{pmatrix}\)</span>가 된다.</p>
+<p>직접 곱해보면 <span class="math inline">\(A \text{adj}(A) =
+\begin{pmatrix} a &amp; b \\ c &amp; d
+\end{pmatrix} \begin{pmatrix} d &amp; -b \\ -c &amp; a \end{pmatrix} =
+\begin{pmatrix} ad-bc &amp; 0 \\ 0 &amp; ad-bc \end{pmatrix} =
+(ad-bc)I\)</span>가 되어 정리가 성립함을 확인할 수 있다. 역행렬이 존재할
+조건인 <span class="math inline">\(\det(A) = ad-bc
+\neq 0\)</span>이 성립하면, <span class="math inline">\(A^{-1} =
+\frac{1}{\det(A)}\text{adj}(A)\)</span>임을 즉각적으로 얻는다.</p>
+<h3 id="정리-3.3.4.-크라메르-공식.">정리 3.3.4. 크라메르 공식.</h3>
+<p>가역행렬 <span class="math inline">\(A \in M_{n \times
+n}(\mathbb{F})\)</span>와 열벡터 <span class="math inline">\(b \in
+\mathbb{F}^n\)</span>에 대하여, 연립일차방정식 <span
+class="math inline">\(Ax = b\)</span>의 유일한 해 <span
+class="math inline">\(x =
+(x_1, \dots, x_n)^T\)</span>의 각 성분은 다음과 같이 주어진다.</p>
+<p><span class="math display">\[\begin{equation*} x_i =
+\frac{\det(A_i)}{\det(A)} \end{equation*}\]</span></p>
+<p>여기서 <span class="math inline">\(A_i\)</span>는 행렬 <span
+class="math inline">\(A\)</span>의 <span
+class="math inline">\(i\)</span>번째 열을 상수 벡터 <span
+class="math inline">\(b\)</span>로 대체한 행렬이다.</p>
+<p><strong>증명.</strong></p>
+<p>행렬 <span class="math inline">\(A\)</span>가 가역이므로 <span
+class="math inline">\(\det(A) \neq 0\)</span>이며, 연립방정식의 해는
+<span class="math inline">\(x =
+A^{-1}b\)</span>로 유일하게 존재한다. 수반행렬 항등식에 의해 <span
+class="math inline">\(A^{-1} =
+\frac{1}{\det(A)}\text{adj}(A)\)</span>이므로, 다음이 성립한다.</p>
+<p><span class="math display">\[\begin{equation*} x =
+\frac{1}{\det(A)}\text{adj}(A)b \end{equation*}\]</span></p>
+<p>해 벡터 <span class="math inline">\(x\)</span>의 <span
+class="math inline">\(i\)</span>번째 성분 <span
+class="math inline">\(x_i\)</span>를 구하기 위해 행렬곱을 전개하면
+다음과 같다.</p>
+<p><span class="math display">\[\begin{equation*} x_i =
+\frac{1}{\det(A)} \sum_{j=1}^n
+(\text{adj}(A))_{ij} b_j = \frac{1}{\det(A)} \sum_{j=1}^n C_{ji} b_j
+\end{equation*}\]</span></p>
+<p>여기서 합 <span class="math inline">\(\sum_{j=1}^n b_j
+C_{ji}\)</span>를 관찰해 보자. 이는 행렬 <span
+class="math inline">\(A\)</span>의 <span
+class="math inline">\(i\)</span>번째 열의 각 성분 <span
+class="math inline">\(A_{ji}\)</span>를 <span
+class="math inline">\(b_j\)</span>로 바꾼 뒤, <span
+class="math inline">\(i\)</span>번째 열에 대하여 여인수 전개를 수행한
+식과 정확히 일치한다. 행렬 <span class="math inline">\(A\)</span>의
+<span class="math inline">\(i\)</span>번째 열을 <span
+class="math inline">\(b\)</span>로 대체한 행렬이 곧 <span
+class="math inline">\(A_i\)</span>이므로, 이 합은 <span
+class="math inline">\(\det(A_i)\)</span>가 된다. 따라서 <span
+class="math inline">\(x_i = \frac{\det(A_i)}{\det(A)}\)</span>이다.</p>
+<h3 id="예시-3.3.5.-크라메르-공식을-이용한-연립방정식-풀이.">예시 3.3.5.
+크라메르 공식을 이용한 연립방정식 풀이.</h3>
+<p>체 <span class="math inline">\(\mathbb{F}\)</span> 위에서 다음
+연립방정식을 크라메르 공식을 통해 풀어보자.</p>
+<p><span class="math display">\[\begin{align*} 2x_1 + x_2 &amp;= 5\\ x_1
++ 3x_2 &amp;= 5 \end{align*}\]</span></p>
+<p>계수행렬 <span class="math inline">\(A = \begin{pmatrix} 2 &amp; 1 \\
+1 &amp; 3 \end{pmatrix}\text{,}\)</span> <span class="math inline">\(b =
+\begin{pmatrix} 5 \\ 5 \end{pmatrix}\)</span>이다. <span
+class="math inline">\(\det(A) = 2(3) -
+1(1) = 5\)</span>이다.</p>
+<p><span class="math inline">\(x_1\)</span>을 구하기 위해 첫 번째 열을
+<span class="math inline">\(b\)</span>로 바꾼 행렬 <span
+class="math inline">\(A_1 =
+\begin{pmatrix} 5 &amp; 1 \\ 5 &amp; 3 \end{pmatrix}\)</span>을
+구성하면, <span class="math inline">\(\det(A_1) =
+15 - 5 = 10\)</span>이다. 따라서 <span class="math inline">\(x_1 = 10/5
+= 2\)</span>이다.</p>
+<p><span class="math inline">\(x_2\)</span>를 구하기 위해 두 번째 열을
+<span class="math inline">\(b\)</span>로 바꾼 행렬 <span
+class="math inline">\(A_2 =
+\begin{pmatrix} 2 &amp; 5 \\ 1 &amp; 5 \end{pmatrix}\)</span>를
+구성하면, <span class="math inline">\(\det(A_2) =
+10 - 5 = 5\)</span>이다. 따라서 <span class="math inline">\(x_2 = 5/5 =
+1\)</span>이다.</p>
+<h2 id="소절-3.3.2-케일리-해밀턴-정리">소절 3.3.2 케일리-해밀턴
+정리</h2>
+<p>모든 정사각행렬은 특정한 다항식 방정식의 해가 되며, 그 다항식은 바로
+자기 자신의 특성다항식입니다. 증명 과정에서 특성다항식의 <span
+class="math inline">\(x\)</span>에 행렬 <span
+class="math inline">\(A\)</span>를 단순히 대입하는 행위는 대수적으로
+정의되지 않음에 유의해야 합니다.</p>
+<h3 id="정리-3.3.6.-케일리-해밀턴-정리.">정리 3.3.6. 케일리-해밀턴
+정리.</h3>
+<p>체 <span class="math inline">\(\mathbb{F}\)</span> 상의 임의의
+정사각행렬 <span class="math inline">\(A\)</span>에 대하여, 그
+특성다항식을 <span class="math inline">\(p_A(x) = \det(xI -
+A)\)</span>라 하자. 다항식 <span class="math inline">\(p_A(x)\)</span>에
+행렬 <span class="math inline">\(A\)</span>를 대입하면 영행렬이 된다.
+즉,</p>
+<p><span class="math display">\[\begin{equation*} p_A(A) = 0
+\end{equation*}\]</span></p>
+<p><strong>증명.</strong></p>
+<p>다항식을 성분으로 가지는 행렬 <span class="math inline">\(xI -
+A\)</span>를 합시다. 행렬식의 전개와 크라메르 공식에서 유도되는 수반행렬
+항등식은 가환인 다항식 성분 위에서도 그대로 성립하므로 다음 등식을 세울
+수 있습니다.</p>
+<p><span class="math display">\[\begin{equation*} (xI - A)\text{adj}(xI
+- A) = \det(xI - A)I = p_A(x)I
+\end{equation*}\]</span></p>
+<p>행렬 <span class="math inline">\(B(x) = \text{adj}(xI - A)\)</span>의
+각 성분은 <span class="math inline">\(xI - A\)</span>의 부분행렬의
+행렬식이므로, <span class="math inline">\(x\)</span>에 대한 차수가 최대
+<span class="math inline">\(n-1\)</span>인 다항식들입니다. 따라서 <span
+class="math inline">\(B(x)\)</span>를 행렬을 계수로 가지는 다항식 형태로
+전개할 수 있습니다.</p>
+<p><span class="math display">\[\begin{equation*} B(x) = B_{n-1}x^{n-1}
++ B_{n-2}x^{n-2} + \dots + B_1
+x + B_0 \end{equation*}\]</span></p>
+<p>특성다항식을 <span class="math inline">\(p_A(x) = x^n +
+c_{n-1}x^{n-1} + \dots + c_1 x + c_0\)</span>라 합시다. 앞선 수반행렬
+항등식 좌우변의 다항식 계수(행렬)들을 차수별로 비교하면 <span
+class="math inline">\(n+1\)</span>개의 연립방정식을 얻습니다.</p>
+<p><span class="math display">\[\begin{align*} x^n: \quad B_{n-1} &amp;=
+I\\ x^{n-1}: \quad B_{n-2} - A
+B_{n-1} &amp;= c_{n-1}I\\ &amp;\vdots\\ x^1: \quad B_0 - A B_1 &amp;=
+c_1 I\\ x^0:
+\quad -A B_0 &amp;= c_0 I \end{align*}\]</span></p>
+<p>이 <span class="math inline">\(n+1\)</span>개의 등식 중 <span
+class="math inline">\(x^k\)</span>에 해당하는 등식의 양변 왼쪽에 행렬
+<span class="math inline">\(A^k\)</span>를 곱합시다.</p>
+<p><span class="math display">\[\begin{align*} A^n B_{n-1} &amp;= A^n\\
+A^{n-1} B_{n-2} - A^n B_{n-1} &amp;=
+c_{n-1} A^{n-1}\\ &amp;\vdots\\ A B_0 - A^2 B_1 &amp;= c_1 A\\ -A B_0
+&amp;= c_0 I
+\end{align*}\]</span></p>
+<p>새롭게 얻어진 이 <span class="math inline">\(n+1\)</span>개의 등식을
+양변 모두 더합니다. 좌변은 이웃한 항들이 연쇄적으로 상쇄되어 정확히
+영행렬만 남습니다. 우변을 모두 더한 결과는 <span
+class="math inline">\(A^n + c_{n-1}A^{n-1} + \dots + c_1 A + c_0
+I\)</span>가 되며, 이는 행렬 평가 사상의 정의에 의해 <span
+class="math inline">\(p_A(A)\)</span>입니다. 결론적으로 영행렬과 <span
+class="math inline">\(p_A(A)\)</span>는 일치합니다.</p>
+<h3 id="예시-3.3.7.-22-행렬의-케일리-해밀턴-정리.">예시 3.3.7. 2×2
+행렬의 케일리-해밀턴 정리.</h3>
+<p>행렬 <span class="math inline">\(A = \begin{pmatrix} 1 &amp; 2 \\ 3
+&amp; 4 \end{pmatrix}\)</span>를 생각하자. 특성다항식은 <span
+class="math inline">\(p_A(x) = (x-1)(x-4) - 6 = x^2 - 5x -
+2\)</span>이다. 행렬 <span class="math inline">\(A\)</span>의 거듭제곱을
+직접 계산하여 대입하면 <span class="math inline">\(A^2 - 5A - 2I =
+\begin{pmatrix} 7 &amp; 10 \\ 15 &amp; 22 \end{pmatrix} -
+\begin{pmatrix} 5 &amp; 10
+\\ 15 &amp; 20 \end{pmatrix} - \begin{pmatrix} 2 &amp; 0 \\ 0 &amp; 2
+\end{pmatrix}
+= \begin{pmatrix} 0 &amp; 0 \\ 0 &amp; 0 \end{pmatrix}\)</span>이 되어
+정리가 참임을 확인할 수 있다.</p>
+<h2 id="소절-3.3.3-최소다항식의-정의와-인수-성질">소절 3.3.3
+최소다항식의 정의와 인수 성질</h2>
+<p>케일리-해밀턴 정리는 행렬 <span class="math inline">\(A\)</span>를
+영행렬로 만드는 다항식이 최소한 하나는 존재함을 보장합니다. 이제 나눗셈
+알고리즘과 최소 차수 성질을 결합하여 행렬의 구조를 극적으로 단순화할
+최소다항식을 정의합니다.</p>
+<h3 id="정의-3.3.8.-최소다항식.">정의 3.3.8. 최소다항식.</h3>
+<p>어떤 행렬 <span class="math inline">\(A\)</span>에 대하여 <span
+class="math inline">\(f(A) = 0\)</span>을 만족하는 다항식 <span
+class="math inline">\(f(x)\)</span>들의 집합을 소멸자 집합이라 하자.
+케일리-해밀턴 정리에 의해 특성다항식이 이 집합에 속하므로, 이 집합은
+결코 영다항식만으로 이루어지지 않았다. 또한 이 집합은 다항식의 덧셈과
+임의의 다항식과의 곱셈에 대해 닫혀 있으므로, 보충 읽기자료의 정리 2(최소
+차수 다항식의 인수 성질)를 완벽하게 만족한다.</p>
+<p>이 집합 안에서 차수가 가장 낮으면서 최고차항 계수가 1인 다항식은
+유일하게 결정되며, 이를 행렬 <span class="math inline">\(A\)</span>의
+최소다항식이라 정의하고 <span class="math inline">\(m_A(x)\)</span>로
+표기한다.</p>
+<p>예제 3.3.9. 다른 증명:최소다항식의 존재성.</p>
+<p>체 <span class="math inline">\(\mathbb{F}\)</span> 상의 유한차원
+벡터공간 <span class="math inline">\(V\)</span> 상의 선형변환 <span
+class="math inline">\(T\)</span>에 대하여, <span
+class="math inline">\(f(T) = 0\)</span> (영변환)을 만족하는 영이 아닌
+다항식 <span class="math inline">\(f(x) \in
+\mathbb{F}[x]\)</span>가 반드시 존재함을 케일리-해밀턴 정리를 사용하지
+않고 다음 집합</p>
+<p><span class="math display">\[\begin{equation*} \{I, T, T^2, \dots,
+T^{n^2}\} \end{equation*}\]</span></p>
+<p>의 선형독립성을 분석하여 증명하시오.</p>
+<p><strong>Solution.</strong></p>
+<p>벡터공간 <span class="math inline">\(V\)</span>의 차원을 <span
+class="math inline">\(n\)</span>이라 하자. <span
+class="math inline">\(V\)</span>에서 <span
+class="math inline">\(V\)</span>로 가는 선형변환들의 공간 <span
+class="math inline">\(\mathcal{L}(V)\)</span>의 차원은 <span
+class="math inline">\(n^2\)</span>이다. 선형변환 <span
+class="math inline">\(T\)</span>의 거듭제곱들로 이루어진 다음 집합을
+생각하자.</p>
+<p><span class="math display">\[\begin{equation*} \{I, T, T^2, \dots,
+T^{n^2}\} \end{equation*}\]</span></p>
+<p>이 집합의 원소 개수는 <span class="math inline">\(n^2 +
+1\)</span>개이므로, 벡터공간 <span
+class="math inline">\(\mathcal{L}(V)\)</span>의 차원인 <span
+class="math inline">\(n^2\)</span>보다 크다. 따라서 이 거듭제곱들은
+선형종속이어야만 한다.</p>
+<p>선형종속의 정의에 의해, 모두가 영은 아닌 스칼라 <span
+class="math inline">\(c_0, c_1, \dots, c_k
+\in \mathbb{F}\)</span> (<span class="math inline">\(k \le
+n^2\)</span>)가 존재하여 다음 등식을 만족한다.</p>
+<p><span class="math display">\[\begin{equation*} c_0 I + c_1 T + c_2
+T^2 + \dots + c_k T^k = 0
+\end{equation*}\]</span></p>
+<p>이때 다항식 <span class="math inline">\(f(x) = c_k x^k + \dots + c_1
+x + c_0\)</span>를 구성하면, <span class="math inline">\(f(x)\)</span>는
+영다항식이 아니며 평가 사상에 의해 <span class="math inline">\(f(T) =
+0\)</span>을 만족한다. 따라서 <span class="math inline">\(T\)</span>를
+소멸시키는 영이 아닌 다항식이 최소한 하나 존재함이 증명되었다.</p>
+<h3 id="예시-3.3.10.-항등행렬의-최소다항식.">예시 3.3.10. 항등행렬의
+최소다항식.</h3>
+<p>항등행렬 <span class="math inline">\(I\)</span>의 특성다항식은 <span
+class="math inline">\(p_I(x) = (x-1)^n\)</span>이다. 그러나 다항식 <span
+class="math inline">\(m(x) = x-1\)</span>을 생각해보면 <span
+class="math inline">\(m(I) = I - I = 0\)</span>이므로 이 역시 소멸자
+집합에 속한다. 1차식보다 차수가 낮은 다항식은 상수항뿐인데 영이 아닌
+상수는 영행렬을 만들 수 없으므로, 최고차항 계수가 1인 가장 낮은 차수의
+다항식은 <span class="math inline">\(m_I(x) = x-1\)</span>이 된다.</p>
+<h3 id="명제-3.3.11.-최소다항식의-나눗셈-성질.">명제 3.3.11.
+최소다항식의 나눗셈 성질.</h3>
+<p>임의의 행렬 <span class="math inline">\(A\)</span>에 대하여 다항식
+<span class="math inline">\(f(x)\)</span>가 <span
+class="math inline">\(f(A) = 0\)</span>을 만족할 필요충분조건은
+최소다항식 <span class="math inline">\(m_A(x)\)</span>가 <span
+class="math inline">\(f(x)\)</span>의 인수가 되는 것이다. 특히
+특성다항식 <span class="math inline">\(p_A(x)\)</span>는 항상
+최소다항식을 인수로 가진다.</p>
+<p><strong>증명.</strong></p>
+<p>다항식 <span class="math inline">\(f(x)\)</span>가 <span
+class="math inline">\(f(A) = 0\)</span>을 만족한다고 가정하자. 다항식
+<span class="math inline">\(f(x)\)</span>는 소멸자 집합의 원소이므로
+보충 읽기자료의 정리 2에 의해 집합 내 최소 차수 다항식인 <span
+class="math inline">\(m_A(x)\)</span>를 인수로 가져야 한다. 역으로 <span
+class="math inline">\(f(x) = q(x)m_A(x)\)</span>라 하면 행렬 평가 사상의
+성질에 의해 <span class="math inline">\(f(A) = q(A)m_A(A) = q(A)0 =
+0\)</span>이 성립한다.</p>
+<p>케일리-해밀턴 정리에 의해 <span class="math inline">\(p_A(A) =
+0\)</span>이므로 특성다항식 역시 소멸자 집합에 속하며, 따라서
+최소다항식을 인수로 가진다.</p>
+<h3 id="예시-3.3.12.-최소다항식의-인수-결정.">예시 3.3.12. 최소다항식의
+인수 결정.</h3>
+<p>명제 6에 의해 최소다항식은 항상 특성다항식의 인수여야 한다. 만약 어떤
+행렬 <span class="math inline">\(A\)</span>의 특성다항식이 <span
+class="math inline">\((x-2)^2(x-3)\)</span>이라면, 최소다항식 후보는
+<span class="math inline">\((x-2)(x-3)\)</span> 또는 <span
+class="math inline">\((x-2)^2(x-3)\)</span>뿐이다. 차수가 낮은 후보부터
+순서대로 행렬을 대입하여 최초로 영행렬이 되는 다항식을 찾으면 그것이
+바로 최소다항식이다.</p>
+<h3 id="정리-3.3.13.-고윳값과-최소다항식의-근.">정리 3.3.13. 고윳값과
+최소다항식의 근.</h3>
+<p>행렬 <span class="math inline">\(A\)</span>의 최소다항식 <span
+class="math inline">\(m_A(x)\)</span>와 특성다항식 <span
+class="math inline">\(p_A(x)\)</span>는 중복도를 무시하면 완전히 동일한
+근, 즉 고윳값들을 공유한다.</p>
+<p><strong>증명.</strong></p>
+<p>스칼라 <span class="math inline">\(\lambda\)</span>가 <span
+class="math inline">\(p_A(x)\)</span>의 근이라 가정하자. 즉 <span
+class="math inline">\(\lambda\)</span>는 행렬 <span
+class="math inline">\(A\)</span>의 고윳값이다. 대응하는 영이 아닌
+고유벡터 <span class="math inline">\(v\)</span>가 존재하여 <span
+class="math inline">\(A v =
+\lambda v\)</span>가 성립한다. 다항식의 행렬 평가 성질을 거듭제곱에 반복
+적용하면 <span class="math inline">\(m_A(A)v = m_A(\lambda)v\)</span>가
+된다. 최소다항식의 정의에 의해 <span class="math inline">\(m_A(A) =
+0\)</span>이므로 좌변은 영벡터이다. <span
+class="math inline">\(v\)</span>는 영벡터가 아니므로 스칼라 <span
+class="math inline">\(m_A(\lambda)\)</span>가 반드시 0이어야 하며,
+따라서 <span class="math inline">\(\lambda\)</span>는 최소다항식의
+근이다.</p>
+<p>반대로 <span class="math inline">\(\lambda\)</span>가 <span
+class="math inline">\(m_A(x)\)</span>의 근이라 가정하자. 명제 6에 의해
+특성다항식은 최소다항식을 인수로 가지므로 <span
+class="math inline">\(p_A(x) = q(x)m_A(x)\)</span>이다. 여기에 <span
+class="math inline">\(\lambda\)</span>를 대입하면 <span
+class="math inline">\(p_A(\lambda) = q(\lambda)m_A(\lambda) =
+0\)</span>이 되어 <span class="math inline">\(\lambda\)</span>는
+특성다항식의 근이 된다.</p>
+<h3 id="예시-3.3.14.-비슷한-고윳값을-가진-행렬들의-최소다항식.">예시
+3.3.14. 비슷한 고윳값을 가진 행렬들의 최소다항식.</h3>
+<p>두 행렬 <span class="math inline">\(A = \begin{pmatrix} 2 &amp; 0 \\
+0 &amp; 2 \end{pmatrix}\)</span>와 <span class="math inline">\(B =
+\begin{pmatrix} 2 &amp; 1 \\ 0 &amp; 2 \end{pmatrix}\)</span>는 모두
+특성다항식이 <span class="math inline">\(p(x) = (x-2)^2\)</span>이다.
+고윳값은 오직 2뿐이므로, 정리 7에 따라 최소다항식은 반드시 <span
+class="math inline">\((x-2)\)</span>를 인수로 포함해야 한다. 행렬 <span
+class="math inline">\(A\)</span>는 <span class="math inline">\(A -
+2I = 0\)</span>이므로 최소다항식이 <span class="math inline">\(m_A(x) =
+x-2\)</span>이지만, 행렬 <span class="math inline">\(B\)</span>는 <span
+class="math inline">\(B -
+2I \neq 0\)</span>이므로 일차식을 인수로 가지면서 영행렬을 만드는
+다항식은 특성다항식 본인인 <span class="math inline">\(m_B(x) =
+(x-2)^2\)</span>가 된다. 이는 서로 다른 대수적 구조를 최소다항식이
+세밀하게 구별해냄을 보여준다.</p>
+<h2 id="연습문제-3.3.4-연습문제">연습문제 3.3.4 연습문제</h2>
+<h3 id="중요-1.-다항식-속-행렬.">★ 중요 1. 다항식 속 행렬.</h3>
+<p>다항식 <span class="math inline">\(f(x) = x^2 + 2x + 1\)</span>과
+정사각행렬 <span class="math inline">\(A\)</span>에 대하여 평가 사상을
+거친 결과 <span class="math inline">\(f(A)\)</span>를 행렬 기호를
+사용하여 구체적으로 나열하고, 이것이 <span
+class="math inline">\((A+I)^2\)</span>과 동일하게 전개됨을 보이시오.</p>
+<h3 id="중요-2.-영고윳값과-단사성.">★ 중요 2. 영고윳값과 단사성.</h3>
+<p>체 <span class="math inline">\(\mathbb{F}\)</span> 상의 행렬 <span
+class="math inline">\(A\)</span>와 스칼라 <span class="math inline">\(0
+\in \mathbb{F}\)</span>에 대하여, <span
+class="math inline">\(0\)</span>이 특성다항식의 근이 될 필요충분조건은
+변환 <span class="math inline">\(A\)</span>가 단사가 아님을
+증명하시오.</p>
+<h3 id="대각행렬의-최소다항식.">3. 대각행렬의 최소다항식.</h3>
+<p>서로 다른 대각성분 <span class="math inline">\(\lambda_1, \dots,
+\lambda_n\)</span>을 가지는 대각행렬 <span
+class="math inline">\(D\)</span>의 최소다항식이 대각성분들을 모두 근으로
+가지는 1차식들의 곱이 됨을 예제를 들어 설명하시오.</p>
+<h3 id="역행렬과-최소다항식.">4. 역행렬과 최소다항식.</h3>
+<p>케일리-해밀턴 정리를 활용하여, 역행렬이 존재하는 <span
+class="math inline">\(n \times n\)</span> 정사각행렬 <span
+class="math inline">\(A\)</span>의 역행렬을 차수가 <span
+class="math inline">\(n-1\)</span> 이하인 <span
+class="math inline">\(A\)</span>의 다항식 형태로 표현할 수 있음을
+증명하시오.</p>
+<h3 id="중요-5.-유사-행렬과-최소다항식.">★ 중요 5. 유사 행렬과
+최소다항식.</h3>
+<p>역행렬이 존재하는 행렬 <span class="math inline">\(P\)</span>에
+대하여 <span class="math inline">\(B = P^{-1}AP\)</span>가 성립할 때,
+행렬 <span class="math inline">\(A\)</span>의 소멸자 집합과 행렬 <span
+class="math inline">\(B\)</span>의 소멸자 집합이 정확히 동일함을 보이고,
+이로부터 두 행렬이 같은 최소다항식을 가짐을 증명하시오.</p>
+<h3 id="최소다항식과-고윳값.">6. 최소다항식과 고윳값.</h3>
+<p>어떤 행렬 <span class="math inline">\(A\)</span>의 최소다항식이 <span
+class="math inline">\(m_A(x) = x^2 - 5x + 6\)</span>으로 주어졌다. 인수
+성질을 활용하여 이 행렬의 모든 고윳값을 확정하고 그 근거를
+제시하시오.</p>
+<h3 id="중요-7.-다항식의-최대공약수.">★ 중요 7. 다항식의
+최대공약수.</h3>
+<p>보충 읽기자료의 정리 A.5.1과 정리 A.5.3를 결합하여, 두 다항식 <span
+class="math inline">\(f(x),
+g(x)\)</span>의 공통 인수 중 차수가 가장 높은 다항식</p>
+<p>¹</p>
+<p>최대공약수와의 유사성을 관찰할 수 있습니다.</p>
+<p><span class="math inline">\(d(x)\)</span>가 존재함을 증명하시오.</p>
+<h3 id="특성다항식과-최소다항식.">8. 특성다항식과 최소다항식.</h3>
+<p>다항식 공간 <span class="math inline">\(V = \mathbb{F}[x]_{\le
+2}\)</span> 위에서 정의된 선형변환 <span class="math inline">\(T(p(x)) =
+p(x) + p&#39;(x)\)</span>에 대하여 기저 <span class="math inline">\(1,
+x, x^2\)</span>을 선택하여 특성다항식을 구하고, 그에 따른 최소다항식을
+확정하시오.</p>
+<h3 id="블록-상삼각행렬의-최소다항식.">9. 블록 상삼각행렬의
+최소다항식.</h3>
+<p>블록 상삼각행렬 <span class="math inline">\(M = \begin{pmatrix} A
+&amp; B \\ 0 &amp; C \end{pmatrix}\)</span>에 대하여, <span
+class="math inline">\(M\)</span>의 최소다항식 <span
+class="math inline">\(m_M(x)\)</span>가 대각 블록의 두 최소다항식의 곱
+<span class="math inline">\(m_A(x)m_C(x)\)</span>의 인수(약수)가 됨을
+블록 행렬의 평가 성질을 통해 엄밀히 증명하시오.</p>
+<h3 id="직합-분해.">10. 직합 분해.</h3>
+<p>임의의 선형변환 <span class="math inline">\(T\)</span>에 대한 어떤
+다항식 <span class="math inline">\(f(x)\)</span>가 서로 공통인 인수를
+가지지 않는 두 다항식의 곱 <span class="math inline">\(f(x) =
+f_1(x)f_2(x)\)</span>로 인수분해된다고 하자. 다항식의 최대공약수 성질을
+이용해 <span class="math inline">\(a(x)f_1(x) + b(x)f_2(x) =
+1\)</span>을 만족하는 <span class="math inline">\(a(x), b(x)\)</span>가
+존재함을 근거로, 변환의 덧셈 분해인 부분공간의 직합 <span
+class="math inline">\(V = \ker(f_1(T)) \oplus \ker(f_2(T))\)</span>를
+증명하시오.</p>
+<h2 id="추가-문제-4">추가 문제</h2>
+<h3 id="추가-문제-1-2">추가 문제 1</h3>
+<p>대각화 가능한 선형변환의 최소다항식이 서로 다른 일차인자의 곱임을
+보이시오.</p>
+<h3 id="추가-문제-2-2">추가 문제 2</h3>
+<p>행렬다항식 <span class="math inline">\(p(A)\)</span>를 반복곱으로
+계산하는 방식과 Horner 방식의 연산량 차이를 비교하시오.</p>
+<h1 id="삼각화와-조르당-표준형">3.4 삼각화와 조르당 표준형</h1>
+<div class="guide-grid">
+<div class="guide-card guide-card-accent">
+<div class="guide-kicker">
+Section Lens
+</div>
+<div class="guide-title">
+조르당 표준형은 대각화가 실패할 때 남는 결함의 지도다.
+</div>
+<p>
+본문을 읽을 때는 정의보다 먼저 이 절이 어떤 불변량을 보존하고 압축하는지
+붙잡는다.
+</p>
+</div>
+<div class="guide-card">
+<div class="guide-kicker">
+Numerical Aside
+</div>
+<p>
+조르당형은 이론적으로 선명하지만 수치적으로 불안정하다. 계산 현장에서는
+QR algorithm, Schur form, Arnoldi iteration처럼 작은 오차에 덜 예민한
+표현을 선호한다.
+</p>
+</div>
+</div>
+<p>임의의 선형변환이 대각화 가능한 것은 아닙니다. 하지만 체 <span
+class="math inline">\(\mathbb{F}\)</span> 위에서 특성다항식이 일차식으로
+완전히 분해된다는 조건만 만족한다면, 대각행렬에 가장 가까운 형태인
+상삼각행렬, 나아가 구조적 유일성을 담보하는 조르단 표준형으로 변환을
+단순화할 수 있습니다.</p>
+<h2 id="소절-3.4.1-몫공간을-이용한-삼각화">소절 3.4.1 몫공간을 이용한
+삼각화</h2>
+<h3 id="정의-3.4.1.-삼각화.">정의 3.4.1. 삼각화.</h3>
+<p>체 <span class="math inline">\(\mathbb{F}\)</span> 상의 유한차원
+벡터공간 <span class="math inline">\(V\)</span>와 선형변환 <span
+class="math inline">\(T: V \to
+V\)</span>에 대하여, <span class="math inline">\(V\)</span>의 어떤
+순서기저 <span class="math inline">\(\beta\)</span>에 대한 행렬표현
+<span class="math inline">\([T]_\beta\)</span>가 상삼각행렬일 때,
+선형변환 <span class="math inline">\(T\)</span>를 삼각화 가능하다고
+한다.</p>
+<p>삼각화:triangularization</p>
+<h3 id="예시-3.4.2.-다항식-공간에서의-삼각화.">예시 3.4.2. 다항식
+공간에서의 삼각화.</h3>
+<p>공간 <span class="math inline">\(V = \mathbb{F}[x]_{\le
+2}\)</span>에서 선형변환 <span class="math inline">\(T(p(x)) = p(x) +
+p&#39;(x)\)</span>를 생각하자. 표준기저 <span
+class="math inline">\(\beta = \{1, x, x^2\}\)</span>에 대하여 작용을
+평가하면 <span class="math inline">\(T(1) = 1\text{,}\)</span> <span
+class="math inline">\(T(x) = x + 1\text{,}\)</span> <span
+class="math inline">\(T(x^2) = x^2 +
+2x\)</span>이다. 이 기저에 대한 행렬표현은</p>
+<p><span class="math display">\[\begin{equation*} [T]_\beta =
+\begin{pmatrix} 1 &amp; 1 &amp; 0 \\ 0 &amp; 1 &amp; 2 \\
+0 &amp; 0 &amp; 1 \end{pmatrix} \end{equation*}\]</span></p>
+<p>이므로 상삼각행렬이다. 따라서 <span
+class="math inline">\(T\)</span>는 삼각화 가능한 변환이다.</p>
+<h3 id="정리-3.4.3.-삼각화의-필요충분조건.">정리 3.4.3. 삼각화의
+필요충분조건.</h3>
+<p>유한차원 벡터공간 <span class="math inline">\(V\)</span> 상의
+선형변환 <span class="math inline">\(T\)</span>가 삼각화 가능할
+필요충분조건은 <span class="math inline">\(T\)</span>의 특성다항식 <span
+class="math inline">\(p_T(x)\)</span>가 체 <span
+class="math inline">\(\mathbb{F}\)</span> 위에서 일차식들의 곱으로
+완전히 분해되는 것이다.</p>
+<p><strong>증명.</strong></p>
+<p><span class="math inline">\((\implies)\)</span> <span
+class="math inline">\(T\)</span>가 삼각화 가능하다고 가정하면 상삼각행렬
+<span class="math inline">\(A =
+[T]_\beta\)</span>를 가지는 기저 <span
+class="math inline">\(\beta\)</span>가 존재한다. 상삼각행렬의 행렬식은
+주대각성분의 곱이므로, 대각성분들을 <span
+class="math inline">\(c_i\)</span>라 할 때 <span
+class="math inline">\(p_T(x) = \det(xI -
+A) = (x-c_1)(x-c_2)\dots(x-c_n)\)</span>이 되어 <span
+class="math inline">\(\mathbb{F}\)</span> 위에서 일차식으로 완전히
+분해된다.</p>
+<p><span class="math inline">\((\impliedby)\)</span> 공간의 차원 <span
+class="math inline">\(n\)</span>에 대한 수학적 귀납법을 적용한다. <span
+class="math inline">\(n=1\)</span>일 때는 자명하게 삼각화 가능하다.
+차수가 <span class="math inline">\(n-1\)</span> 이하인 모든 공간에 대해
+정리가 성립한다고 가정하자. <span
+class="math inline">\(p_T(x)\)</span>가 일차식으로 분해되므로 최소한
+하나의 고윳값 <span class="math inline">\(\lambda_1 \in
+\mathbb{F}\)</span>와 그에 대응하는 고유벡터 <span
+class="math inline">\(v_1\)</span>을 가진다. <span
+class="math inline">\(W = \text{span}\{v_1\}\)</span>은 1차원 <span
+class="math inline">\(T\)</span>-불변공간이다.</p>
+<p>몫공간 <span class="math inline">\(V/W\)</span>를 구성하고 유도된
+선형변환 <span class="math inline">\(\overline{T}: V/W \to
+V/W\)</span>를 <span class="math inline">\(\overline{T}(v+W) =
+T(v)+W\)</span>로 정의한다. 이 사상은 대표원의 선택과 무관하게 잘
+정의된다. 기저 확장을 통해 계산해 보면 <span
+class="math inline">\(p_T(x) =
+(x-\lambda_1)p_{\overline{T}}(x)\)</span>가 성립함을 알 수 있으므로,
+<span class="math inline">\(p_{\overline{T}}(x)\)</span> 역시 <span
+class="math inline">\(\mathbb{F}\)</span> 위에서 일차식으로
+분해된다.</p>
+<p><span class="math inline">\(V/W\)</span>의 차원은 <span
+class="math inline">\(n-1\)</span>이므로 귀납법의 가정에 의해
+상삼각행렬을 만드는 <span class="math inline">\(V/W\)</span>의 기저
+<span class="math inline">\(\{u_2+W, \dots, u_n+W\}\)</span>가 존재한다.
+각 잉여류의 대표원 <span class="math inline">\(u_i\)</span>들을 선택하여
+새로운 집합 <span class="math inline">\(\alpha = \{v_1, u_2, \dots,
+u_n\}\)</span>을 구성하면, 이는 <span class="math inline">\(V\)</span>의
+기저가 되며 이 기저에 대한 <span class="math inline">\(T\)</span>의
+행렬표현은 첫 번째 열이 0(첫 번째 성분 제외)이고 나머지 부분은 <span
+class="math inline">\(V/W\)</span>의 상삼각행렬을 포함하는 형태이므로
+전체 행렬 역시 상삼각행렬이 된다. <span
+class="math inline">\(\blacksquare\)</span></p>
+<h3 id="예시-3.4.4.-실수와-복소수에서의-삼각화-가능성.">예시 3.4.4.
+실수와 복소수에서의 삼각화 가능성.</h3>
+<p>실수체 <span class="math inline">\(\mathbb{R}\)</span> 위에서 <span
+class="math inline">\(A = \begin{pmatrix} 0 &amp; -1 \\ 1 &amp; 0
+\end{pmatrix}\)</span>의 특성다항식은 <span class="math inline">\(x^2 +
+1\)</span>이므로 <span class="math inline">\(\mathbb{R}\)</span>에서
+일차식으로 분해되지 않는다. 정리 정리 3.4.3에 의해 이 행렬은 실수 범위
+내에서 삼각화가 불가능하다. 하지만 복소수체 <span
+class="math inline">\(\mathbb{C}\)</span>로 확장하면 <span
+class="math inline">\((x-i)(x+i)\)</span>로 분해되므로 삼각화, 나아가
+대각화까지 가능해진다.</p>
+<h2 id="소절-3.4.2-일반화된-고유공간-분해">소절 3.4.2 일반화된 고유공간
+분해</h2>
+<p>대각화가 불가능한 행렬을 분석하기 위해 고유공간의 개념을 확장해야
+합니다.</p>
+<h3 id="정의-3.4.5.-일반화된-고유벡터와-일반화된-고유공간.">정의 3.4.5.
+일반화된 고유벡터와 일반화된 고유공간.</h3>
+<p>선형변환 <span class="math inline">\(T\)</span>와 고윳값 <span
+class="math inline">\(\lambda\)</span>에 대하여,</p>
+<p>일반화된 고유벡터:generalized eigenvector</p>
+<p>어떤 양의 정수 <span class="math inline">\(k\)</span>가 존재하여
+<span class="math inline">\((T - \lambda I)^k(v) = 0\)</span>을 만족하는
+영벡터가 아닌 벡터 <span class="math inline">\(v\)</span>를 일반화된
+고유벡터라 한다. 주어진 <span class="math inline">\(\lambda\)</span>에
+대응하는 모든 일반화된 고유벡터와 영벡터의 집합을 일반화된 고유공간이라
+하고 <span class="math inline">\(K_\lambda\)</span>로 표기한다.</p>
+<p>일반화된 고유공간:generalized eigenspace</p>
+<h3 id="예시-3.4.6.-일반화된-고유공간의-예.">예시 3.4.6. 일반화된
+고유공간의 예.</h3>
+<p><span class="math inline">\(A = \begin{pmatrix} 2 &amp; 1 \\ 0 &amp;
+2 \end{pmatrix}\)</span>에서 고윳값은 2이다. 고유공간 <span
+class="math inline">\(E_2\)</span>는 <span class="math inline">\((1,
+0)^T\)</span>가 생성하는 1차원 공간이지만, <span
+class="math inline">\((A -
+2I)^2 = \begin{pmatrix} 0 &amp; 1 \\ 0 &amp; 0 \end{pmatrix}^2 =
+\begin{pmatrix}
+0 &amp; 0 \\ 0 &amp; 0 \end{pmatrix}\)</span>이므로 벡터 <span
+class="math inline">\((0, 1)^T\)</span>는 일반화된 고유벡터이다. 따라서
+<span class="math inline">\(K_2 = \mathbb{F}^2\)</span> 전체가 된다.</p>
+<h3 id="정리-3.4.7.-소분해-정리.">정리 3.4.7. 소분해 정리.</h3>
+<p>선형변환 <span class="math inline">\(T\)</span>의 특성다항식이 <span
+class="math inline">\(p_T(x) =
+(x-\lambda_1)^{m_1}\dots(x-\lambda_k)^{m_k}\)</span>로 분해될 때,
+벡터공간 <span class="math inline">\(V\)</span>는 각 고윳값에 대응하는
+일반화된 고유공간들의 직합으로 분해되며, 각 <span
+class="math inline">\(K_{\lambda_i}\)</span>는 <span
+class="math inline">\(T\)</span>-불변공간이다. 즉,</p>
+<p><span class="math display">\[\begin{equation*} V = K_{\lambda_1}
+\oplus K_{\lambda_2} \oplus \dots
+\oplus K_{\lambda_k} \end{equation*}\]</span></p>
+<p><strong>증명.</strong></p>
+<p><span class="math inline">\(q_i(x) = p_T(x) /
+(x-\lambda_i)^{m_i}\)</span>라 정의하자. 다항식 <span
+class="math inline">\(q_1(x),
+\dots, q_k(x)\)</span>는 공통 인수를 가지지 않으므로 최대공약수가 1이다.
+다항식 환의 베주 항등식에 의해 <span class="math inline">\(\sum_{i=1}^k
+a_i(x)q_i(x) = 1\)</span>을 만족하는 다항식 <span
+class="math inline">\(a_i(x)\)</span>들이 존재한다.</p>
+<p>여기에 선형변환 <span class="math inline">\(T\)</span>를 대입하면
+<span class="math inline">\(I = \sum_{i=1}^k a_i(T)q_i(T)\)</span>이다.
+임의의 <span class="math inline">\(v \in V\)</span>에 대하여 <span
+class="math inline">\(v = \sum_{i=1}^k a_i(T)q_i(T)(v)\)</span>로
+분해된다. <span class="math inline">\(v_i = a_i(T)q_i(T)(v)\)</span>라
+두자.</p>
+<p>케일리-해밀턴 정리에 의해 <span class="math inline">\(p_T(T) =
+0\)</span>이므로, <span class="math inline">\((T-\lambda_i
+I)^{m_i}(v_i) = a_i(T) p_T(T)(v) = 0\)</span>이 성립한다. 따라서 <span
+class="math inline">\(v_i \in
+K_{\lambda_i}\)</span>이며, <span class="math inline">\(V\)</span>가
+일반화된 고유공간들의 합으로 표현됨을 보였다.</p>
+<p>직합임을 보이기 위해 <span class="math inline">\(v_1 + \dots + v_k =
+0\)</span> (<span class="math inline">\(v_i \in
+K_{\lambda_i}\)</span>)이라 가정하고 양변에 적절한 다항식 작용소를 곱해
+교차 항들을 소거하는 과정을 거치면 모든 <span
+class="math inline">\(i\)</span>에 대해 <span class="math inline">\(v_i
+= 0\)</span>임을 이끌어낼 수 있다. 또한, 다항식 작용소들은 서로
+교환법칙을 만족하므로 <span class="math inline">\(T\)</span>를 <span
+class="math inline">\(K_{\lambda_i}\)</span>의 원소에 작용시킨 결과는
+다시 <span class="math inline">\(K_{\lambda_i}\)</span>에 속하게 되어
+<span class="math inline">\(T\)</span>-불변성이 보장된다. <span
+class="math inline">\(\blacksquare\)</span></p>
+<h3 id="예시-3.4.8.-소분해-정리의-응용.">예시 3.4.8. 소분해 정리의
+응용.</h3>
+<p>특성다항식이 <span class="math inline">\(p_T(x) =
+(x-1)^2(x-2)\)</span>인 변환에 대하여, 공간 <span
+class="math inline">\(V\)</span>는 고윳값 1에 대한 일반화된 고유공간
+<span class="math inline">\(K_1\)</span>과 고윳값 2에 대한 일반화된
+고유공간 <span class="math inline">\(K_2\)</span>(여기서는 대수적
+중복도가 1이므로 일반 고유공간 <span
+class="math inline">\(E_2\)</span>와 일치함)의 직합 <span
+class="math inline">\(V = K_1 \oplus K_2\)</span>로 완벽하게 분리된다.
+<span class="math inline">\(T\)</span>의 작용은 이 두 독립적인 블록
+안에서의 작용으로 완전히 분해된다.</p>
+<h2 id="소절-3.4.3-조르당-표준형">소절 3.4.3 조르당 표준형</h2>
+<p>직합으로 분해된 각각의 일반화된 고유공간 <span
+class="math inline">\(K_\lambda\)</span> 내부에서, 변환 <span
+class="math inline">\(T - \lambda I\)</span>는 멱영 작용소(거듭제곱하면
+영변환이 되는 작용소)가 됩니다. 이 멱영 작용소의 구조를 파헤쳐 얻는 가장
+단순한 행렬표현이 조르당 블록입니다.</p>
+<h3 id="정의-3.4.9.-조르당-블록과-조르당-행렬.">정의 3.4.9. 조르당
+블록과 조르당 행렬.</h3>
+<p>조르당 블록:Jordan block</p>
+<p>대각성분이 모두 <span class="math inline">\(\lambda\)</span>이고,
+바로 위 대각선 성분이 모두 1이며, 나머지 성분은 모두 0인 정사각행렬을
+<span class="math inline">\(\lambda\)</span>에 대한 조르당 블록이라
+한다. 주대각선을 따라 조르당 블록들이 나열된 블록 대각행렬을 조르당
+행렬이라 한다.</p>
+<p>조르당 행렬:Jordan matrix</p>
+<h3 id="예시-3.4.10.-조르당-블록의-예.">예시 3.4.10. 조르당 블록의
+예.</h3>
+<p>고윳값 <span class="math inline">\(\lambda=3\)</span>에 대한 <span
+class="math inline">\(2 \times 2\)</span> 조르당 블록은 <span
+class="math inline">\(\begin{pmatrix} 3 &amp; 1 \\ 0 &amp; 3
+\end{pmatrix}\)</span>이다. 이 행렬의 특성다항식은 <span
+class="math inline">\((x-3)^2\)</span>이며, <span
+class="math inline">\((A-3I)^2 = 0\)</span>이므로 행렬 전체가 일반화된
+고유벡터들로 구성되어 있음을 알 수 있다.</p>
+<h3 id="정리-3.4.11.-조르당-표준형-정리.">정리 3.4.11. 조르당 표준형
+정리.</h3>
+<p>특성다항식이 체 <span class="math inline">\(\mathbb{F}\)</span>
+위에서 일차식으로 분해되는 유한차원 공간 <span
+class="math inline">\(V\)</span> 상의 선형변환 <span
+class="math inline">\(T\)</span>에 대하여, <span
+class="math inline">\(V\)</span>는 <span
+class="math inline">\(T\)</span>의 행렬표현이 조르당 행렬이 되도록 하는
+기저(조르당 기저)를 가진다. 또한 이 조르당 행렬은 블록들의 나열 순서를
+제외하면 유일하게 결정된다.</p>
+<p><strong>증명.</strong></p>
+<p>소분해 정리 3.4.7에 의해 <span class="math inline">\(V = \bigoplus
+K_{\lambda_i}\)</span>로 분해되므로, 각 <span
+class="math inline">\(K_{\lambda_i}\)</span>에 제한된 변환 <span
+class="math inline">\(T_i\)</span>에 대해서만 증명하면 충분하다. <span
+class="math inline">\(N = T_i - \lambda_i I\)</span>라 두면 <span
+class="math inline">\(N\)</span>은 <span
+class="math inline">\(K_{\lambda_i}\)</span> 위에서 멱영 작용소이다.</p>
+<p>멱영 작용소에 대하여, 영이 아닌 어떤 벡터 <span
+class="math inline">\(v\)</span>와 <span
+class="math inline">\(N^k(v)=0\)</span>이 되는 최소의 <span
+class="math inline">\(k\)</span>를 생각하자. 집합 <span
+class="math inline">\(\{v, N(v), \dots, N^{k-1}(v)\}\)</span>은
+선형독립을 이루며 이를 순환 기저라 한다. 멱영 작용소의 구조 정리에 의해
+<span class="math inline">\(K_{\lambda_i}\)</span>는 이러한 순환
+기저들이 생성하는 순환 부분공간들의 직합으로 분해된다.</p>
+<p>각 순환 기저의 순서를 역순인 <span class="math inline">\(\alpha =
+\{N^{k-1}(v), \dots, N(v),
+v\}\)</span>로 나열하자. <span class="math inline">\(N(N^{k-1}(v)) =
+0\text{,}\)</span> <span class="math inline">\(N(N^{j-1}(v)) =
+N^j(v)\)</span>가 성립하므로, 이 기저에 대한 <span
+class="math inline">\(N\)</span>의 행렬표현은 대각성분이 0이고 바로 위
+대각선이 1인 조르당 블록이 된다. <span class="math inline">\(T_i = N +
+\lambda_i
+I\)</span>이므로 <span class="math inline">\(T_i\)</span>의 행렬표현은
+대각성분이 <span class="math inline">\(\lambda_i\)</span>인 조르당
+블록이 된다. 이들을 모두 모으면 조르당 행렬이 형성되며, 기저의 구조적
+유일성에 의해 조르당 블록들의 크기와 개수는 유일하게 고정된다.</p>
+<h3 id="예시-3.4.12.-조르당-표준형의-결정.">예시 3.4.12. 조르당 표준형의
+결정.</h3>
+<p>행렬 <span class="math inline">\(A\)</span>의 특성다항식이 <span
+class="math inline">\((x-2)^4\)</span>이고 최소다항식이 <span
+class="math inline">\((x-2)^2\)</span>라 하자. 최소다항식의 차수는 가장
+큰 조르당 블록의 크기를 나타내므로, 가장 큰 블록은 <span
+class="math inline">\(2 \times 2\)</span>이다. 공간의 차원이 4이므로
+남은 크기 2를 채우는 블록 구성은 <span class="math inline">\(2 \times
+2\)</span> 블록 하나 추가이거나, <span class="math inline">\(1 \times
+1\)</span> 블록 두 개 추가이다. 이를 확정하기 위해 <span
+class="math inline">\(\dim(E_2)\)</span>(기하적 중복도)를 확인하면 된다.
+기하적 중복도는 조르당 블록의 총 개수와 일치하기 때문이다. 만약 <span
+class="math inline">\(\dim(E_2) = 2\)</span>라면, <span
+class="math inline">\(2 \times 2\)</span> 블록 두 개로 구성된 유일한
+조르당 표준형을 갖는다.</p>
+<h2 id="연습문제-3.4.4-연습문제">연습문제 3.4.4 연습문제</h2>
+<h3 id="중요-1.-실수체에서의-삼각화-불가능성.">★ 중요 1. 실수체에서의
+삼각화 불가능성.</h3>
+<p>실수체 <span class="math inline">\(\mathbb{R}\)</span> 위에서 행렬
+<span class="math inline">\(A = \begin{pmatrix} 0 &amp; -1 \\ 1 &amp; 0
+\end{pmatrix}\)</span>의 특성다항식을 구하고, <span
+class="math inline">\(\mathbb{R}\)</span> 위에서 삼각화가 불가능한
+이유를 설명하시오. 또한 체를 복소수체 <span
+class="math inline">\(\mathbb{C}\)</span>로 확장했을 때 삼각화가
+가능해짐을 보이시오.</p>
+<h3 id="조르당-블록의-거듭제곱.">2. 조르당 블록의 거듭제곱.</h3>
+<p>고윳값이 <span class="math inline">\(\lambda\)</span>인 <span
+class="math inline">\(3 \times 3\)</span> 조르당 블록 <span
+class="math inline">\(J\)</span>에 대하여, 행렬 <span
+class="math inline">\(N = J - \lambda I\)</span>라 할 때 거듭제곱 <span
+class="math inline">\(N^2\)</span>과 <span
+class="math inline">\(N^3\)</span>을 직접 행렬 곱셈을 통해
+계산하시오.</p>
+<h3 id="중요-3.-고유벡터와-일반화된-고유벡터.">★ 중요 3. 고유벡터와
+일반화된 고유벡터.</h3>
+<p>선형변환 <span class="math inline">\(T\)</span>에 대하여 벡터 <span
+class="math inline">\(v\)</span>가 고윳값 <span
+class="math inline">\(\lambda\)</span>에 대응하는 고유벡터라면, <span
+class="math inline">\(v\)</span>는 정의에 의해 항상 <span
+class="math inline">\(\lambda\)</span>에 대한 일반화된 고유벡터가 됨을
+증명하시오.</p>
+<h3 id="중요-4.-몫공간의-선형변환-정의의-타당성.">★ 중요 4. 몫공간의
+선형변환 정의의 타당성.</h3>
+<p><span class="math inline">\(T\)</span>-불변 부분공간 <span
+class="math inline">\(W\)</span>에 대하여 몫공간 <span
+class="math inline">\(V/W\)</span> 상의 선형변환 <span
+class="math inline">\(\overline{T}\)</span>를 <span
+class="math inline">\(\overline{T}(v+W) = T(v)+W\)</span>로 정의할 때,
+<span class="math inline">\(v\)</span>는 이 잉여류의 대표원이다. 서로
+다른 두 대표원 <span class="math inline">\(v_1, v_2\)</span>가 동일한
+잉여류를 나타낼 때, <span class="math inline">\(\overline{T}\)</span>의
+함숫값이 대표원의 선택과 무관하게 잘 정의됨을 증명하시오.</p>
+<h3 id="삼각화의-귀납적-증명.">5. 삼각화의 귀납적 증명.</h3>
+<p>유한차원 벡터공간 <span class="math inline">\(V\)</span> 상의
+선형변환 <span class="math inline">\(T\)</span>의 특성다항식이 체 <span
+class="math inline">\(\mathbb{F}\)</span> 위에서 일차식들의 곱으로
+완전히 분해될 때, <span class="math inline">\(T\)</span>가 삼각화
+가능함을 몫공간의 차원에 대한 수학적 귀납법을 사용하여 증명하시오.</p>
+<h3 id="중요-6.-최소다항식과-조르당-블록의-크기.">★ 중요 6. 최소다항식과
+조르당 블록의 크기.</h3>
+<p>선형변환 <span class="math inline">\(T\)</span>의 최소다항식이 <span
+class="math inline">\(m_T(x) =
+(x-\lambda_1)^{k_1}\dots(x-\lambda_r)^{k_r}\)</span>일 때, 조르당
+표준형에서 각 고윳값 <span class="math inline">\(\lambda_i\)</span>에
+대한 조르당 블록들 중 가장 큰 블록의 크기가 정확히 <span
+class="math inline">\(k_i\)</span>가 됨을 증명하시오.</p>
+<h3 id="행렬과-전치행렬의-닮음성.">7. 행렬과 전치행렬의 닮음성.</h3>
+<p>특성다항식이 일차식으로 분해되는 임의의 정사각행렬 <span
+class="math inline">\(A\)</span>와 그 전치행렬 <span
+class="math inline">\(A^T\)</span>는 동일한 조르당 표준형을 가짐을
+논증하고, 이를 통해 <span class="math inline">\(A\)</span>와 <span
+class="math inline">\(A^T\)</span>가 서로 닮음 관계임을 증명하시오.</p>
+<h3 id="조르당-표준형의-결정.">8. 조르당 표준형의 결정.</h3>
+<p>체 <span class="math inline">\(\mathbb{F}\)</span> 위에서 어떤 <span
+class="math inline">\(5 \times 5\)</span> 행렬의 특성다항식이 <span
+class="math inline">\((x-1)^3(x+2)^2\)</span>이고 최소다항식이 <span
+class="math inline">\((x-1)^2(x+2)\)</span>일 때, 가능한 조르당 표준형을
+블록 대각행렬 형태로 모두 나열하시오.</p>
+<h3 id="멱영-작용소의-삼각화.">9. 멱영 작용소의 삼각화.</h3>
+<p>멱영 작용소 <span class="math inline">\(N: V \to V\)</span>는 모든
+고윳값이 0이므로 항상 삼각화 가능함을 보이고, 적절한 기저를 선택했을 때
+주대각성분이 모두 0인 상삼각행렬로 표현됨을 증명하시오.</p>
+<h2 id="추가-문제-5">추가 문제</h2>
+<h3 id="추가-문제-1-3">추가 문제 1</h3>
+<p>하나의 조르당 블록 <span class="math inline">\(J=\lambda
+I+N\)</span>에 대해 <span class="math inline">\(N^k\)</span>의 rank와
+kernel 차원을 구하고, 블록 크기를 복원하는 방법을 설명하시오.</p>
+<h3 id="추가-문제-2-3">추가 문제 2</h3>
+<p>수치선형대수에서 조르당 표준형보다 Schur 분해가 선호되는 이유를
+안정성 관점에서 정리하시오.</p>
+<div class="guide-card guide-card-accent">
+<div class="guide-kicker">
+Chapter 3 Compression
+</div>
+<div class="guide-title">
+대각화 가능성은 하나의 질문으로 줄어든다: 공간을 고유방향만으로 다 채울
+수 있는가?
+</div>
+<p>
+특성다항식은 후보 고유값을 준다. 최소다항식은 변환이 실제로 만족하는
+가장 짧은 규칙을 준다. 조르당형은 고유벡터가 모자란 만큼 일반화된
+고유벡터 사슬을 붙인다.
+</p>
+</div>
+<h1 id="텐서곱">4.1 텐서곱</h1>
+<div class="guide-grid">
+<div class="guide-card guide-card-accent">
+<div class="guide-kicker">
+Section Lens
+</div>
+<div class="guide-title">
+텐서곱은 쌍선형성을 선형성으로 번역하는 장치다.
+</div>
+<p>
+본문을 읽을 때는 정의보다 먼저 이 절이 어떤 불변량을 보존하고 압축하는지
+붙잡는다.
+</p>
+</div>
+<div class="guide-card">
+<div class="guide-kicker">
+Numerical Aside
+</div>
+<p>
+fast.ai의 tensor product, broadcasting, block multiplication 관점은
+텐서곱을 추상기호가 아니라 데이터 배열의 shape와 연산 규칙으로 읽게 해
+준다.
+</p>
+</div>
+</div>
+<p>이 절에서는, 텐서곱을 정의하고 기본 성질을 알아봅니다.</p>
+<h2 id="소절-4.1.1-텐서곱과-보편성질">소절 4.1.1 텐서곱과 보편성질</h2>
+<p>쌍선형변환은 각 변수에 대해 선형성을 가지지만, 전체 공간의 관점에서는
+선형변환이 아니기 때문에 다루기가 까다롭습니다. 수학자들은 세상의 모든
+쌍선형변환을 단순한 선형변환으로 취급할 수 있게 해주는 “완벽한 중간
+기착지”를 고안해냈으며, 이를 보편성질을 통해 정의합니다.</p>
+<h3 id="정의-4.1.1.-텐서곱의-보편성질.">정의 4.1.1. 텐서곱의
+보편성질.</h3>
+<p>체 <span class="math inline">\(\mathbb{F}\)</span> 상의 두 벡터공간
+<span class="math inline">\(V, W\)</span>가 주어졌다고 하자. 어떤
+벡터공간 <span class="math inline">\(T\)</span>와 쌍선형변환 <span
+class="math inline">\(\otimes: V \times W \to T\)</span>의 쌍 <span
+class="math inline">\((T,
+\otimes)\)</span>가 다음 조건을 만족할 때, 이를 <span
+class="math inline">\(V\)</span>와 <span
+class="math inline">\(W\)</span>의 텐서곱이라 한다.</p>
+<p>임의의 벡터공간 <span class="math inline">\(Z\)</span>와 임의의
+쌍선형변환 <span class="math inline">\(B: V \times W \to Z\)</span>가
+주어질 때마다, 다음 등식을 만족하는 선형변환 <span
+class="math inline">\(\tilde{B}: T \to Z\)</span>가 유일하게
+존재한다.</p>
+<p><span class="math display">\[\begin{equation*} B = \tilde{B} \circ
+\otimes \end{equation*}\]</span></p>
+<p>이때 벡터공간 <span class="math inline">\(T\)</span>를 <span
+class="math inline">\(V \otimes W\)</span>로 표기하고, 쌍선형변환 <span
+class="math inline">\(\otimes\)</span>에 의한 <span
+class="math inline">\((v, w)\)</span>의 상 <span
+class="math inline">\(\otimes(v, w)\)</span>를 간단히 <span
+class="math inline">\(v
+\otimes w\)</span>로 표기한다.</p>
+<p>정의 4.1.1는 텐서곱의 개념을 보편성질에 기대어 정의하고 있습니다.
+보편성질에 기반한 정의는 그 성질을 구현하는 대상을 특정하지 않았기
+때문에 “유연”합니다.</p>
+<h3 id="예시-4.1.2.-스칼라-곱셈과-텐서곱.">예시 4.1.2. 스칼라 곱셈과
+텐서곱.</h3>
+<p>스칼라 곱셈 사상 <span class="math inline">\(B: \mathbb{F} \times V
+\to V\)</span>를 <span class="math inline">\(B(c, v) = cv\)</span>로
+정의하면 이는 쌍선형변환입니다. 보편성질에 의해 <span
+class="math inline">\(\tilde{B}(c \otimes v)
+= cv\)</span>를 만족하는 유일한 선형변환 <span
+class="math inline">\(\tilde{B}: \mathbb{F} \otimes V \to
+V\)</span>가 존재합니다.</p>
+<h2 id="소절-4.1.2-텐서곱의-유일성과-차원">소절 4.1.2 텐서곱의 유일성과
+차원</h2>
+<p>보편성질로 무언가를 정의할 수 있는 이유는, 그 성질을 갖는 대상이
+존재하기만 한다면 그러한 대상이 여럿 존재하더라도 그 모두의 동일성이
+보장되어 유일하다고 말할 수 있기 때문입니다. 따라서, 보편성질을 이용해
+정의한 대상이 유일하다고 말할 때, 그 뜻이 무엇인지 명확히 이해하는 것이
+중요합니다.</p>
+<h3 id="정리-4.1.3.-텐서곱의-유일성.">정리 4.1.3. 텐서곱의 유일성.</h3>
+<p>보편성질을 만족하는 두 텐서곱 <span class="math inline">\((T_1,
+\otimes_1)\)</span>과 <span class="math inline">\((T_2,
+\otimes_2)\)</span>가 존재한다면, 다음 등식을 만족하는 동형사상 <span
+class="math inline">\(f: T_1 \to
+T_2\)</span>가 유일하게 존재한다.</p>
+<p><span class="math display">\[\begin{equation*} f \circ \otimes_1 =
+\otimes_2 \end{equation*}\]</span></p>
+<p>즉, 두 벡터공간은 단순히 동형일 뿐만 아니라, 텐서곱을 정의하는
+쌍선형변환의 구조까지 보존하는 의미에서 유일하다.</p>
+<p><strong>증명.</strong></p>
+<p><span class="math inline">\(T_1\)</span>이 보편성질을 만족하는
+텐서곱이고 <span class="math inline">\(\otimes_2: V \times W \to
+T_2\)</span>가 쌍선형변환이므로, 보편성질의 정의에 의해 다음을 만족하는
+선형변환 <span class="math inline">\(f: T_1 \to T_2\)</span>가 유일하게
+존재한다.</p>
+<p><span class="math display">\[\begin{equation*} \otimes_2 = f \circ
+\otimes_1 \end{equation*}\]</span></p>
+<p>반대로 <span class="math inline">\(T_2\)</span> 역시 보편성질을
+만족하는 텐서곱이고 <span class="math inline">\(\otimes_1: V \times
+W \to T_1\)</span>이 쌍선형변환이므로, 다음을 만족하는 선형변환 <span
+class="math inline">\(g: T_2 \to
+T_1\)</span>이 유일하게 존재한다.</p>
+<p><span class="math display">\[\begin{equation*} \otimes_1 = g \circ
+\otimes_2 \end{equation*}\]</span></p>
+<p>이제 이 두 식을 대입하여 합성하면 다음을 얻는다.</p>
+<p><span class="math display">\[\begin{equation*} \otimes_1 = g \circ (f
+\circ \otimes_1) = (g \circ f)
+\circ \otimes_1 \end{equation*}\]</span></p>
+<p>여기서 <span class="math inline">\(T_1\)</span>의 보편성질을 다시
+적용하자. 목적지 공간을 <span class="math inline">\(Z = T_1\)</span>으로
+두고, 주어진 쌍선형변환을 <span class="math inline">\(B =
+\otimes_1\)</span>로 생각한다. 보편성질에 의해 <span
+class="math inline">\(\otimes_1 = h \circ \otimes_1\)</span>을 만족하는
+선형변환 <span class="math inline">\(h: T_1 \to
+T_1\)</span>은 유일해야 한다.</p>
+<p>그런데 항등사상 <span class="math inline">\(I_{T_1}\)</span>이 분명히
+<span class="math inline">\(\otimes_1 = I_{T_1} \circ
+\otimes_1\)</span>을 만족하므로, 선형변환의 유일성에 의해 반드시 <span
+class="math inline">\(g \circ f =
+I_{T_1}\)</span>이어야만 한다.</p>
+<p>정확히 대칭적인 논리로, <span class="math inline">\(T_2\)</span>의
+보편성질을 목적지 <span class="math inline">\(Z = T_2\)</span>와
+쌍선형변환 <span class="math inline">\(B = \otimes_2\)</span>에 대하여
+적용하면 다음이 성립한다.</p>
+<p><span class="math display">\[\begin{equation*} \otimes_2 = (f \circ
+g) \circ \otimes_2 \implies f
+\circ g = I_{T_2} \end{equation*}\]</span></p>
+<p>결과적으로 <span class="math inline">\(f\)</span>와 <span
+class="math inline">\(g\)</span>는 서로의 역변환이다. 따라서 <span
+class="math inline">\(f\)</span>는 전단사 선형변환인 동형사상이며,
+정의에 따라 <span class="math inline">\(f \circ \otimes_1 =
+\otimes_2\)</span>를 만족하므로 두 텐서곱 공간은 그 내부의 쌍선형 연산
+구조까지 완벽하게 동일하다.</p>
+<h3 id="정리-4.1.4.-텐서곱의-존재성.">정리 4.1.4. 텐서곱의 존재성.</h3>
+<p>체 <span class="math inline">\(\mathbb{F}\)</span> 상의 임의의 두
+벡터공간 <span class="math inline">\(V\)</span>와 <span
+class="math inline">\(W\)</span>에 대하여, 텐서곱의 보편성질을 완벽하게
+만족하는 쌍 <span class="math inline">\((V \otimes W,
+\otimes)\)</span>가 항상 존재한다.</p>
+<p><strong>증명.</strong></p>
+<p>집합 <span class="math inline">\(V \times W\)</span>의 모든 원소
+<span class="math inline">\((v, w)\)</span>들을 기저로 가지는 거대한
+자유벡터공간 <span class="math inline">\(F\)</span>를 구성한다. 이 공간
+<span class="math inline">\(F\)</span>의 원소는 기호 <span
+class="math inline">\((v,
+w)\)</span>들의 유한 선형결합으로 표현된다.</p>
+<p>우리가 최종적으로 원하는 연산 <span
+class="math inline">\(\otimes\)</span>는 쌍선형변환이어야 한다. 이를
+위해 <span class="math inline">\(F\)</span> 안에서 다음 형태의 모든
+벡터들에 의해 생성되는 부분공간 <span class="math inline">\(S\)</span>를
+정의한다. (단, <span class="math inline">\(v, v_1, v_2 \in
+V\text{,}\)</span> <span class="math inline">\(w, w_1, w_2 \in
+W\text{,}\)</span> <span class="math inline">\(c \in
+\mathbb{F}\)</span>)</p>
+<ul>
+<li><p><span class="math inline">\(\displaystyle (v_1 + v_2, w) - (v_1,
+w) - (v_2, w)\)</span></p></li>
+<li><p><span class="math inline">\(\displaystyle (cv, w) - c(v,
+w)\)</span></p></li>
+<li><p><span class="math inline">\(\displaystyle (v, w_1 + w_2) - (v,
+w_1) - (v, w_2)\)</span></p></li>
+<li><p><span class="math inline">\(\displaystyle (v, cw) - c(v,
+w)\)</span></p></li>
+</ul>
+<p>이제 <span class="math inline">\(F\)</span>를 부분공간 <span
+class="math inline">\(S\)</span>로 나눈 몫공간을 <span
+class="math inline">\(V \otimes W = F/S\)</span>로 정의한다. 임의의
+잉여류 대표원 <span class="math inline">\((v, w)\)</span>에 대응하는
+잉여류 <span class="math inline">\((v, w) +
+S\)</span>를 기호 <span class="math inline">\(v \otimes w\)</span>로
+표기한다.</p>
+<p>사상 <span class="math inline">\(\otimes: V \times W \to V \otimes
+W\)</span>를 <span class="math inline">\(\otimes(v, w) = v
+\otimes w\)</span>로 정의하자. 부분공간 <span
+class="math inline">\(S\)</span>를 법으로 몫공간을 취했으므로, <span
+class="math inline">\(S\)</span>의 생성원들은 모두 이 몫공간에서
+영벡터가 된다. 이 구조적 특징으로 인해 사상 <span
+class="math inline">\(\otimes\)</span>는 자연스럽게 쌍선형변환이 된다.
+(예를 들어, <span class="math inline">\((v_1 + v_2) \otimes w = (v_1 +
+v_2, w) + S = ((v_1, w) + (v_2, w)) + S
+= v_1 \otimes w + v_2 \otimes w\)</span>가 성립한다.)</p>
+<p>이 몫공간이 실제로 보편성질을 만족하는지 확인하자. 임의의 벡터공간
+<span class="math inline">\(Z\)</span>와 쌍선형변환 <span
+class="math inline">\(B: V \times W \to Z\)</span>가 주어졌다고
+가정한다.</p>
+<p>집합 <span class="math inline">\(V \times W\)</span>에서 <span
+class="math inline">\(Z\)</span>로 가는 함수 <span
+class="math inline">\(B\)</span>를 자유벡터공간 <span
+class="math inline">\(F\)</span>의 기저 위에서 정의된 함수로 보고, 이를
+전체 공간으로 선형적으로 확장하여 유일한 선형변환 <span
+class="math inline">\(\bar{B}: F \to Z\)</span>를 얻는다. 기저에서의
+값은 <span class="math inline">\(\bar{B}(v, w) = B(v,
+w)\)</span>이다.</p>
+<p><span class="math inline">\(B\)</span>가 원래 쌍선형변환이었으므로,
+부분공간 <span class="math inline">\(S\)</span>의 모든 생성원들은 <span
+class="math inline">\(\bar{B}\)</span>에 의해 영벡터로 맵핑된다. (예:
+<span class="math inline">\(\bar{B}((cv, w) - c(v, w))
+= B(cv, w) - cB(v, w) = 0\)</span>). 따라서 <span
+class="math inline">\(S \subseteq \ker(\bar{B})\)</span>가 성립한다.</p>
+<p>동형정리 2.2.1에 의해, <span class="math inline">\(S\)</span>가
+커널에 포함되므로 선형변환 <span class="math inline">\(\tilde{B}:
+F/S \to Z\)</span>가 유일하게 유도된다. 이 유도된 사상은 <span
+class="math inline">\(\tilde{B}(v \otimes
+w) = \tilde{B}((v, w) + S) = \bar{B}(v, w) = B(v, w)\)</span>를 완벽하게
+만족한다.</p>
+<p>결과적으로 <span class="math inline">\(\tilde{B} \circ \otimes =
+B\)</span>를 만족하는 유일한 선형변환 <span
+class="math inline">\(\tilde{B}\)</span>를 항상 찾을 수 있으므로, 우리가
+구성한 몫공간 <span class="math inline">\(F/S\)</span>는 텐서곱의
+보편성질을 충족하며 그 존재성이 증명되었다. <span
+class="math inline">\(\blacksquare\)</span></p>
+<p>예제 4.1.5. 몫공간 구성에서 영벡터 성질.</p>
+<p>이 대수적 구성을 통해 직관적인 등식 <span class="math inline">\(v
+\otimes 0 = 0\)</span>을 몫공간의 관점에서 엄밀하게 확인할 수
+있습니다。</p>
+<p><strong>Solution.</strong></p>
+<p>사상 <span class="math inline">\(\otimes\)</span>의 정의에 의해 <span
+class="math inline">\(v \otimes 0 = (v, 0) + S\)</span>입니다. 부분공간
+<span class="math inline">\(S\)</span>의 생성원 중 <span
+class="math inline">\((v, 0+0) - (v, 0) - (v, 0)\)</span>을 생각해보면,
+이는 식을 정리했을 때 <span class="math inline">\(-(v, 0)\)</span>이
+되고 이 벡터가 <span class="math inline">\(S\)</span>에 속한다는
+뜻입니다. <span class="math inline">\(S\)</span>는 부분공간이므로 양변에
+<span class="math inline">\(-1\)</span>을 곱한 <span
+class="math inline">\((v, 0)\)</span> 역시 <span
+class="math inline">\(S\)</span>에 속합니다.</p>
+<p>자신이 속한 부분공간을 법으로 하는 잉여류는 영벡터를 나타내므로,
+<span class="math inline">\((v,
+0) + S = 0 + S\)</span>가 되어 텐서곱 공간에서 영벡터가 됨을 명확하게
+보여줍니다.</p>
+<h3 id="정리-4.1.6.-텐서곱의-기저와-차원.">정리 4.1.6. 텐서곱의 기저와
+차원.</h3>
+<p>체 <span class="math inline">\(\mathbb{F}\)</span> 상의 유한차원
+벡터공간 <span class="math inline">\(V\)</span>와 <span
+class="math inline">\(W\)</span>의 기저를 각각 <span
+class="math inline">\(\{v_1, \dots, v_n\}\)</span>과 <span
+class="math inline">\(\{w_1, \dots, w_m\}\)</span>이라 하자. 이때 집합
+<span class="math inline">\(\{v_i \otimes w_j \mid 1 \le i \le n, 1 \le
+j \le m\}\)</span>은 <span class="math inline">\(V \otimes
+W\)</span>의 기저가 된다. 특히, <span class="math inline">\(\dim(V
+\otimes W) = \dim(V)\dim(W)\)</span>이다.</p>
+<p><strong>증명.</strong></p>
+<p>형식적인 기호 <span class="math inline">\(v_i \otimes
+w_j\)</span>들을 기저로 가지는 <span class="math inline">\(nm\)</span>
+차원 벡터공간 <span class="math inline">\(T\)</span>를 구성하고, <span
+class="math inline">\(v = \sum a_i v_i\)</span>와 <span
+class="math inline">\(w = \sum b_j w_j\)</span>에 대하여 사상 <span
+class="math inline">\(\otimes: V \times W \to T\)</span>를 <span
+class="math inline">\(v \otimes w = \sum_{i,j} a_i b_j
+(v_i \otimes w_j)\)</span>로 정의한다. 임의의 쌍선형변환 <span
+class="math inline">\(B\)</span>가 주어졌을 때 <span
+class="math inline">\(\tilde{B}(v_i \otimes w_j) = B(v_i,
+w_j)\)</span>로 선형변환을 유일하게 정의할 수 있으며, 이 구조가
+보편성질을 완벽하게 만족함을 대수적으로 쉽게 확인할 수 있다. <span
+class="math inline">\(\blacksquare\)</span></p>
+<h3 id="예시-4.1.7.-표준-텐서곱의-기저.">예시 4.1.7. 표준 텐서곱의
+기저.</h3>
+<p><span class="math inline">\(\mathbb{F}^2\)</span>의 표준기저를 <span
+class="math inline">\(\{e_1, e_2\}\)</span>라 할 때, 텐서곱 <span
+class="math inline">\(\mathbb{F}^2 \otimes \mathbb{F}^2\)</span>는
+차원이 4이며 기저는 <span class="math inline">\(\{e_1
+\otimes e_1, e_1 \otimes e_2, e_2 \otimes e_1, e_2 \otimes
+e_2\}\)</span>가 됩니다. 임의의 원소는 이 네 기저 벡터의 선형결합으로
+표현됩니다.</p>
+<h2 id="소절-4.1.3-선형변환-공간의-텐서곱-표현">소절 4.1.3 선형변환
+공간의 텐서곱 표현</h2>
+<p>텐서곱의 가장 놀라운 응용 중 하나는, 한 공간에서 다른 공간으로 가는
+모든 선형변환들의 모임을 텐서곱으로 완벽하게 분해하여 표현할 수 있다는
+점입니다.</p>
+<h3 id="정리-4.1.8.-선형변환-공간의-텐서곱-표현.">정리 4.1.8. 선형변환
+공간의 텐서곱 표현.</h3>
+<p>체 <span class="math inline">\(\mathbb{F}\)</span> 상의 유한차원
+벡터공간 <span class="math inline">\(V, W\)</span>에 대하여, 텐서곱 공간
+<span class="math inline">\(V^* \otimes W\)</span>는 선형변환들의 공간
+<span class="math inline">\(\mathcal{L}(V, W)\)</span>와 동형이다. (단,
+<span class="math inline">\(V^*\)</span>는 <span
+class="math inline">\(V\)</span>의 쌍대공간이다.)</p>
+<p><strong>증명.</strong></p>
+<p>사상 <span class="math inline">\(B: V^* \times W \to \mathcal{L}(V,
+W)\)</span>를 <span class="math inline">\(B(f, w)(v) =
+f(v)w\)</span>로 정의하자. <span class="math inline">\(B\)</span>는 함수
+<span class="math inline">\(f\)</span>와 벡터 <span
+class="math inline">\(w\)</span> 각각에 대하여 선형성을 가지므로
+쌍선형변환이다.</p>
+<p>텐서곱의 보편성질에 의해, <span class="math inline">\(\tilde{B}(f
+\otimes w)(v) = f(v)w\)</span>를 만족하는 유일한 선형변환 <span
+class="math inline">\(\tilde{B}: V^* \otimes W \to \mathcal{L}(V,
+W)\)</span>가 존재한다.</p>
+<p><span class="math inline">\(V\)</span>의 기저를 <span
+class="math inline">\(\{v_1, \dots, v_n\}\text{,}\)</span> 이에 대응하는
+쌍대기저를 <span class="math inline">\(\{f_1, \dots, f_n\}\)</span>이라
+하고, <span class="math inline">\(W\)</span>의 기저를 <span
+class="math inline">\(\{w_1, \dots,
+w_m\}\)</span>이라 하자.</p>
+<p><span class="math inline">\(V^* \otimes W\)</span>의 기저 원소 <span
+class="math inline">\(f_i \otimes w_j\)</span>에 대한 <span
+class="math inline">\(\tilde{B}\)</span>의 상을 살펴보면, <span
+class="math inline">\(\tilde{B}(f_i \otimes w_j)(v_k) = f_i(v_k)w_j =
+\delta_{ik}w_j\)</span>이다.</p>
+<p>이는 정확히 기저 벡터 <span class="math inline">\(v_i\)</span>를
+<span class="math inline">\(w_j\)</span>로 보내고 나머지 기저 벡터들은
+영벡터로 보내는 기본적인 행렬 단위 사상들에 해당하며, 이 사상들은 <span
+class="math inline">\(\mathcal{L}(V, W)\)</span>의 기저를 이룬다.</p>
+<p>선형변환 <span class="math inline">\(\tilde{B}\)</span>가 기저를
+기저로 맵핑하므로, <span class="math inline">\(\tilde{B}\)</span>는
+동형사상이다. <span class="math inline">\(\blacksquare\)</span></p>
+<h3 id="예시-4.1.9.-선형변환과-행렬-표현.">예시 4.1.9. 선형변환과 행렬
+표현.</h3>
+<p><span class="math inline">\(V = \mathbb{R}^2\text{,}\)</span> <span
+class="math inline">\(W = \mathbb{R}^2\)</span>일 때, 단일 텐서 <span
+class="math inline">\(f
+\otimes w \in V^* \otimes W\)</span>가 어떤 선형변환을 나타내는지 확인해
+보자. <span class="math inline">\(f(x, y) = x+y\)</span>이고 <span
+class="math inline">\(w = (1, 2)\)</span>라면, 대응되는 선형변환 <span
+class="math inline">\(T(v) =
+f(v)w\)</span>는 <span class="math inline">\(T(x,y) = (x+y)(1, 2) =
+(x+y, 2x+2y)\)</span>가 된다. 이 선형변환의 행렬은 <span
+class="math inline">\(\begin{pmatrix} 1 &amp; 1 \\ 2 &amp; 2
+\end{pmatrix}\)</span>이며 랭크가 1이다. 즉, 텐서곱의 순수 원소들은
+랭크가 1인 선형변환을 구성하는 기본 블록 역할을 한다.</p>
+<h2 id="연습문제-4.1.4-연습문제">연습문제 4.1.4 연습문제</h2>
+<h3 id="중요-1.-스칼라와의-텐서곱.">★ 중요 1. 스칼라와의 텐서곱.</h3>
+<p>체 <span class="math inline">\(\mathbb{F}\)</span> 상의 벡터공간
+<span class="math inline">\(V\)</span>에 대하여, 스칼라 체 <span
+class="math inline">\(\mathbb{F}\)</span>를 텐서곱한 공간 <span
+class="math inline">\(V \otimes \mathbb{F}\)</span>가 원래의 공간 <span
+class="math inline">\(V\)</span>와 동형임을 증명하시오.</p>
+<h3 id="중요-2.-텐서곱-공간의-차원.">★ 중요 2. 텐서곱 공간의 차원.</h3>
+<p>체 <span class="math inline">\(\mathbb{F}\)</span> 상의 벡터공간
+<span class="math inline">\(\mathbb{F}^2\)</span>와 <span
+class="math inline">\(\mathbb{F}^3\)</span>의 텐서곱 공간 <span
+class="math inline">\(\mathbb{F}^2 \otimes \mathbb{F}^3\)</span>의
+차원을 구하고, 표준기저를 이용하여 이 공간의 모든 기저 원소들을
+나열하시오.</p>
+<h3 id="스칼라-배수와-텐서곱.">3. 스칼라 배수와 텐서곱.</h3>
+<p>스칼라 <span class="math inline">\(c \in \mathbb{F}\)</span>에 대하여
+<span class="math inline">\(c(v \otimes w) = (cv) \otimes w =
+v \otimes (cw)\)</span>가 성립함을 쌍선형성을 통해 보이시오.</p>
+<h3 id="중요-4.-텐서곱의-교환성.">★ 중요 4. 텐서곱의 교환성.</h3>
+<p>보편성질을 직접 적용하여, 임의의 두 벡터공간 <span
+class="math inline">\(V\)</span>와 <span
+class="math inline">\(W\)</span>에 대하여 동형사상 <span
+class="math inline">\(V \otimes W \cong W \otimes V\)</span>가 존재함을
+증명하시오.</p>
+<h3 id="중요-5.-체와의-텐서곱.">★ 중요 5. 체와의 텐서곱.</h3>
+<p>임의의 벡터공간 <span class="math inline">\(V\)</span>에 대하여
+자연스러운 동형사상 <span class="math inline">\(V \otimes
+\mathbb{F} \cong V\)</span>가 성립함을 쌍선형변환의 보편성질을 이용하여
+증명하시오.</p>
+<h3 id="분해-불가능한-텐서.">6. 분해 불가능한 텐서.</h3>
+<p>텐서곱 공간 <span class="math inline">\(V \otimes W\)</span>의 모든
+원소가 <span class="math inline">\(v \otimes w\)</span> 형태의 단일
+텐서로만 이루어져 있는 것은 아님을 보이기 위해, 적당한 기저를 선택하여
+두 텐서의 합 <span class="math inline">\(v_1 \otimes w_1 + v_2 \otimes
+w_2\)</span>가 단일 텐서로 표현될 수 없는 구체적인 예시를 하나
+제시하시오.</p>
+<h3 id="텐서곱의-함수-정의.">7. 텐서곱의 함수 정의.</h3>
+<p>두 선형변환 <span class="math inline">\(S: V_1 \to V_2\)</span>와
+<span class="math inline">\(T: W_1 \to W_2\)</span>가 주어졌을 때,
+텐서곱 공간 사이의 선형변환 <span class="math inline">\(S \otimes T: V_1
+\otimes W_1 \to V_2
+\otimes W_2\)</span>를 단일 텐서에 대하여 <span class="math inline">\((S
+\otimes T)(v \otimes w) = S(v)
+\otimes T(w)\)</span>로 정의한다. 이 사상이 잘 정의된 선형변환임을
+보편성질을 통해 증명하시오.</p>
+<h3 id="행렬-공간과-텐서곱.">8. 행렬 공간과 텐서곱.</h3>
+<p>행렬 공간 <span class="math inline">\(M_{m \times
+n}(\mathbb{F})\)</span>가 텐서곱 공간 <span
+class="math inline">\(\mathbb{F}^m
+\otimes \mathbb{F}^n\)</span>과 자연스럽게 동형임을 보이고, 이 동형사상
+아래에서 랭크가 1인 행렬들이 정확히 영벡터가 아닌 단일 텐서 <span
+class="math inline">\(v \otimes
+w\)</span>에 대응됨을 증명하시오.</p>
+<h3 id="텐서곱의-결합성.">9. 텐서곱의 결합성.</h3>
+<p>세 벡터공간 <span class="math inline">\(U, V, W\)</span>에 대하여
+동형사상 <span class="math inline">\((U \otimes V) \otimes W
+\cong U \otimes (V \otimes W)\)</span>가 성립함을 삼중선형변환(trilinear
+map)의 보편성질을 새롭게 정의하여 증명하시오.</p>
+<h3 id="대각합과-텐서곱.">10. 대각합과 텐서곱.</h3>
+<p>정리 4.1.8의 동형사상 <span class="math inline">\(V^* \otimes V \cong
+\mathcal{L}(V, V)\)</span>를 생각하자. 이 텐서곱 공간 위에 선형범함수
+<span class="math inline">\(\text{tr}: V^* \otimes V \to
+\mathbb{F}\)</span>를 단일 텐서에 대하여 <span
+class="math inline">\(\text{tr}(f \otimes v) = f(v)\)</span>로 정의하여
+선형적으로 확장하자. 이 선형범함수가 <span
+class="math inline">\(\mathcal{L}(V, V)\)</span> 상의 선형변환의 행렬
+대각합 연산과 동일함을 증명하시오.</p>
+<h2 id="추가-문제-6">추가 문제</h2>
+<h3 id="추가-문제-1-4">추가 문제 1</h3>
+<p>기저 <span class="math inline">\(\{v_i\}\)</span>와 <span
+class="math inline">\(\{w_j\}\)</span>가 주어졌을 때 <span
+class="math inline">\(\{v_i\otimes w_j\}\)</span>가 <span
+class="math inline">\(V\otimes W\)</span>의 기저가 되는 이유를
+보편성질로 설명하시오.</p>
+<h3 id="추가-문제-2-4">추가 문제 2</h3>
+<p>행렬곱을 텐서 수축으로 보고, NumPy broadcasting이 어떤 지표를
+암묵적으로 복제하는지 작은 예제로 설명하시오.</p>
+<h1 id="실수에서-복소수로의-확장">4.2 실수에서 복소수로의 확장</h1>
+<div class="guide-grid">
+<div class="guide-card guide-card-accent">
+<div class="guide-kicker">
+Section Lens
+</div>
+<div class="guide-title">
+복소화는 실수 공간에서 보이지 않던 인수분해를 보이게 한다.
+</div>
+<p>
+본문을 읽을 때는 정의보다 먼저 이 절이 어떤 불변량을 보존하고 압축하는지
+붙잡는다.
+</p>
+</div>
+<div class="guide-card">
+<div class="guide-kicker">
+Numerical Aside
+</div>
+<p>
+복소수는 FFT, 스펙트럼 방법, 신호처리의 기본 언어다. 실수 데이터를 복소
+기저로 읽으면 진동 모드가 좌표처럼 분해된다.
+</p>
+</div>
+</div>
+<p>실수 성분 행렬 분석 과정에서 복소수를 도입하는 과정을 엄밀하게
+기술하기 위하여 텐서곱을 사용할 수 있습니다. 텐서곱을 사용하는 방법은,
+실수에서 복소수로의 확장 뿐만아니라 일반적인 확장체에 대해서도
+적용됩니다.</p>
+<p>¹</p>
+<p>주어진 체를 포함하는 더 큰 체를 확장체라고 합니다.</p>
+<p>확장체:extension field</p>
+<h2 id="소절-4.2.1-확장체">소절 4.2.1 확장체</h2>
+<h3 id="정의-4.2.1.-확장체.">정의 4.2.1. 확장체.</h3>
+<p>두 체 <span class="math inline">\(\mathbb{F}\)</span>와 <span
+class="math inline">\(K\)</span>에 대하여, <span
+class="math inline">\(\mathbb{F}\)</span>가 <span
+class="math inline">\(K\)</span>의 부분체일 때 <span
+class="math inline">\(K\)</span>를 <span
+class="math inline">\(\mathbb{F}\)</span>의 확장체라 하고 기호로 <span
+class="math inline">\(K/\mathbb{F}\)</span>와 같이 표기한다. 이때 체
+<span class="math inline">\(K\)</span>의 원소들끼리의 덧셈과, <span
+class="math inline">\(\mathbb{F}\)</span>의 원소(스칼라)와 <span
+class="math inline">\(K\)</span>의 원소(벡터) 사이의 체의 곱셈 연산을
+생각하면, 확장체 <span class="math inline">\(K\)</span>는 자연스럽게
+기저체 <span class="math inline">\(\mathbb{F}\)</span> 상의 벡터공간이
+된다. 이 벡터공간의 차원을 <span class="math inline">\(K\)</span>의
+<span class="math inline">\(\mathbb{F}\)</span> 위에서의 차수라 부르며
+<span class="math inline">\([K:\mathbb{F}]\)</span>로 표기한다.</p>
+<h3 id="예시-4.2.2.-확장체의-예시.">예시 4.2.2. 확장체의 예시.</h3>
+<p>우리가 가장 친숙하게 다루는 수 체계인 유리수체 <span
+class="math inline">\(\mathbb{Q}\text{,}\)</span> 실수체 <span
+class="math inline">\(\mathbb{R}\text{,}\)</span> 복소수체 <span
+class="math inline">\(\mathbb{C}\)</span>는 훌륭한 확장체의
+예시이다.</p>
+<ul>
+<li><p><span
+class="math inline">\(\mathbb{R}/\mathbb{Q}\text{:}\)</span> 실수체
+<span class="math inline">\(\mathbb{R}\)</span>은 유리수체 <span
+class="math inline">\(\mathbb{Q}\)</span>의 확장체이다. <span
+class="math inline">\(\mathbb{R}\)</span>을 <span
+class="math inline">\(\mathbb{Q}\)</span> 상의 벡터공간으로 바라볼 때,
+무수히 많은 무리수들의 선형독립성으로 인해 그 벡터공간의 차원 <span
+class="math inline">\([\mathbb{R}:\mathbb{Q}]\)</span>는 무한대가
+된다.</p></li>
+<li><p><span
+class="math inline">\(\mathbb{C}/\mathbb{R}\text{:}\)</span> 복소수체
+<span class="math inline">\(\mathbb{C}\)</span>는 방정식 <span
+class="math inline">\(x^2 + 1 = 0\)</span>의 근인 <span
+class="math inline">\(i\)</span>를 추가하여 실수체 <span
+class="math inline">\(\mathbb{R}\)</span>을 확장한 체이다. <span
+class="math inline">\(\mathbb{C}\)</span>의 임의의 원소는 <span
+class="math inline">\(a + bi\)</span> (<span class="math inline">\(a, b
+\in
+\mathbb{R}\)</span>)로 유일하게 표현되므로, <span
+class="math inline">\(\mathbb{C}\)</span>를 <span
+class="math inline">\(\mathbb{R}\)</span> 상의 벡터공간으로 볼 때 기저는
+<span class="math inline">\(\{1, i\}\)</span>가 되며 그 차원 <span
+class="math inline">\([\mathbb{C}:\mathbb{R}]\)</span>은 정확히
+2이다.</p></li>
+</ul>
+<h2 id="소절-4.2.2-스칼라-확장">소절 4.2.2 스칼라 확장</h2>
+<h3 id="정의-4.2.3.-스칼라-확장.">정의 4.2.3. 스칼라 확장.</h3>
+<p>체 <span class="math inline">\(\mathbb{F}\)</span>와 그 확장체 <span
+class="math inline">\(K\)</span>을 생각하자. 체 <span
+class="math inline">\(K\)</span>은 스스로가 <span
+class="math inline">\(\mathbb{F}\)</span> 상의 벡터공간이기도 하다. 체
+<span class="math inline">\(\mathbb{F}\)</span> 상의 벡터공간 <span
+class="math inline">\(V\)</span>가 주어졌을 때, 텐서곱을 이용하여 새로운
+공간 <span class="math inline">\(V_K = K
+\otimes_{\mathbb{F}} V\)</span>를 구성할 수 있다. 이 텐서곱 공간 <span
+class="math inline">\(V_K\)</span> 위에 새로운 스칼라 <span
+class="math inline">\(k \in K\)</span>에 대한 곱셈을 단일 텐서에 대하여
+다음과 같이 정의한다.</p>
+<p><span class="math display">\[\begin{equation*} k(c \otimes v) = (kc)
+\otimes v \quad (c \in K, v \in
+V) \end{equation*}\]</span></p>
+<p>이 스칼라 곱셈을 선형적으로 확장하면 <span
+class="math inline">\(V_K\)</span>은 체 <span
+class="math inline">\(K\)</span> 상의 벡터공간이 되며, 이를 <span
+class="math inline">\(V\)</span>의 체 <span
+class="math inline">\(K\)</span>로의 스칼라 확장이라 한다.</p>
+<h3 id="정리-4.2.4.-기저와-차원의-보존.">정리 4.2.4. 기저와 차원의
+보존.</h3>
+<p>체 <span class="math inline">\(\mathbb{F}\)</span> 상의 벡터공간
+<span class="math inline">\(V\)</span>의 기저를 <span
+class="math inline">\(\beta = \{v_1, \dots,
+v_n\}\)</span>이라 하자. 스칼라 확장을 통해 얻은 <span
+class="math inline">\(K\)</span>-벡터공간 <span
+class="math inline">\(V_K\)</span>에 대하여, 집합 <span
+class="math inline">\(\beta&#39; = \{1 \otimes v_1, \dots, 1 \otimes
+v_n\}\)</span>은 <span class="math inline">\(V_K\)</span>의 <span
+class="math inline">\(K\)</span>-기저가 된다. 특히, <span
+class="math inline">\(V\)</span>의 <span
+class="math inline">\(\mathbb{F}\)</span> 위에서의 차원과 <span
+class="math inline">\(V_K\)</span>의 <span
+class="math inline">\(K\)</span> 위에서의 차원은 동일하다.</p>
+<p><strong>증명.</strong></p>
+<p><span class="math inline">\(V_K\)</span>의 임의의 원소는 <span
+class="math inline">\(c_j \in K\)</span>과 <span
+class="math inline">\(u_j \in V\)</span>에 대하여 <span
+class="math inline">\(\sum
+c_j \otimes u_j\)</span>의 형태를 가진다. 기저 <span
+class="math inline">\(\beta\)</span>에 대하여 <span
+class="math inline">\(u_j =
+\sum_{i=1}^n a_{ji} v_i\)</span> (<span class="math inline">\(a_{ji} \in
+\mathbb{F}\)</span>)로 유일하게 표현된다. 텐서곱의 쌍선형성에 의해
+다음이 성립한다.</p>
+<p><span class="math display">\[\begin{equation*} \sum_j c_j \otimes u_j
+= \sum_j c_j \otimes
+\left(\sum_i a_{ji} v_i\right) = \sum_i \left(\sum_j c_j a_{ji}\right)
+\otimes v_i = \sum_i \left(\sum_j c_j a_{ji}\right) (1 \otimes v_i)
+\end{equation*}\]</span></p>
+<p>스칼라 체 <span class="math inline">\(K\)</span> 안에서 <span
+class="math inline">\(l_i = \sum_j c_j a_{ji}\)</span>라 두면 임의의
+원소는 <span class="math inline">\(\sum l_i (1 \otimes v_i)\)</span>로
+표현되므로, <span class="math inline">\(\beta&#39;\)</span>는 <span
+class="math inline">\(V_K\)</span>을 <span
+class="math inline">\(K\)</span> 위에서 생성한다.</p>
+<p>선형독립성을 보이기 위해 <span class="math inline">\(\sum_{i=1}^n l_i
+(1 \otimes v_i) = 0\)</span> (<span class="math inline">\(l_i
+\in K\)</span>)이라 가정하자. 텐서곱의 정의에 의해 이 식은 <span
+class="math inline">\(\sum_{i=1}^n l_i
+\otimes v_i = 0\)</span>과 같다. 체 <span
+class="math inline">\(K\)</span>을 <span
+class="math inline">\(\mathbb{F}\)</span>-벡터공간으로 보았을 때 그
+기저를 <span class="math inline">\(\{e_k\}\)</span>라 하면, <span
+class="math inline">\(l_i = \sum_k b_{ik} e_k\)</span> (<span
+class="math inline">\(b_{ik}
+\in \mathbb{F}\)</span>)로 전개할 수 있다.</p>
+<p>이를 대입하면 <span class="math inline">\(\sum_k \sum_i (b_{ik} e_k
+\otimes v_i) = \sum_{k, i}
+b_{ik} (e_k \otimes v_i) = 0\)</span>이 된다. <span
+class="math inline">\(V_K\)</span>을 <span
+class="math inline">\(\mathbb{F}\)</span>-벡터공간으로 보았을 때 <span
+class="math inline">\(\{e_k \otimes v_i\}\)</span>는 기저를 이루므로,
+모든 <span class="math inline">\(b_{ik} = 0\)</span>이어야 한다. 따라서
+모든 <span class="math inline">\(l_i = 0\)</span>이 되어 <span
+class="math inline">\(\beta&#39;\)</span>는 <span
+class="math inline">\(K\)</span> 위에서 선형독립이다.</p>
+<h3 id="예시-4.2.5.-다항식-공간의-스칼라-확장.">예시 4.2.5. 다항식
+공간의 스칼라 확장.</h3>
+<p><span class="math inline">\(\mathbb{F} = \mathbb{R}\text{,}\)</span>
+<span class="math inline">\(K = \mathbb{C}\)</span>라 하자. <span
+class="math inline">\(V =
+\mathbb{R}[x]_{\le 2}\)</span>는 실수 계수를 가지는 2차 이하의 다항식
+공간이다. 스칼라 확장 <span class="math inline">\(\mathbb{C}
+\otimes_{\mathbb{R}} V\)</span>를 취하면, 기저 <span
+class="math inline">\(\{1,
+x, x^2\}\)</span>은 집합 <span class="math inline">\(\{1 \otimes 1, 1
+\otimes x, 1 \otimes x^2\}\)</span>으로 대응되며 이는 <span
+class="math inline">\(\mathbb{C}[x]_{\le 2}\)</span>의 복소수 기저와
+완벽하게 식별된다. 즉, 실수 다항식 공간에 복소수 스칼라를 곱할 수 있는
+권한을 부여하여 복소 다항식 공간을 얻어낸 것이다.</p>
+<h2 id="소절-4.2.3-선형변환의-확장">소절 4.2.3 선형변환의 확장</h2>
+<p>스칼라 확장은 벡터공간뿐만 아니라 선형변환에도 자연스럽게 확장될 수
+있습니다. 체 <span class="math inline">\(\mathbb{F}\)</span> 상의
+선형변환 <span class="math inline">\(T: V \to W\)</span>가 주어졌을 때,
+텐서곱을 이용하여 <span class="math inline">\(K\)</span>-선형변환 <span
+class="math inline">\(T_K: V_K \to W_K\)</span>를 다음과 같이 정의할 수
+있습니다.</p>
+<p><span class="math display">\[\begin{equation*} T_K(c \otimes v) = c
+\otimes T(v) \quad (c \in K, v
+\in V) \end{equation*}\]</span></p>
+<p>이 정의는 선형성에 의해 전체 공간으로 확장되며, 결과적으로 <span
+class="math inline">\(T_K\)</span>는 체 <span
+class="math inline">\(K\)</span> 상의 선형변환이 됩니다. 이 과정은
+원래의 선형변환이 확장된 공간에서도 동일한 행위를 하도록 보장합니다.</p>
+<h3 id="명제-4.2.6.-선형변환-공간과-스칼라-확장의-가환성.">명제 4.2.6.
+선형변환 공간과 스칼라 확장의 가환성.</h3>
+<p>체 <span class="math inline">\(\mathbb{F}\)</span> 상의 유한차원
+벡터공간 <span class="math inline">\(V, W\)</span>와 확장체 <span
+class="math inline">\(K\)</span>에 대하여, 다음 <span
+class="math inline">\(K\)</span>-벡터공간의 자연스러운 동형사상이
+성립한다.</p>
+<p><span class="math display">\[\begin{equation*} K \otimes_{\mathbb{F}}
+\mathcal{L}_{\mathbb{F}}(V, W)
+\cong \mathcal{L}_K(V_K, W_K) \end{equation*}\]</span></p>
+<p>즉, 선형변환 공간을 먼저 구성하고 스칼라를 나중에 확장하는 것과, 각각
+스칼라 확장을 거친 공간들 사이에서 선형변환 공간을 새롭게 구성하는 것은
+대수적으로 완전히 동일하다.</p>
+<p><strong>증명.</strong></p>
+<p>사상 <span class="math inline">\(B: K \times
+\mathcal{L}_{\mathbb{F}}(V, W) \to \mathcal{L}_K(V_K,
+W_K)\)</span>을 <span class="math inline">\(B(c, T) = c T_K\)</span>로
+정의하자. 여기서 <span class="math inline">\(T_K: V_K \to W_K\)</span>은
+<span class="math inline">\(T_K(a \otimes v) = (ca) \otimes
+T(v)\)</span>로 작용하는 <span
+class="math inline">\(K\)</span>-선형변환이다. 사상 <span
+class="math inline">\(B\)</span>는 <span
+class="math inline">\(c\)</span>와 <span
+class="math inline">\(T\)</span> 각각에 대해 선형성을 가지므로 <span
+class="math inline">\(\mathbb{F}\)</span>-쌍선형변환이다.</p>
+<p>텐서곱의 보편성질에 의해, <span class="math inline">\(\Phi(c \otimes
+T) = c T_K\)</span>을 만족하는 <span
+class="math inline">\(\mathbb{F}\)</span>-선형변환 <span
+class="math inline">\(\Phi: K \otimes_{\mathbb{F}}
+\mathcal{L}_{\mathbb{F}}(V, W) \to \mathcal{L}_K(V_K, W_K)\)</span>이
+유일하게 존재한다. 또한 임의의 스칼라 <span class="math inline">\(k \in
+K\)</span>에 대하여 <span class="math inline">\(\Phi(k(c \otimes T))
+= \Phi((kc) \otimes T) = (kc)T_K = k(cT_K) = k\Phi(c \otimes
+T)\)</span>가 성립하므로, 이 사상 <span
+class="math inline">\(\Phi\)</span>는 사실 <span
+class="math inline">\(K\)</span>-선형변환이다.</p>
+<p><span class="math inline">\(V\)</span>와 <span
+class="math inline">\(W\)</span>의 <span
+class="math inline">\(\mathbb{F}\)</span>-차원을 각각 <span
+class="math inline">\(n, m\)</span>이라 하자. 양변의 <span
+class="math inline">\(K\)</span>-벡터공간으로서의 차원을 계산해 보면
+모두 <span class="math inline">\(nm\)</span>으로 동일하다.</p>
+<p><span class="math inline">\(V\)</span>의 기저 <span
+class="math inline">\(\{v_1, \dots, v_n\}\)</span>와 <span
+class="math inline">\(W\)</span>의 기저 <span
+class="math inline">\(\{w_1, \dots,
+w_m\}\)</span>에 대하여, <span class="math inline">\(v_i\)</span>를
+<span class="math inline">\(w_j\)</span>로 보내고 나머지는 영벡터로
+보내는 기본 선형변환 <span class="math inline">\(E_{ji} \in
+\mathcal{L}_{\mathbb{F}}(V, W)\)</span>들을 생각하자. 사상 <span
+class="math inline">\(\Phi\)</span>에 의해 <span class="math inline">\(1
+\otimes E_{ji}\)</span>는 기저 <span class="math inline">\(1 \otimes
+v_k\)</span>를 <span class="math inline">\(\delta_{ik} (1 \otimes
+w_j)\)</span>로 보내는 공역의 기본 <span
+class="math inline">\(K\)</span>-선형변환으로 매핑된다. 이 결과물들이
+<span class="math inline">\(\mathcal{L}_K(V_K, W_K)\)</span>의 <span
+class="math inline">\(K\)</span>-기저를 완벽하게 생성하므로 <span
+class="math inline">\(\Phi\)</span>는 전사사상이며, 양변의 차원이
+유한하고 동일하므로 전단사 동형사상이 된다.</p>
+<h3 id="예시-4.2.7.-선형변환-공간의-스칼라-확장.">예시 4.2.7. 선형변환
+공간의 스칼라 확장.</h3>
+<p>실수 공간 <span class="math inline">\(V = \mathbb{R}^n, W =
+\mathbb{R}^m\)</span>과 복소수체 <span
+class="math inline">\(\mathbb{C}\)</span>를 생각하자. 실수 위에서의
+선형변환 공간 <span
+class="math inline">\(\mathcal{L}_{\mathbb{R}}(\mathbb{R}^n,
+\mathbb{R}^m)\)</span>은 <span class="math inline">\(m \times
+n\)</span> 실수 행렬 공간 <span class="math inline">\(M_{m \times
+n}(\mathbb{R})\)</span>과 동형이다. 명제 4.2.6에 따르면, 이 실수 행렬
+공간을 복소수체로 스칼라 확장한 <span class="math inline">\(\mathbb{C}
+\otimes_{\mathbb{R}} M_{m \times n}(\mathbb{R})\)</span>은, 확장된 공간
+<span class="math inline">\(\mathbb{C}^n\)</span>에서 <span
+class="math inline">\(\mathbb{C}^m\)</span>으로 가는 선형변환 공간인
+복소 행렬 공간 <span class="math inline">\(M_{m \times
+n}(\mathbb{C})\)</span>와 동형이 된다. 요컨대, 복소수 텐서를 곱하는
+행위는 실수 행렬의 각 성분에 <span class="math inline">\(i\)</span>를
+포함한 복소수를 허용하여 행렬 공간 전체를 복소 행렬 공간으로 확장하는
+직관적인 과정과 정확히 일치한다.</p>
+<h2 id="연습문제-4.2.4-연습문제">연습문제 4.2.4 연습문제</h2>
+<h3 id="중요-1.-텐서곱-공간의-차원.">★ 중요 1. 텐서곱 공간의 차원.</h3>
+<p>텐서곱 공간 <span class="math inline">\(\mathbb{C}
+\otimes_{\mathbb{R}} \mathbb{C}\)</span>를 <span
+class="math inline">\(\mathbb{C}\)</span>-벡터공간으로 보았을 때의
+차원과, <span class="math inline">\(\mathbb{R}\)</span>-벡터공간으로
+보았을 때의 차원을 각각 구하시오.</p>
+<h3 id="중요-2.-켤레선형-대합의-판별.">★ 중요 2. 켤레선형 대합의
+판별.</h3>
+<p>복소 벡터공간 <span class="math inline">\(\mathbb{C}^2\)</span>에서
+<span class="math inline">\(S(z_1, z_2) = (\bar{z}_2,
+\bar{z}_1)\)</span>로 정의된 변환이 켤레선형 대합인지 확인하여 실수
+구조가 될 수 있는지 판별하시오.</p>
+<h3 id="중요-3.-스칼라-확장의-차원.">★ 중요 3. 스칼라 확장의 차원.</h3>
+<p>스칼라 확장의 기저 보존 정리(정리 정리 4.2.4)를 이용하여, 유한차원
+공간 <span class="math inline">\(V\)</span>의 차원이 <span
+class="math inline">\(n\)</span>일 때 <span
+class="math inline">\(V_{\mathbb{C}}\)</span>의 실수 위에서의 차원을
+명시하시오.</p>
+<h3 id="스칼라-확장과-직합.">4. 스칼라 확장과 직합.</h3>
+<p>두 <span class="math inline">\(\mathbb{R}\)</span>-벡터공간 <span
+class="math inline">\(V, W\)</span>에 대하여, 스칼라 확장이 직합 구조를
+보존함을 증명하시오:</p>
+<p><span class="math display">\[\begin{equation*} \mathbb{C}
+\otimes_{\mathbb{R}} (V \oplus W) \cong
+(\mathbb{C} \otimes_{\mathbb{R}} V) \oplus (\mathbb{C}
+\otimes_{\mathbb{R}} W) \end{equation*}\]</span></p>
+<h3 id="중요-5.-유도된-사상의-선형성.">★ 중요 5. 유도된 사상의
+선형성.</h3>
+<p>선형변환 <span class="math inline">\(T: V \to W\)</span>가 주어졌을
+때, 텐서곱 공간 상의 유도된 사상 <span
+class="math inline">\(T_{\mathbb{C}}: V_{\mathbb{C}} \to
+W_{\mathbb{C}}\)</span>를 <span class="math inline">\(T_{\mathbb{C}}(c
+\otimes v) = c \otimes T(v)\)</span>로 정의한다. 이 사상이 복소수 상에서
+선형변환이 됨을 보이시오.</p>
+<h3 id="스칼라-확장-후-행렬표현의-불변성.">6. 스칼라 확장 후 행렬표현의
+불변성.</h3>
+<p>앞선 문제의 사상 <span
+class="math inline">\(T_{\mathbb{C}}\)</span>에 대하여, 공간 <span
+class="math inline">\(V\)</span>와 <span
+class="math inline">\(W\)</span>의 <span
+class="math inline">\(\mathbb{R}\)</span>-기저 <span
+class="math inline">\(\alpha, \beta\)</span>를 그대로 스칼라 확장한
+<span class="math inline">\(\mathbb{C}\)</span>-기저 <span
+class="math inline">\(\alpha&#39;, \beta&#39;\)</span>을 선택했을 때
+행렬표현 <span
+class="math inline">\([T_{\mathbb{C}}]_{\alpha&#39;}^{\beta&#39;}\)</span>가
+원래의 행렬표현 <span class="math inline">\([T]_\alpha^\beta\)</span>와
+정확히 일치함을 증명하시오.</p>
+<h3 id="대각합과-행렬식의-불변성.">7. 대각합과 행렬식의 불변성.</h3>
+<p>정사각행렬을 이용해 정의된 선형변환에 대하여, 스칼라 확장을
+취하더라도 변환의 행렬 대각합과 행렬식이 변하지 않음을 앞선 문제의
+결과를 이용하여 논증하시오.</p>
+<h3 id="실수-구조의-고정원소-공간.">8. 실수 구조의 고정원소 공간.</h3>
+<p><span class="math inline">\(\mathbb{C}^2\)</span> 상의 실수 구조
+<span class="math inline">\(S(z_1, z_2) = (i\bar{z}_2,
+-i\bar{z}_1)\)</span>에 대하여, 하강 정리에 등장하는 고정원소 공간 <span
+class="math inline">\(V = \{w
+\in \mathbb{C}^2 \mid S(w) = w\}\)</span>의 <span
+class="math inline">\(\mathbb{R}\)</span>-기저를 구체적으로
+찾으시오.</p>
+<h2 id="추가-문제-7">추가 문제</h2>
+<h3 id="추가-문제-1-5">추가 문제 1</h3>
+<p>실수 행렬 <span class="math inline">\(A\)</span>를 복소수체 위로
+확장했을 때, 실수 고유값과 복소 고유값의 의미가 어떻게 달라지는지
+설명하시오.</p>
+<h3 id="추가-문제-2-5">추가 문제 2</h3>
+<p>FFT가 복소수 스칼라 확장을 자연스럽게 사용하는 이유를 선형변환의
+기저변환 관점에서 정리하시오.</p>
+<div class="guide-card">
+<div class="guide-kicker">
+fast.ai Reading Map
+</div>
+<p>
+이 후속편과 함께 읽기 좋은 fast.ai 노트는 PageRank with Eigen
+Decompositions, Implementing QR Factorization, Background Removal with
+Robust PCA, Topic Modeling with NMF and SVD, Matrix and Tensor
+Products이다. 추상 이론을 큰 행렬을 빠르고 안정적으로 다루는 기술로
+번역해 준다.
+</p>
+</div>
+</body>
+</html>

@@ -109,12 +109,15 @@
   <main>
     <section class="hero">
       <p class="eyebrow">Lecture Note PDF</p>
-      <h1>추상선형대수학 1.1-2.3 원문을 한 권의 PDF로 재구성</h1>
-      <p>원문 표현은 가능한 한 유지하고, 읽기 편한 레이아웃과 절별 연습문제, `★ 중요` 표시, `추가 문제`를 함께 제공한다. HTML 미리보기와 PDF를 함께 제공한다.</p>
+      <h1>추상선형대수학 원문을 교과서형 PDF로 재구성</h1>
+      <p>원문 표현은 가능한 한 유지하고, 읽기 편한 레이아웃과 절별 연습문제, `★ 중요` 표시, `추가 문제`를 함께 제공한다. 3-4장 후속편에는 fast.ai 수치선형대수 관점도 덧붙였다.</p>
       <div class="actions">
-        <a class="button primary" href="./dist/abstract-linear-algebra-1-1-to-2-3.pdf">PDF 열기</a>
-        <a class="button" href="./dist/abstract-linear-algebra-1-1-to-2-3.html">HTML 미리보기</a>
+        <a class="button primary" href="./dist/abstract-linear-algebra-1-1-to-2-3.pdf">1.1-2.3 PDF</a>
+        <a class="button" href="./dist/abstract-linear-algebra-1-1-to-2-3.html">1.1-2.3 HTML</a>
+        <a class="button primary" href="./dist/abstract-linear-algebra-3-4.pdf">3-4장 PDF</a>
+        <a class="button" href="./dist/abstract-linear-algebra-3-4.html">3-4장 HTML</a>
         <a class="button" href="./src/study-guide.md">원고 보기</a>
+        <a class="button" href="./src/study-guide-3-4.md">후속편 원고</a>
       </div>
     </section>
 
@@ -129,6 +132,8 @@
           <li>2.1 동형사상</li>
           <li>2.2 동형정리</li>
           <li>2.3 직곱, 사영, 쌍대공간</li>
+          <li>3.1-3.4 대각화, 케일리-해밀턴, 최소다항식, 조르당 표준형</li>
+          <li>4.1-4.2 텐서곱, 실수에서 복소수로의 확장</li>
         </ul>
       </article>
 
@@ -138,12 +143,13 @@
           <li>원문 내용을 가능한 한 유지하고 서식만 정리</li>
           <li>원문 연습문제를 절별로 모두 포함</li>
           <li>중요 문제는 `★ 중요`, 보강 문제는 `추가 문제`로 분리</li>
+          <li>후속편은 fast.ai 수치선형대수 노트를 사이드바로 연결</li>
         </ul>
       </article>
 
       <article class="panel">
         <h2>빌드</h2>
-        <p><code>python3 scripts/build.py</code></p>
+        <p><code>python3 scripts/build.py</code><br /><code>python3 scripts/build_sequel.py</code></p>
         <p><a href="https://dohyeong-kim.github.io/abstract-linear-algebra/frontmatter.html">원문 사이트</a>를 기반으로 작성했고, 산출물은 <code>dist/</code>에 생성된다.</p>
       </article>
     </section>
