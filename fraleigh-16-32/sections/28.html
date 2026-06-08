@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Section 28: Groebner Bases for Ideals</title>
+  <link rel="stylesheet" href="../assets/detail.css" />
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+  <div class="shell">
+    <div class="topbar">
+      <a class="button" href="../index.html">Overview</a>
+      <nav aria-label="section pager">
+        <a class="mini-link" href="27.html">Prev 27</a>
+        <a class="mini-link" href="29.html">Next 29</a>
+      </nav>
+    </div>
+
+    <header>
+      <div>
+        <p class="eyebrow">Fraleigh 7th Section 28</p>
+        <h1>Groebner Bases for Ideals</h1>
+        <p class="lead">다변수 polynomial ideal에서 나머지와 membership을 계산 가능하게 만든다.</p>
+      </div>
+      <aside class="meta">
+        <span><b>Read first</b><br />깊은 이론보다 term order, leading term, reduction, S-polynomial의 흐름을 잡는다.</span>
+        <span><b>Folded blocks</b><br />definitions, theorems, propositions, examples, exercises</span>
+      </aside>
+    </header>
+
+    <section class="quick" aria-label="chapter map">
+      <article class="card">
+        <h2>Goal</h2>
+        <p>다변수 polynomial ideal에서 나머지와 membership을 계산 가능하게 만든다.</p>
+      </article>
+      <article class="card">
+        <h2>Exam posture</h2>
+        <p>깊은 이론보다 term order, leading term, reduction, S-polynomial의 흐름을 잡는다.</p>
+      </article>
+      <article class="card">
+        <h2>Neighbor chapters</h2>
+        <p><a href="27.html">Prev 27</a> / <a href="29.html">Next 29</a></p>
+      </article>
+    </section>
+
+    <details class="fold" open><summary>Definitions <span>6</span></summary><div class="fold-body"><article class="item"><ul><li>A monomial order is a total order on power products compatible with multiplication.</li><li>The leading term \(\operatorname{LT}(f)\) is the largest term of f under the chosen order.</li><li>A Groebner basis G for I is a generating set whose leading terms generate all leading terms of elements of I.</li><li>The \(S\text{-polynomial}\) of f and g cancels their leading terms using the least common multiple of leading monomials.</li><li>The algebraic variety \(V(S)\) is the set of common zeros of a finite set S of polynomials.</li><li>A basis of an ideal I is a finite set of polynomials that generates I as an ideal.</li></ul></article></div></details>
+    <details class="fold" open>
+<summary>Theorems <span>5</span></summary>
+<div class="fold-body">
+<article class="item kind-theorem">
+<h3>Division by a list</h3>
+<span class="formula">Given an ordered list of polynomials, a polynomial f can be reduced to a remainder not divisible by any leading term in the list.</span>
+<p><b>Proof spine.</b> Repeatedly cancel the current leading term when possible. Term order prevents infinite descent.</p>
+</article>
+<article class="item kind-theorem">
+<h3>Groebner membership test</h3>
+<span class="formula">If G is a Groebner basis for I, then f lies in I iff the remainder of f on division by G is 0.</span>
+<p><b>Proof spine.</b> If remainder r is nonzero and f in I, then LT(r) should be divisible by some LT(g), contradicting reducedness.</p>
+</article>
+<article class="item kind-theorem">
+<h3>Buchberger criterion</h3>
+<span class="formula">A generating set G is a Groebner basis iff every \(S\text{-polynomial}\) S(g_i,g_j) reduces to 0 modulo G.</span>
+<p><b>Proof spine.</b> The criterion detects whether all leading-term conflicts have been resolved.</p>
+</article>
+<article class="item kind-theorem">
+<h3>Hilbert basis theorem</h3>
+<span class="formula">Every ideal in \(F[x_1,\ldots,x_n]\) has a finite basis.</span>
+<p><b>Proof spine.</b> The proof is omitted here; its role is to guarantee finite data behind polynomial ideals.</p>
+</article>
+<article class="item kind-theorem">
+<h3>Common zeros depend on ideal</h3>
+<span class="formula">A set of polynomials and the ideal it generates have the same common zero set.</span>
+<p><b>Proof spine.</b> If every generator vanishes at a point, every polynomial combination of them also vanishes there.</p>
+</article>
+</div>
+</details>
+    <details class="fold" open>
+<summary>Propositions <span>2</span></summary>
+<div class="fold-body">
+<article class="item kind-proposition">
+<h3>Lex elimination signal</h3>
+<span class="formula">With lex order, Groebner bases often contain polynomials involving fewer variables, enabling elimination.</span>
+<p><b>Proof spine.</b> Leading terms prioritize variables, forcing reductions to remove the larger variables first.</p>
+</article>
+<article class="item kind-proposition">
+<h3>One-variable case</h3>
+<span class="formula">In \(F[x]\), a single generator of an ideal is already a Groebner basis.</span>
+<p><b>Proof spine.</b> The division algorithm gives the membership test.</p>
+</article>
+</div>
+</details>
+    <details class="fold" open>
+<summary>Examples <span>5</span></summary>
+<div class="fold-body">
+<article class="item kind-example">
+<h3>Membership</h3>
+<span class="formula">To test f in (g1,g2), reduce f by a Groebner basis for the ideal. Remainder 0 means yes; nonzero means no.</span>
+<p><b>Use.</b> ordinary generators may not be enough unless they are Groebner.</p>
+</article>
+<article class="item kind-example">
+<h3>Simple basis</h3>
+<span class="formula">In \(F[x,y]\) with lex order x&gt;y, {x-y, y^2-1} lets you eliminate x and solve y^2=1 first.</span>
+<p><b>Use.</b> system solving becomes triangular.</p>
+</article>
+<article class="item kind-example">
+<h3>Why S-polynomials appear</h3>
+<span class="formula">If \(\operatorname{LT}(f)\) and LT(g) overlap, their leading terms can cancel in a combination. \(S\text{-polynomial}\) tests whether that cancellation creates a new leading term.</span>
+<p><b>Use.</b> Buchberger is conflict resolution.</p>
+</article>
+<article class="item kind-example">
+<h3>Variety of a line</h3>
+<span class="formula">For S={2x+y-2} in R[x,y], \(V(S)\) is the line \(2x+y=2\).</span>
+<p><b>Use.</b> A variety is the geometric shadow of equations.</p>
+</article>
+<article class="item kind-example">
+<h3>Ideal basis versus Groebner basis</h3>
+<span class="formula">A generating set can be a basis of an ideal without being a Groebner basis.</span>
+<p><b>Use.</b> Groebner basis is a stronger computational basis.</p>
+</article>
+</div>
+</details>
+    <details class="fold" open>
+<summary>Exercises <span>6</span></summary>
+<div class="fold-body">
+<article class="item kind-exercise">
+<h3>Reduce</h3>
+<span class="formula">Reduce f=x^2y+xy by G={x-y} under lex x&gt;y.</span>
+<p><b>Proof spine.</b> Replace x by y step by step; final expression is in y.</p>
+</article>
+<article class="item kind-exercise">
+<h3>Membership idea</h3>
+<span class="formula">Explain why a nonzero remainder proves f notin I when G is Groebner.</span>
+<p><b>Proof spine.</b> Use the leading-term contradiction.</p>
+</article>
+<article class="item kind-exercise">
+<h3>S-polynomial</h3>
+<span class="formula">Write the \(S\text{-polynomial}\) formula for f and g using lcm of leading monomials.</span>
+<p><b>Proof spine.</b> S = l/\(\operatorname{LT}(f)\) * f - l/LT(g) * g, up to leading coefficients.</p>
+</article>
+<article class="item kind-exercise">
+<h3>One-variable</h3>
+<span class="formula">Why is every ideal in \(F[x]\) computationally easy compared with \(F[x,y]\)?</span>
+<p><b>Proof spine.</b> Division by the gcd/single generator controls membership.</p>
+</article>
+<article class="item kind-exercise">
+<h3>Same variety</h3>
+<span class="formula">Show V(f,g)=V((f,g)) for two polynomials f,g.</span>
+<p><b>Proof spine.</b> Use closure under polynomial combinations.</p>
+</article>
+<article class="item kind-exercise">
+<h3>Groebner need</h3>
+<span class="formula">Explain why Hilbert basis theorem alone does not give an algorithm for ideal membership.</span>
+<p><b>Proof spine.</b> It gives finite generation, not a reduction procedure.</p>
+</article>
+</div>
+</details>
+    <details class="fold"><summary>Proof Patterns <span>2</span></summary><div class="fold-body"><article class="item kind-proof"><ul><li>Term order arguments end because leading monomials strictly decrease.</li><li>Membership proof is always: nonzero reduced remainder would have an impossible leading term.</li></ul></article></div></details>
+
+    <section class="card">
+      <h2>All sections</h2>
+      <div class="chapter-grid"><a href="16.html">16. Group Action on a Set</a>
+<a href="17.html">17. Applications of G-Sets to Counting</a>
+<a href="18.html">18. Rings and Fields</a>
+<a href="19.html">19. Integral Domains</a>
+<a href="20.html">20. Fermat&#x27;s and Euler&#x27;s Theorems</a>
+<a href="21.html">21. The Field of Quotients of an Integral Domain</a>
+<a href="22.html">22. Rings of Polynomials</a>
+<a href="23.html">23. Factorization of Polynomials over a Field</a>
+<a href="24.html">24. Noncommutative Examples</a>
+<a href="25.html">25. Ordered Rings and Fields</a>
+<a href="26.html">26. Homomorphisms and Factor Rings</a>
+<a href="27.html">27. Prime and Maximal Ideals</a>
+<a href="28.html" aria-current="page">28. Groebner Bases for Ideals</a>
+<a href="29.html">29. Introduction to Extension Fields</a>
+<a href="30.html">30. Vector Spaces</a>
+<a href="31.html">31. Algebraic Extensions</a>
+<a href="32.html">32. Geometric Constructions</a></div>
+    </section>
+
+    <footer>
+      <p>This page is a study reconstruction based on the provided chapter range. The statements are paraphrased for exam preparation rather than copied from the source text.</p>
+    </footer>
+  </div>
+</body>
+</html>

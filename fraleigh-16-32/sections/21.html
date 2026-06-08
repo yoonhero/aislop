@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Section 21: The Field of Quotients of an Integral Domain</title>
+  <link rel="stylesheet" href="../assets/detail.css" />
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+  <div class="shell">
+    <div class="topbar">
+      <a class="button" href="../index.html">Overview</a>
+      <nav aria-label="section pager">
+        <a class="mini-link" href="20.html">Prev 20</a>
+        <a class="mini-link" href="22.html">Next 22</a>
+      </nav>
+    </div>
+
+    <header>
+      <div>
+        <p class="eyebrow">Fraleigh 7th Section 21</p>
+        <h1>The Field of Quotients of an Integral Domain</h1>
+        <p class="lead">domain D를 분수체 안에 넣어 나눗셈을 가능하게 만든다.</p>
+      </div>
+      <aside class="meta">
+        <span><b>Read first</b><br />정수에서 유리수를 만드는 방식이 모든 integral domain에 그대로 작동한다.</span>
+        <span><b>Folded blocks</b><br />definitions, theorems, propositions, examples, exercises</span>
+      </aside>
+    </header>
+
+    <section class="quick" aria-label="chapter map">
+      <article class="card">
+        <h2>Goal</h2>
+        <p>domain D를 분수체 안에 넣어 나눗셈을 가능하게 만든다.</p>
+      </article>
+      <article class="card">
+        <h2>Exam posture</h2>
+        <p>정수에서 유리수를 만드는 방식이 모든 integral domain에 그대로 작동한다.</p>
+      </article>
+      <article class="card">
+        <h2>Neighbor chapters</h2>
+        <p><a href="20.html">Prev 20</a> / <a href="22.html">Next 22</a></p>
+      </article>
+    </section>
+
+    <details class="fold" open><summary>Definitions <span>3</span></summary><div class="fold-body"><article class="item"><ul><li>Pairs (a,b) with a in D and b != 0 represent fractions \(a/b\).</li><li>\((a,b)\sim(c,d)\) iff \(ad=bc\). This is the equality rule for fractions.</li><li>The canonical embedding D -&gt; Quot(D) sends a to a/1.</li></ul></article></div></details>
+    <details class="fold" open>
+<summary>Theorems <span>4</span></summary>
+<div class="fold-body">
+<article class="item kind-theorem">
+<h3>Existence of quotient field</h3>
+<span class="formula">Every integral domain D has a field F whose elements are fractions \(a/b\) with a,b in D and b != 0, and D embeds in F.</span>
+<p><b>Proof spine.</b> Use the equivalence relation \(ad=bc\), define operations on classes, and use no zero divisors to prove well-definedness.</p>
+</article>
+<article class="item kind-theorem">
+<h3>Minimality of quotient field</h3>
+<span class="formula">If D is embedded in a field E, then the smallest subfield of E containing D is isomorphic to Quot(D).</span>
+<p><b>Proof spine.</b> Send \(a/b\) to a b^{-1} inside E and check this is a well-defined field map.</p>
+</article>
+<article class="item kind-theorem">
+<h3>Universal property</h3>
+<span class="formula">Any injective ring homomorphism from D to a field K extends uniquely to a field homomorphism Quot(D)-&gt;K by \(a/b\mapsto f(a)f(b)^{-1}\).</span>
+<p><b>Proof spine.</b> The formula is forced by preserving division.</p>
+</article>
+<article class="item kind-theorem">
+<h3>Uniqueness of quotient fields</h3>
+<span class="formula">Any two fields of quotients of the same integral domain are isomorphic by an isomorphism fixing the original domain.</span>
+<p><b>Proof spine.</b> Use the universal fraction map both ways; each fraction \(a/b\) must be sent to the corresponding fraction.</p>
+</article>
+</div>
+</details>
+    <details class="fold" open>
+<summary>Propositions <span>2</span></summary>
+<div class="fold-body">
+<article class="item kind-proposition">
+<h3>Fraction equality</h3>
+<span class="formula">\(a/b\)=c/d in Quot(D) iff \(ad=bc\).</span>
+<p><b>Proof spine.</b> This is the defining equivalence relation.</p>
+</article>
+<article class="item kind-proposition">
+<h3>Nonzero inverse</h3>
+<span class="formula">If \(a/b\) != 0, then its inverse is b/a.</span>
+<p><b>Proof spine.</b> a != 0, and (\(a/b\))(b/a)=1.</p>
+</article>
+</div>
+</details>
+    <details class="fold" open>
+<summary>Examples <span>3</span></summary>
+<div class="fold-body">
+<article class="item kind-example">
+<h3>Z to Q</h3>
+<span class="formula">Quot(Z)=Q.</span>
+<p><b>Use.</b> The general construction is exactly familiar fractions.</p>
+</article>
+<article class="item kind-example">
+<h3>F[x] to rational functions</h3>
+<span class="formula">For a field F, Quot(\(F[x]\)) is F(x), the field of rational functions.</span>
+<p><b>Use.</b> polynomial fractions become legitimate elements.</p>
+</article>
+<article class="item kind-example">
+<h3>Why domain is needed</h3>
+<span class="formula">\(\mathbb Z_6\) cannot be used: 2/1 would equal 0/3 by cross multiplication, while 3 is nonzero but not cancellable.</span>
+<p><b>Use.</b> zero divisors break fraction equality.</p>
+</article>
+</div>
+</details>
+    <details class="fold" open>
+<summary>Exercises <span>5</span></summary>
+<div class="fold-body">
+<article class="item kind-exercise">
+<h3>Well-defined addition</h3>
+<span class="formula">Prove that \(\frac ab+\frac cd=\frac{ad+bc}{bd}\) does not depend on representatives.</span>
+<p><b>Proof spine.</b> Replace \(a/b\) by a&#x27;/b&#x27; and use ab&#x27;=a&#x27;b.</p>
+</article>
+<article class="item kind-exercise">
+<h3>Embedding</h3>
+<span class="formula">Show \(a\mapsto a/1\) is injective.</span>
+<p><b>Proof spine.</b> a/1=0/1 implies a=0.</p>
+</article>
+<article class="item kind-exercise">
+<h3>Rational functions</h3>
+<span class="formula">In Quot(\(\mathbb Q[x]\)), simplify (x^2-1)/(x-1).</span>
+<p><b>Proof spine.</b> It equals x+1 because x != 1 is not an evaluation condition; cancellation is polynomial factor cancellation.</p>
+</article>
+<article class="item kind-exercise">
+<h3>Universal map</h3>
+<span class="formula">Given f:Z-&gt;R, f(n)=n, identify the induced map Q-&gt;R.</span>
+<p><b>Proof spine.</b> It is the usual inclusion of rationals into reals.</p>
+</article>
+<article class="item kind-exercise">
+<h3>Uniqueness map</h3>
+<span class="formula">If F and K are both quotient fields of D, describe the isomorphism F-&gt;K on \(a/b\).</span>
+<p><b>Proof spine.</b> It sends \(a/b\) to the same formal fraction inside K.</p>
+</article>
+</div>
+</details>
+    <details class="fold"><summary>Proof Patterns <span>2</span></summary><div class="fold-body"><article class="item kind-proof"><ul><li>For fraction constructions, every proof has a representative-choice step.</li><li>If a denominator might be a zero divisor, stop: quotient fields require domains.</li></ul></article></div></details>
+
+    <section class="card">
+      <h2>All sections</h2>
+      <div class="chapter-grid"><a href="16.html">16. Group Action on a Set</a>
+<a href="17.html">17. Applications of G-Sets to Counting</a>
+<a href="18.html">18. Rings and Fields</a>
+<a href="19.html">19. Integral Domains</a>
+<a href="20.html">20. Fermat&#x27;s and Euler&#x27;s Theorems</a>
+<a href="21.html" aria-current="page">21. The Field of Quotients of an Integral Domain</a>
+<a href="22.html">22. Rings of Polynomials</a>
+<a href="23.html">23. Factorization of Polynomials over a Field</a>
+<a href="24.html">24. Noncommutative Examples</a>
+<a href="25.html">25. Ordered Rings and Fields</a>
+<a href="26.html">26. Homomorphisms and Factor Rings</a>
+<a href="27.html">27. Prime and Maximal Ideals</a>
+<a href="28.html">28. Groebner Bases for Ideals</a>
+<a href="29.html">29. Introduction to Extension Fields</a>
+<a href="30.html">30. Vector Spaces</a>
+<a href="31.html">31. Algebraic Extensions</a>
+<a href="32.html">32. Geometric Constructions</a></div>
+    </section>
+
+    <footer>
+      <p>This page is a study reconstruction based on the provided chapter range. The statements are paraphrased for exam preparation rather than copied from the source text.</p>
+    </footer>
+  </div>
+</body>
+</html>

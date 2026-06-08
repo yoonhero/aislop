@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Section 17: Applications of G-Sets to Counting</title>
+  <link rel="stylesheet" href="../assets/detail.css" />
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+  <div class="shell">
+    <div class="topbar">
+      <a class="button" href="../index.html">Overview</a>
+      <nav aria-label="section pager">
+        <a class="mini-link" href="16.html">Prev 16</a>
+        <a class="mini-link" href="18.html">Next 18</a>
+      </nav>
+    </div>
+
+    <header>
+      <div>
+        <p class="eyebrow">Fraleigh 7th Section 17</p>
+        <h1>Applications of G-Sets to Counting</h1>
+        <p class="lead">대칭 때문에 같은 것으로 보이는 객체를 orbit 단위로 센다.</p>
+      </div>
+      <aside class="meta">
+        <span><b>Read first</b><br />Burnside는 새로운 마법이 아니라, fixed point를 두 방향으로 세는 double counting이다.</span>
+        <span><b>Folded blocks</b><br />definitions, theorems, propositions, examples, exercises</span>
+      </aside>
+    </header>
+
+    <section class="quick" aria-label="chapter map">
+      <article class="card">
+        <h2>Goal</h2>
+        <p>대칭 때문에 같은 것으로 보이는 객체를 orbit 단위로 센다.</p>
+      </article>
+      <article class="card">
+        <h2>Exam posture</h2>
+        <p>Burnside는 새로운 마법이 아니라, fixed point를 두 방향으로 세는 double counting이다.</p>
+      </article>
+      <article class="card">
+        <h2>Neighbor chapters</h2>
+        <p><a href="16.html">Prev 16</a> / <a href="18.html">Next 18</a></p>
+      </article>
+    </section>
+
+    <details class="fold" open><summary>Definitions <span>4</span></summary><div class="fold-body"><article class="item"><ul><li>\(\operatorname{Fix}(g)=\{x\in X\mid gx=x\}\). 한 group element가 고정하는 객체들의 집합.</li><li>The number of essentially different objects under a group action is the number of orbits.</li><li>Conjugation action is \(g*x=gxg^{-1}\). Its orbits are conjugacy classes.</li><li>The centralizer \(C_G(x)\) is the stabilizer of x under conjugation.</li></ul></article></div></details>
+    <details class="fold" open>
+<summary>Theorems <span>3</span></summary>
+<div class="fold-body">
+<article class="item kind-theorem">
+<h3>Burnside lemma</h3>
+<span class="formula">If a finite group G acts on a finite set X, then the number of orbits is \(\frac{1}{|G|}\sum_{g\in G}|\operatorname{Fix}(g)|\).</span>
+<p><b>Proof spine.</b> Count \(S=\{(g,x)\mid gx=x\}\). By g first, |S|=sum |Fix(g)|. By orbit first, each orbit contributes |G| using orbit-stabilizer.</p>
+<p><b>Use.</b> up to symmetry 문제의 기본 공식.</p>
+</article>
+<article class="item kind-theorem">
+<h3>Class equation</h3>
+<span class="formula">For a finite group G under conjugation, \(|G|=|Z(G)|+\sum_i [G:C_G(a_i)]\), where a_i run over representatives of noncentral conjugacy classes.</span>
+<p><b>Proof spine.</b> Conjugation orbits of central elements have size 1. Other orbit sizes are centralizer indices.</p>
+<p><b>Use.</b> p-group의 center가 nontrivial임을 보이는 표준 입구다.</p>
+</article>
+<article class="item kind-theorem">
+<h3>p-group center theorem</h3>
+<span class="formula">If |G|=p^n with p prime and n&gt;0, then \(Z(G)\) is nontrivial.</span>
+<p><b>Proof spine.</b> In the class equation, every noncentral conjugacy class has size divisible by p. Since |G| is divisible by p, |\(Z(G)\)| is divisible by p.</p>
+<p><b>Use.</b> Sylow 전 단계에서 자주 쓰는 group action 계산.</p>
+</article>
+</div>
+</details>
+    <details class="fold" open>
+<summary>Propositions <span>2</span></summary>
+<div class="fold-body">
+<article class="item kind-proposition">
+<h3>Fixed colors under a rotation</h3>
+<span class="formula">For necklace colorings, a rotation by k positions fixes exactly \(c^{\gcd(n,k)}\) colorings when c colors and n beads are used.</span>
+<p><b>Proof spine.</b> The rotation splits positions into gcd(n,k) cycles, and each cycle must be monochromatic.</p>
+</article>
+<article class="item kind-proposition">
+<h3>Conjugacy class size</h3>
+<span class="formula">The size of the conjugacy class of a is [G:C_G(a)].</span>
+<p><b>Proof spine.</b> This is orbit-stabilizer for the conjugation action.</p>
+</article>
+</div>
+</details>
+    <details class="fold" open>
+<summary>Examples <span>5</span></summary>
+<div class="fold-body">
+<article class="item kind-example">
+<h3>Three-bead necklaces with two colors</h3>
+<span class="formula">C3 acts on 2^3 colorings. The identity fixes 8, each nontrivial rotation fixes 2. Burnside gives (8+2+2)/3=4 necklaces.</span>
+<p><b>Use.</b> fixed set을 직접 세는 연습.</p>
+</article>
+<article class="item kind-example">
+<h3>D4 colorings of a square</h3>
+<span class="formula">D4 has rotations and reflections. Count colorings fixed by each symmetry type, then average over eight symmetries.</span>
+<p><b>Use.</b> 대칭을 conjugacy type별로 묶으면 계산이 짧아진다.</p>
+</article>
+<article class="item kind-example">
+<h3>Conjugation in S3</h3>
+<span class="formula">S3 has conjugacy classes: identity, three transpositions, two 3-cycles. This is exactly the orbit decomposition under conjugation.</span>
+<p><b>Use.</b> conjugacy class는 추상 정의가 아니라 group action의 orbit이다.</p>
+</article>
+<article class="item kind-example">
+<h3>Round-table seating</h3>
+<span class="formula">Circular seating is counted by quotienting ordinary arrangements by the rotation action.</span>
+<p><b>Use.</b> If all n people are distinct, rotations identify n linear arrangements, giving (n-1)! circular arrangements.</p>
+</article>
+<article class="item kind-example">
+<h3>Cube face markings</h3>
+<span class="formula">A cube-marking problem is a Burnside problem for the 24-element rotation group of the cube.</span>
+<p><b>Use.</b> It is the canonical example where fixed counts are grouped by rotation type.</p>
+</article>
+</div>
+</details>
+    <details class="fold" open>
+<summary>Exercises <span>6</span></summary>
+<div class="fold-body">
+<article class="item kind-exercise">
+<h3>Burnside warm-up</h3>
+<span class="formula">Count binary bracelets of length 4 under rotations only.</span>
+<p><b>Proof spine.</b> Use C4. Fixed counts: identity 16, 90-degree rotations 2 each, 180-degree rotation 4.</p>
+</article>
+<article class="item kind-exercise">
+<h3>Class equation</h3>
+<span class="formula">Write the class equation of S3.</span>
+<p><b>Proof spine.</b> Use class sizes 1, 3, 2.</p>
+</article>
+<article class="item kind-exercise">
+<h3>Center of order p^2 group</h3>
+<span class="formula">Use the p-group center theorem to show every group of order p^2 is abelian.</span>
+<p><b>Proof spine.</b> After \(Z(G)\) is nontrivial, consider whether its order is p or p^2 and use G/\(Z(G)\) cyclic.</p>
+</article>
+<article class="item kind-exercise">
+<h3>Conjugacy stabilizer</h3>
+<span class="formula">For a transposition in S4, compute the size of its conjugacy class via the centralizer.</span>
+<p><b>Proof spine.</b> There are six transpositions; centralizer size must be 24/6=4.</p>
+</article>
+<article class="item kind-exercise">
+<h3>Table seating</h3>
+<span class="formula">How many ways can seven distinct people sit around a round table up to rotation?</span>
+<p><b>Proof spine.</b> 6!.</p>
+</article>
+<article class="item kind-exercise">
+<h3>Fixed-point table</h3>
+<span class="formula">For a square with two colors on vertices, make the full Burnside fixed-point table for D4.</span>
+<p><b>Proof spine.</b> Group the eight symmetries by type: identity, rotations, and reflections.</p>
+</article>
+</div>
+</details>
+    <details class="fold"><summary>Proof Patterns <span>2</span></summary><div class="fold-body"><article class="item kind-proof"><ul><li>Counting orbits usually means building the set of pairs (g,x) with gx=x.</li><li>Conjugacy problems become stabilizer problems once you write the action explicitly.</li></ul></article></div></details>
+
+    <section class="card">
+      <h2>All sections</h2>
+      <div class="chapter-grid"><a href="16.html">16. Group Action on a Set</a>
+<a href="17.html" aria-current="page">17. Applications of G-Sets to Counting</a>
+<a href="18.html">18. Rings and Fields</a>
+<a href="19.html">19. Integral Domains</a>
+<a href="20.html">20. Fermat&#x27;s and Euler&#x27;s Theorems</a>
+<a href="21.html">21. The Field of Quotients of an Integral Domain</a>
+<a href="22.html">22. Rings of Polynomials</a>
+<a href="23.html">23. Factorization of Polynomials over a Field</a>
+<a href="24.html">24. Noncommutative Examples</a>
+<a href="25.html">25. Ordered Rings and Fields</a>
+<a href="26.html">26. Homomorphisms and Factor Rings</a>
+<a href="27.html">27. Prime and Maximal Ideals</a>
+<a href="28.html">28. Groebner Bases for Ideals</a>
+<a href="29.html">29. Introduction to Extension Fields</a>
+<a href="30.html">30. Vector Spaces</a>
+<a href="31.html">31. Algebraic Extensions</a>
+<a href="32.html">32. Geometric Constructions</a></div>
+    </section>
+
+    <footer>
+      <p>This page is a study reconstruction based on the provided chapter range. The statements are paraphrased for exam preparation rather than copied from the source text.</p>
+    </footer>
+  </div>
+</body>
+</html>

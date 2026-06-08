@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Section 32: Geometric Constructions</title>
+  <link rel="stylesheet" href="../assets/detail.css" />
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+  <div class="shell">
+    <div class="topbar">
+      <a class="button" href="../index.html">Overview</a>
+      <nav aria-label="section pager">
+        <a class="mini-link" href="31.html">Prev 31</a>
+        <a class="mini-link" href="../index.html">Overview</a>
+      </nav>
+    </div>
+
+    <header>
+      <div>
+        <p class="eyebrow">Fraleigh 7th Section 32</p>
+        <h1>Geometric Constructions</h1>
+        <p class="lead">자와 컴퍼스 문제를 extension degree 문제로 바꾼다.</p>
+      </div>
+      <aside class="meta">
+        <span><b>Read first</b><br />constructible number는 사칙연산과 square root만으로 얻어진다.</span>
+        <span><b>Folded blocks</b><br />definitions, theorems, propositions, examples, exercises</span>
+      </aside>
+    </header>
+
+    <section class="quick" aria-label="chapter map">
+      <article class="card">
+        <h2>Goal</h2>
+        <p>자와 컴퍼스 문제를 extension degree 문제로 바꾼다.</p>
+      </article>
+      <article class="card">
+        <h2>Exam posture</h2>
+        <p>constructible number는 사칙연산과 square root만으로 얻어진다.</p>
+      </article>
+      <article class="card">
+        <h2>Neighbor chapters</h2>
+        <p><a href="31.html">Prev 31</a> / <a href="../index.html">Overview</a></p>
+      </article>
+    </section>
+
+    <details class="fold" open><summary>Definitions <span>3</span></summary><div class="fold-body"><article class="item"><ul><li>A real number is constructible if it appears as a coordinate of a point constructible from 0 and 1 by straightedge and compass.</li><li>Constructible numbers form a subfield of R.</li><li>A quadratic extension is obtained by adjoining a square root of an element already present.</li></ul></article></div></details>
+    <details class="fold" open>
+<summary>Theorems <span>5</span></summary>
+<div class="fold-body">
+<article class="item kind-theorem">
+<h3>Field operations are constructible</h3>
+<span class="formula">If \(\alpha\text{ and }\beta\) are constructible, then \(\alpha+\beta\), \(\alpha-\beta\), \(\alpha\beta\), and \(\alpha/\beta\) for \(\beta\ne0\) are constructible.</span>
+<p><b>Proof spine.</b> Classical line constructions implement arithmetic on a fixed coordinate line.</p>
+</article>
+<article class="item kind-theorem">
+<h3>Square roots are constructible</h3>
+<span class="formula">If \(\alpha>0\) is constructible, then \(\sqrt\alpha\) is constructible.</span>
+<p><b>Proof spine.</b> Use similar triangles or circle construction to realize geometric mean.</p>
+</article>
+<article class="item kind-theorem">
+<h3>Constructible degree obstruction</h3>
+<span class="formula">If \(\alpha\text{ is constructible}\) and algebraic \(\text{over }\mathbb Q\), then \([\mathbb Q(\alpha):\mathbb Q]\) is a power of 2 divisor; more precisely \(\alpha\text{ lies}\) in a tower of quadratic extensions \(\text{over }\mathbb Q\).</span>
+<p><b>Proof spine.</b> Every new intersection point solves at most a quadratic equation over the previous coordinate field.</p>
+</article>
+<article class="item kind-theorem">
+<h3>Constructible iff quadratic tower</h3>
+<span class="formula">A real algebraic number is constructible only if it lies in a field obtained from Q by finitely many quadratic extensions; conversely elements built by such field operations and square roots are constructible.</span>
+<p><b>Proof spine.</b> Line and circle intersections solve equations of degree at most two over the previous coordinate field.</p>
+</article>
+<article class="item kind-theorem">
+<h3>Regular polygon criterion</h3>
+<span class="formula">A regular n-gon is constructible exactly when \(\cos(2\pi/n)\) is constructible; the full classification leads to Fermat-prime conditions.</span>
+<p><b>Proof spine.</b> Constructing the central angle and constructing the polygon are equivalent tasks.</p>
+</article>
+</div>
+</details>
+    <details class="fold" open>
+<summary>Propositions <span>2</span></summary>
+<div class="fold-body">
+<article class="item kind-proposition">
+<h3>Line-circle algebra</h3>
+<span class="formula">Coordinates of intersections of constructible lines and circles are obtained by solving linear or quadratic equations over the previous field.</span>
+<p><b>Proof spine.</b> Line equations are linear; circle equations are quadratic.</p>
+</article>
+<article class="item kind-proposition">
+<h3>Non-power-of-two obstruction</h3>
+<span class="formula">If the minimal polynomial degree of alpha \(\text{over }\mathbb Q\) is not a power of 2, then alpha is not constructible.</span>
+<p><b>Proof spine.</b> The degree would need to divide a power of 2 by tower law.</p>
+</article>
+</div>
+</details>
+    <details class="fold" open>
+<summary>Examples <span>4</span></summary>
+<div class="fold-body">
+<article class="item kind-example">
+<h3>Doubling the cube</h3>
+<span class="formula">\(\sqrt[3]{2}\) has minimal polynomial \(x^3-2\) \(\text{over }\mathbb Q\), degree 3, so it is not constructible.</span>
+<p><b>Use.</b> degree 3 is not compatible with quadratic towers.</p>
+</article>
+<article class="item kind-example">
+<h3>Angle trisection</h3>
+<span class="formula">Trisecting a general 60-degree angle would construct \(\cos20^\circ\) degrees, which satisfies a cubic obstruction.</span>
+<p><b>Use.</b> not every angle can be trisected.</p>
+</article>
+<article class="item kind-example">
+<h3>Squaring the circle</h3>
+<span class="formula">A square with area pi would construct sqrt(pi), which would make pi algebraic/constructible; pi is transcendental, so impossible.</span>
+<p><b>Use.</b> this uses a deeper fact about pi.</p>
+</article>
+<article class="item kind-example">
+<h3>Regular polygons</h3>
+<span class="formula">Regular 3-, 4-, 5-, 6-, 8-, 10-, 12-, 15-, 16-, 17-, 20-, and 30-gons fit the constructible pattern discussed in the exercises.</span>
+<p><b>Use.</b> Polygon questions are constructibility questions for angles.</p>
+</article>
+</div>
+</details>
+    <details class="fold" open>
+<summary>Exercises <span>6</span></summary>
+<div class="fold-body">
+<article class="item kind-exercise">
+<h3>Constructible closure</h3>
+<span class="formula">Show constructible numbers are closed under subtraction.</span>
+<p><b>Proof spine.</b> Use field operation theorem or reflect lengths on the line.</p>
+</article>
+<article class="item kind-exercise">
+<h3>Degree test</h3>
+<span class="formula">Can a root of an irreducible quintic \(\text{over }\mathbb Q\) be constructible?</span>
+<p><b>Proof spine.</b> Not if its degree is 5.</p>
+</article>
+<article class="item kind-exercise">
+<h3>sqrt tower</h3>
+<span class="formula">Explain why \(\sqrt{1+\sqrt2}\) is constructible.</span>
+<p><b>Proof spine.</b> Start with \(\sqrt2\), then add 1, then take another square root.</p>
+</article>
+<article class="item kind-exercise">
+<h3>Cube duplication</h3>
+<span class="formula">Formalize the obstruction for constructing a cube with twice the volume.</span>
+<p><b>Proof spine.</b> The side length would be \(\sqrt[3]{2}\).</p>
+</article>
+<article class="item kind-exercise">
+<h3>Regular 9-gon</h3>
+<span class="formula">Use the cubic obstruction behind Theorem 32.11 to show the regular 9-gon is not constructible.</span>
+<p><b>Proof spine.</b> Relate it to trisecting a 120-degree angle or to the degree of the relevant cosine.</p>
+</article>
+<article class="item kind-exercise">
+<h3>Regular 10-gon</h3>
+<span class="formula">Show a regular 10-gon is constructible.</span>
+<p><b>Proof spine.</b> Use that a regular 5-gon is constructible and bisect the central angle.</p>
+</article>
+</div>
+</details>
+    <details class="fold"><summary>Proof Patterns <span>2</span></summary><div class="fold-body"><article class="item kind-proof"><ul><li>Translate geometry into coordinates, then coordinates into field extensions.</li><li>Impossibility proofs need algebraic degree evidence; pictures alone do not prove impossibility.</li></ul></article></div></details>
+
+    <section class="card">
+      <h2>All sections</h2>
+      <div class="chapter-grid"><a href="16.html">16. Group Action on a Set</a>
+<a href="17.html">17. Applications of G-Sets to Counting</a>
+<a href="18.html">18. Rings and Fields</a>
+<a href="19.html">19. Integral Domains</a>
+<a href="20.html">20. Fermat&#x27;s and Euler&#x27;s Theorems</a>
+<a href="21.html">21. The Field of Quotients of an Integral Domain</a>
+<a href="22.html">22. Rings of Polynomials</a>
+<a href="23.html">23. Factorization of Polynomials over a Field</a>
+<a href="24.html">24. Noncommutative Examples</a>
+<a href="25.html">25. Ordered Rings and Fields</a>
+<a href="26.html">26. Homomorphisms and Factor Rings</a>
+<a href="27.html">27. Prime and Maximal Ideals</a>
+<a href="28.html">28. Groebner Bases for Ideals</a>
+<a href="29.html">29. Introduction to Extension Fields</a>
+<a href="30.html">30. Vector Spaces</a>
+<a href="31.html">31. Algebraic Extensions</a>
+<a href="32.html" aria-current="page">32. Geometric Constructions</a></div>
+    </section>
+
+    <footer>
+      <p>This page is a study reconstruction based on the provided chapter range. The statements are paraphrased for exam preparation rather than copied from the source text.</p>
+    </footer>
+  </div>
+</body>
+</html>

@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Section 27: Prime and Maximal Ideals</title>
+  <link rel="stylesheet" href="../assets/detail.css" />
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+  <div class="shell">
+    <div class="topbar">
+      <a class="button" href="../index.html">Overview</a>
+      <nav aria-label="section pager">
+        <a class="mini-link" href="26.html">Prev 26</a>
+        <a class="mini-link" href="28.html">Next 28</a>
+      </nav>
+    </div>
+
+    <header>
+      <div>
+        <p class="eyebrow">Fraleigh 7th Section 27</p>
+        <h1>Prime and Maximal Ideals</h1>
+        <p class="lead">ideal의 성질로 quotient ring이 domain인지 field인지 판정한다.</p>
+      </div>
+      <aside class="meta">
+        <span><b>Read first</b><br />maximal &lt;-&gt; quotient field, prime &lt;-&gt; quotient domain. 이 두 줄을 외워도 된다.</span>
+        <span><b>Folded blocks</b><br />definitions, theorems, propositions, examples, exercises</span>
+      </aside>
+    </header>
+
+    <section class="quick" aria-label="chapter map">
+      <article class="card">
+        <h2>Goal</h2>
+        <p>ideal의 성질로 quotient ring이 domain인지 field인지 판정한다.</p>
+      </article>
+      <article class="card">
+        <h2>Exam posture</h2>
+        <p>maximal &lt;-&gt; quotient field, prime &lt;-&gt; quotient domain. 이 두 줄을 외워도 된다.</p>
+      </article>
+      <article class="card">
+        <h2>Neighbor chapters</h2>
+        <p><a href="26.html">Prev 26</a> / <a href="28.html">Next 28</a></p>
+      </article>
+    </section>
+
+    <details class="fold" open><summary>Definitions <span>4</span></summary><div class="fold-body"><article class="item"><ul><li>A maximal ideal M is a proper ideal with no proper ideal strictly between M and R.</li><li>A prime ideal P in a commutative ring satisfies ab in P -&gt; a in P or b in P.</li><li>A principal ideal (a) consists of all multiples ra.</li><li>Prime fields are the smallest subfields: Q in characteristic 0 and \(\mathbb Z_p\) in characteristic p.</li></ul></article></div></details>
+    <details class="fold" open>
+<summary>Theorems <span>5</span></summary>
+<div class="fold-body">
+<article class="item kind-theorem">
+<h3>Maximal quotient theorem</h3>
+<span class="formula">For a commutative ring R with unity, M is maximal iff R/M is a field.</span>
+<p><b>Proof spine.</b> If M maximal and a notin M, then M+(a)=R, so 1=m+ra and a+M has inverse r+M. Conversely, ideals between M and R correspond to ideals of R/M.</p>
+</article>
+<article class="item kind-theorem">
+<h3>Prime quotient theorem</h3>
+<span class="formula">For a commutative ring R with unity, P is prime iff R/P is an integral domain.</span>
+<p><b>Proof spine.</b> ab in P exactly means (a+P)(b+P)=0 in R/P. Domain zero-product property is the prime condition.</p>
+</article>
+<article class="item kind-theorem">
+<h3>Ideals in F[x]</h3>
+<span class="formula">If F is a field, every ideal of \(F[x]\) is principal.</span>
+<p><b>Proof spine.</b> Choose a nonzero polynomial of least degree in the ideal; division shows every element is its multiple.</p>
+</article>
+<article class="item kind-theorem">
+<h3>Field ideal criterion</h3>
+<span class="formula">A commutative ring with unity is a field iff it has no proper nontrivial ideals.</span>
+<p><b>Proof spine.</b> If a nonzero a is not a unit, then (a) is a proper nontrivial ideal. Conversely, fields have only {0} and F.</p>
+</article>
+<article class="item kind-theorem">
+<h3>Prime subfield theorem</h3>
+<span class="formula">A field has characteristic p and contains a copy of \(\mathbb Z_p\), or has characteristic 0 and contains a copy of Q.</span>
+<p><b>Proof spine.</b> Map Z into the field by n |-&gt; n*1 and inspect the kernel.</p>
+</article>
+</div>
+</details>
+    <details class="fold" open>
+<summary>Propositions <span>2</span></summary>
+<div class="fold-body">
+<article class="item kind-proposition">
+<h3>Maximal implies prime</h3>
+<span class="formula">Every maximal ideal in a commutative ring with unity is prime.</span>
+<p><b>Proof spine.</b> R/M field implies R/M domain.</p>
+</article>
+<article class="item kind-proposition">
+<h3>Irreducible quotient</h3>
+<span class="formula">For p(x) in \(F[x]\), the quotient \(F[x]/(p)\) is a field iff p is irreducible.</span>
+<p><b>Proof spine.</b> In \(F[x]\), irreducible p generates a maximal ideal.</p>
+</article>
+</div>
+</details>
+    <details class="fold" open>
+<summary>Examples <span>4</span></summary>
+<div class="fold-body">
+<article class="item kind-example">
+<h3>Ideals of Z</h3>
+<span class="formula">Every ideal of Z is \(n\mathbb Z\). The ideal \(n\mathbb Z\) is maximal iff n is prime, and prime iff n is prime or n=0.</span>
+<p><b>Use.</b> \(\mathbb Z/n\mathbb Z\) tells the quotient story.</p>
+</article>
+<article class="item kind-example">
+<h3>F[x]/(x^2+1)</h3>
+<span class="formula">Over R, (\(x^2+1\)) is maximal and the quotient is C. Over C, \(x^2+1\) factors, so the ideal is not maximal.</span>
+<p><b>Use.</b> base field matters.</p>
+</article>
+<article class="item kind-example">
+<h3>Z x Z</h3>
+<span class="formula">\(\mathbb Z\times\{0\}\) is prime but not maximal? The quotient is Z, a domain but not a field.</span>
+<p><b>Use.</b> prime and maximal differ outside special rings.</p>
+</article>
+<article class="item kind-example">
+<h3>Prime but not maximal</h3>
+<span class="formula">In \(\mathbb Z\times\mathbb Z\), the ideal \(\mathbb Z\times\{0\}\) is prime because the quotient is Z, but it is not maximal because Z is not a field.</span>
+<p><b>Use.</b> This separates prime from maximal.</p>
+</article>
+</div>
+</details>
+    <details class="fold" open>
+<summary>Exercises <span>5</span></summary>
+<div class="fold-body">
+<article class="item kind-exercise">
+<h3>Maximal in Z</h3>
+<span class="formula">For which n is \(n\mathbb Z\) maximal in Z?</span>
+<p><b>Proof spine.</b> Exactly prime n.</p>
+</article>
+<article class="item kind-exercise">
+<h3>Prime quotient</h3>
+<span class="formula">Show (x) is prime in \(F[x,y]\).</span>
+<p><b>Proof spine.</b> Quotient by (x) is isomorphic to F[y], a domain.</p>
+</article>
+<article class="item kind-exercise">
+<h3>Maximal quotient</h3>
+<span class="formula">Show (\(x-a\)) is maximal in \(F[x]\).</span>
+<p><b>Proof spine.</b> Quotient is F by evaluation at a.</p>
+</article>
+<article class="item kind-exercise">
+<h3>Not prime</h3>
+<span class="formula">Show (6) is not prime in Z.</span>
+<p><b>Proof spine.</b> 2*3 in (6), but neither 2 nor 3 is in (6).</p>
+</article>
+<article class="item kind-exercise">
+<h3>Finite prime is maximal</h3>
+<span class="formula">Show that in a finite commutative ring with unity, every prime ideal is maximal.</span>
+<p><b>Proof spine.</b> The quotient is a finite integral domain, hence a field.</p>
+</article>
+</div>
+</details>
+    <details class="fold"><summary>Proof Patterns <span>2</span></summary><div class="fold-body"><article class="item kind-proof"><ul><li>Translate ideal questions into quotient questions whenever possible.</li><li>Minimal-degree arguments in \(F[x]\) use division algorithm.</li></ul></article></div></details>
+
+    <section class="card">
+      <h2>All sections</h2>
+      <div class="chapter-grid"><a href="16.html">16. Group Action on a Set</a>
+<a href="17.html">17. Applications of G-Sets to Counting</a>
+<a href="18.html">18. Rings and Fields</a>
+<a href="19.html">19. Integral Domains</a>
+<a href="20.html">20. Fermat&#x27;s and Euler&#x27;s Theorems</a>
+<a href="21.html">21. The Field of Quotients of an Integral Domain</a>
+<a href="22.html">22. Rings of Polynomials</a>
+<a href="23.html">23. Factorization of Polynomials over a Field</a>
+<a href="24.html">24. Noncommutative Examples</a>
+<a href="25.html">25. Ordered Rings and Fields</a>
+<a href="26.html">26. Homomorphisms and Factor Rings</a>
+<a href="27.html" aria-current="page">27. Prime and Maximal Ideals</a>
+<a href="28.html">28. Groebner Bases for Ideals</a>
+<a href="29.html">29. Introduction to Extension Fields</a>
+<a href="30.html">30. Vector Spaces</a>
+<a href="31.html">31. Algebraic Extensions</a>
+<a href="32.html">32. Geometric Constructions</a></div>
+    </section>
+
+    <footer>
+      <p>This page is a study reconstruction based on the provided chapter range. The statements are paraphrased for exam preparation rather than copied from the source text.</p>
+    </footer>
+  </div>
+</body>
+</html>

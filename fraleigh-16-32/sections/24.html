@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Section 24: Noncommutative Examples</title>
+  <link rel="stylesheet" href="../assets/detail.css" />
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+  <div class="shell">
+    <div class="topbar">
+      <a class="button" href="../index.html">Overview</a>
+      <nav aria-label="section pager">
+        <a class="mini-link" href="23.html">Prev 23</a>
+        <a class="mini-link" href="25.html">Next 25</a>
+      </nav>
+    </div>
+
+    <header>
+      <div>
+        <p class="eyebrow">Fraleigh 7th Section 24</p>
+        <h1>Noncommutative Examples</h1>
+        <p class="lead">곱셈이 교환되지 않는 ring에서 어떤 직관이 깨지는지 확인한다.</p>
+      </div>
+      <aside class="meta">
+        <span><b>Read first</b><br />AB=BA를 아무 때나 쓰는 순간 이 장의 문제는 틀린다.</span>
+        <span><b>Folded blocks</b><br />definitions, theorems, propositions, examples, exercises</span>
+      </aside>
+    </header>
+
+    <section class="quick" aria-label="chapter map">
+      <article class="card">
+        <h2>Goal</h2>
+        <p>곱셈이 교환되지 않는 ring에서 어떤 직관이 깨지는지 확인한다.</p>
+      </article>
+      <article class="card">
+        <h2>Exam posture</h2>
+        <p>AB=BA를 아무 때나 쓰는 순간 이 장의 문제는 틀린다.</p>
+      </article>
+      <article class="card">
+        <h2>Neighbor chapters</h2>
+        <p><a href="23.html">Prev 23</a> / <a href="25.html">Next 25</a></p>
+      </article>
+    </section>
+
+    <details class="fold" open><summary>Definitions <span>3</span></summary><div class="fold-body"><article class="item"><ul><li>A noncommutative ring is a ring whose multiplication need not satisfy ab=ba.</li><li>A division ring has unity and every nonzero element is a unit, but multiplication may be noncommutative.</li><li>The quaternions H have basis 1,i,j,k with \(i^2=j^2=k^2=-1\) and \(ij=k=-ji\).</li></ul></article></div></details>
+    <details class="fold" open>
+<summary>Theorems <span>5</span></summary>
+<div class="fold-body">
+<article class="item kind-theorem">
+<h3>Matrix ring theorem</h3>
+<span class="formula">For any ring R with unity, \(M_n(R)\) is a ring with unity under matrix addition and multiplication.</span>
+<p><b>Proof spine.</b> Associativity and distributivity follow from finite summation and ring distributivity in R.</p>
+</article>
+<article class="item kind-theorem">
+<h3>Quaternion division theorem</h3>
+<span class="formula">Every nonzero quaternion has a multiplicative inverse, so H is a division ring.</span>
+<p><b>Proof spine.</b> Use conjugation: q^{-1}=conj(q)/N(q), where N(q)=q conj(q) is a positive real for q != 0.</p>
+</article>
+<article class="item kind-theorem">
+<h3>Field distinction</h3>
+<span class="formula">Every field is a division ring, but not every division ring is a field.</span>
+<p><b>Proof spine.</b> H is the standard counterexample because ij=-ji.</p>
+</article>
+<article class="item kind-theorem">
+<h3>Endomorphism ring</h3>
+<span class="formula">For an abelian group A, \(\operatorname{End}(A)\) is a ring under pointwise addition and composition.</span>
+<p><b>Proof spine.</b> Addition is inherited from A; multiplication is composition, and composition distributes over pointwise addition.</p>
+</article>
+<article class="item kind-theorem">
+<h3>Wedderburn theorem</h3>
+<span class="formula">Every finite division ring is commutative; equivalently, every finite division ring is a field.</span>
+<p><b>Proof spine.</b> The proof is deeper than this study page needs, but the statement is a major boundary between finite and infinite noncommutative algebra.</p>
+</article>
+</div>
+</details>
+    <details class="fold" open>
+<summary>Propositions <span>2</span></summary>
+<div class="fold-body">
+<article class="item kind-proposition">
+<h3>Order reversal for inverses</h3>
+<span class="formula">In a noncommutative ring, if a and b are units, then \((ab)^{-1}=b^{-1}a^{-1}\).</span>
+<p><b>Proof spine.</b> Multiply ab by b^{-1}a^{-1} on both sides in the correct order.</p>
+</article>
+<article class="item kind-proposition">
+<h3>Center is commutative</h3>
+<span class="formula">The center Z(R)={a in R | ar=ra for all r in R} is a commutative subring when R has unity.</span>
+<p><b>Proof spine.</b> Elements in the center commute with everything, in particular with each other.</p>
+</article>
+</div>
+</details>
+    <details class="fold" open>
+<summary>Examples <span>4</span></summary>
+<div class="fold-body">
+<article class="item kind-example">
+<h3>2x2 matrices</h3>
+<span class="formula">Let A=E12 and B=E21. Then AB=E11 while BA=E22.</span>
+<p><b>Use.</b> A tiny explicit witness of noncommutativity.</p>
+</article>
+<article class="item kind-example">
+<h3>Quaternions</h3>
+<span class="formula">ij=k but ji=-k. Both i and j are units, but their product order matters.</span>
+<p><b>Use.</b> division does not force commutativity.</p>
+</article>
+<article class="item kind-example">
+<h3>Endomorphism ring</h3>
+<span class="formula">Linear maps V-&gt;V form a ring under addition and composition. Composition is generally noncommutative.</span>
+<p><b>Use.</b> Functions and matrices share the same obstruction.</p>
+</article>
+<article class="item kind-example">
+<h3>End(Z_n)</h3>
+<span class="formula">\(\operatorname{End}(\mathbb Z_n)\) is naturally isomorphic to \(\mathbb Z_n\): an endomorphism is determined by the image of 1.</span>
+<p><b>Use.</b> A concrete endomorphism ring that is commutative.</p>
+</article>
+</div>
+</details>
+    <details class="fold" open>
+<summary>Exercises <span>6</span></summary>
+<div class="fold-body">
+<article class="item kind-exercise">
+<h3>Inverse order</h3>
+<span class="formula">Prove \((abc)^{-1}=c^{-1}b^{-1}a^{-1}\).</span>
+<p><b>Proof spine.</b> Multiply in order.</p>
+</article>
+<article class="item kind-exercise">
+<h3>Center of matrices</h3>
+<span class="formula">Show the center of M_n(F) is the scalar matrices.</span>
+<p><b>Proof spine.</b> Commute with elementary matrices.</p>
+</article>
+<article class="item kind-exercise">
+<h3>Quaternion calculation</h3>
+<span class="formula">Compute \((i+j)^2\) in H.</span>
+<p><b>Proof spine.</b> i^2+ij+ji+j^2=-2.</p>
+</article>
+<article class="item kind-exercise">
+<h3>Bad cancellation</h3>
+<span class="formula">Find matrices A,B,C with AB=AC but B != C.</span>
+<p><b>Proof spine.</b> Use a nonzero singular A.</p>
+</article>
+<article class="item kind-exercise">
+<h3>Endomorphism addition</h3>
+<span class="formula">For endomorphisms f,g of an abelian group A, prove f+g is again an endomorphism.</span>
+<p><b>Proof spine.</b> Use commutativity of A to rearrange f(a+b)+g(a+b).</p>
+</article>
+<article class="item kind-exercise">
+<h3>Finite division ring consequence</h3>
+<span class="formula">Why can there be no noncommutative division ring with exactly 8 elements?</span>
+<p><b>Proof spine.</b> Wedderburn says every finite division ring is a field.</p>
+</article>
+</div>
+</details>
+    <details class="fold"><summary>Proof Patterns <span>2</span></summary><div class="fold-body"><article class="item kind-proof"><ul><li>Preserve order in every multiplication line.</li><li>Counterexamples are easiest in \(M_2(F)\).</li></ul></article></div></details>
+
+    <section class="card">
+      <h2>All sections</h2>
+      <div class="chapter-grid"><a href="16.html">16. Group Action on a Set</a>
+<a href="17.html">17. Applications of G-Sets to Counting</a>
+<a href="18.html">18. Rings and Fields</a>
+<a href="19.html">19. Integral Domains</a>
+<a href="20.html">20. Fermat&#x27;s and Euler&#x27;s Theorems</a>
+<a href="21.html">21. The Field of Quotients of an Integral Domain</a>
+<a href="22.html">22. Rings of Polynomials</a>
+<a href="23.html">23. Factorization of Polynomials over a Field</a>
+<a href="24.html" aria-current="page">24. Noncommutative Examples</a>
+<a href="25.html">25. Ordered Rings and Fields</a>
+<a href="26.html">26. Homomorphisms and Factor Rings</a>
+<a href="27.html">27. Prime and Maximal Ideals</a>
+<a href="28.html">28. Groebner Bases for Ideals</a>
+<a href="29.html">29. Introduction to Extension Fields</a>
+<a href="30.html">30. Vector Spaces</a>
+<a href="31.html">31. Algebraic Extensions</a>
+<a href="32.html">32. Geometric Constructions</a></div>
+    </section>
+
+    <footer>
+      <p>This page is a study reconstruction based on the provided chapter range. The statements are paraphrased for exam preparation rather than copied from the source text.</p>
+    </footer>
+  </div>
+</body>
+</html>

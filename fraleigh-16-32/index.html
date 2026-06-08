@@ -1,0 +1,844 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fraleigh 16-32 압축 교과서</title>
+  <style>
+    :root {
+      --paper: #f8f5ee;
+      --ink: #181817;
+      --muted: #68635c;
+      --line: #d9d1c4;
+      --panel: #fffdf7;
+      --panel2: #f0eee8;
+      --green: #205f4d;
+      --red: #a33c2f;
+      --blue: #1d4f7a;
+      --gold: #9a6a12;
+      --shadow: 0 20px 50px rgba(40, 33, 23, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        linear-gradient(90deg, rgba(24, 24, 23, 0.035) 1px, transparent 1px),
+        linear-gradient(rgba(24, 24, 23, 0.035) 1px, transparent 1px),
+        radial-gradient(circle at 18% 8%, rgba(29, 79, 122, 0.14), transparent 28%),
+        radial-gradient(circle at 88% 18%, rgba(163, 60, 47, 0.13), transparent 30%),
+        var(--paper);
+      background-size: 28px 28px, 28px 28px, auto, auto, auto;
+      font-family: "Iowan Old Style", "Apple SD Gothic Neo", "Noto Serif KR", Georgia, serif;
+      line-height: 1.72;
+    }
+
+    a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 0.18em; }
+
+    .shell {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 28px 0 80px;
+    }
+
+    header {
+      min-height: 86vh;
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
+      gap: 28px;
+      align-items: center;
+      border-bottom: 2px solid var(--ink);
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      color: var(--red);
+      font-family: "Avenir Next", "Apple SD Gothic Neo", sans-serif;
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: "Avenir Next", "Apple SD Gothic Neo", sans-serif;
+      line-height: 1.16;
+      letter-spacing: 0;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2.45rem, 7vw, 6.4rem);
+      line-height: 0.95;
+    }
+
+    .lead {
+      max-width: 43rem;
+      margin: 24px 0 0;
+      color: #38332f;
+      font-size: clamp(1.02rem, 1.8vw, 1.22rem);
+    }
+
+    .hero-card,
+    .card,
+    .chapter,
+    .rail {
+      border: 1px solid var(--line);
+      background: rgba(255, 253, 247, 0.9);
+      box-shadow: var(--shadow);
+    }
+
+    .hero-card {
+      padding: 20px;
+      border-radius: 8px;
+    }
+
+    .map {
+      display: grid;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      font-family: "Avenir Next", "Apple SD Gothic Neo", sans-serif;
+      font-size: 0.92rem;
+    }
+
+    .map li {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 10px;
+      padding: 10px 12px;
+      background: var(--panel2);
+      border-left: 4px solid var(--green);
+    }
+
+    .map b { color: var(--green); }
+
+    .toolbar {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      display: flex;
+      gap: 8px;
+      overflow: auto;
+      margin: 0 -16px 34px;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(248, 245, 238, 0.94);
+      backdrop-filter: blur(10px);
+      font-family: "Avenir Next", "Apple SD Gothic Neo", sans-serif;
+    }
+
+    .toolbar a {
+      flex: 0 0 auto;
+      padding: 8px 11px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel);
+      text-decoration: none;
+      font-size: 0.84rem;
+    }
+
+    .toolbar a:hover { border-color: var(--ink); }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      margin: 26px 0 34px;
+    }
+
+    .card {
+      padding: 18px;
+      border-radius: 8px;
+    }
+
+    .card h2,
+    .card h3 {
+      margin: 0 0 10px;
+      color: var(--blue);
+      font-size: 1.05rem;
+    }
+
+    .card p,
+    .card li,
+    .chapter li,
+    .chapter p {
+      color: #2f2c28;
+    }
+
+    .chapter {
+      display: grid;
+      grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+      gap: 0;
+      margin: 20px 0;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .head {
+      padding: 24px;
+      background: #f2eee4;
+      border-right: 1px solid var(--line);
+    }
+
+    .head h2 {
+      margin: 0 0 12px;
+      font-size: clamp(1.35rem, 2vw, 2rem);
+    }
+
+    .tag {
+      display: inline-flex;
+      margin-bottom: 14px;
+      padding: 4px 8px;
+      color: white;
+      background: var(--ink);
+      font-family: "Avenir Next", "Apple SD Gothic Neo", sans-serif;
+      font-size: 0.76rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+    }
+
+    .body { padding: 22px 24px 24px; }
+
+    .body h3 {
+      margin: 20px 0 8px;
+      color: var(--green);
+      font-size: 1rem;
+    }
+
+    .body h3:first-child { margin-top: 0; }
+
+    ul, ol {
+      margin: 0.65rem 0 1rem 1.2rem;
+      padding: 0;
+    }
+
+    li + li { margin-top: 0.28rem; }
+
+    .formula {
+      display: block;
+      margin: 12px 0;
+      padding: 12px 14px;
+      border-left: 4px solid var(--blue);
+      background: #f4f7f9;
+      font-family: "Menlo", "SFMono-Regular", monospace;
+      font-size: 0.93rem;
+      line-height: 1.62;
+      overflow-x: auto;
+    }
+
+    .proof {
+      border-left-color: var(--red);
+      background: #fbf1ef;
+    }
+
+    .exam {
+      border-left-color: var(--gold);
+      background: #fff7dd;
+    }
+
+    .small {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .ladder {
+      display: grid;
+      gap: 8px;
+      margin-top: 14px;
+      font-family: "Avenir Next", "Apple SD Gothic Neo", sans-serif;
+    }
+
+    .ladder div {
+      padding: 10px 12px;
+      border-left: 4px solid var(--blue);
+      background: var(--panel);
+    }
+
+    .deep-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 10px;
+      margin: 18px 0 34px;
+    }
+
+    .deep-grid a {
+      min-height: 74px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 253, 247, 0.92);
+      box-shadow: 0 10px 26px rgba(40, 33, 23, 0.05);
+      text-decoration: none;
+      font-family: "Avenir Next", "Apple SD Gothic Neo", sans-serif;
+    }
+
+    .deep-grid a:hover {
+      border-color: var(--ink);
+      background: #fff;
+    }
+
+    .deep-grid b {
+      display: block;
+      color: var(--green);
+      font-size: 0.84rem;
+    }
+
+    .deep-grid span {
+      display: block;
+      margin-top: 4px;
+      color: #2f2c28;
+      font-size: 0.9rem;
+      line-height: 1.35;
+    }
+
+    footer {
+      margin-top: 38px;
+      padding-top: 22px;
+      border-top: 2px solid var(--ink);
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    @media (max-width: 900px) {
+      header,
+      .chapter,
+      .grid {
+        grid-template-columns: 1fr;
+      }
+      header { min-height: auto; padding: 30px 0; }
+      .head { border-right: 0; border-bottom: 1px solid var(--line); }
+    }
+
+    @media (max-width: 560px) {
+      .shell { width: min(100% - 20px, 1180px); padding-top: 14px; }
+      .hero-card, .card, .head, .body { padding: 16px; }
+      .toolbar { margin-inline: -10px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header>
+      <div>
+        <p class="eyebrow">Fraleigh 7th, Sections 16-32</p>
+        <h1>현대대수<br />시험용 압축 교과서</h1>
+        <p class="lead">동기와 역사 서술은 접고, 정의와 정리의 의존 관계만 남긴다. 목표는 “문장을 외우기”가 아니라 문제에서 어떤 정리를 꺼내야 하는지 즉시 보는 것이다.</p>
+      </div>
+      <aside class="hero-card">
+        <ul class="map">
+          <li><b>16-17</b><span>군 작용: orbit, stabilizer, Burnside</span></li>
+          <li><b>18-25</b><span>환과 체: zero divisor, domain, polynomial, order</span></li>
+          <li><b>26-28</b><span>아이디얼: quotient, prime, maximal, Groebner</span></li>
+          <li><b>29-32</b><span>확대체: adjoining roots, degree, algebraic, constructible</span></li>
+        </ul>
+      </aside>
+    </header>
+
+    <nav class="toolbar" aria-label="장 이동">
+      <a href="#c16">16</a><a href="#c17">17</a><a href="#c18">18</a><a href="#c19">19</a>
+      <a href="#c20">20</a><a href="#c21">21</a><a href="#c22">22</a><a href="#c23">23</a>
+      <a href="#c24">24</a><a href="#c25">25</a><a href="#c26">26</a><a href="#c27">27</a>
+      <a href="#c28">28</a><a href="#c29">29</a><a href="#c30">30</a><a href="#c31">31</a><a href="#c32">32</a>
+    </nav>
+
+    <section class="grid" aria-label="읽는 법">
+      <article class="card">
+        <h2>읽는 순서</h2>
+        <p>각 장은 정의를 먼저 읽고, 정리는 조건과 결론만 한 줄로 붙잡는다. 증명은 “왜 이 조건이 쓰였는가”만 본다.</p>
+      </article>
+      <article class="card">
+        <h2>문제 풀이 신호</h2>
+        <p>몫, kernel, ideal, degree, orbit 같은 단어가 보이면 계산보다 구조 정리를 먼저 찾는다. 대부분의 시험 문제는 그 신호를 숨기지 않는다.</p>
+      </article>
+      <article class="card">
+        <h2>출처 처리</h2>
+        <p>장 배열과 핵심 주제는 제공된 책 PDF를 기준으로 확인했다. 아래 원고는 원문 문장 복사가 아니라 시험 대비용 재서술이다.</p>
+      </article>
+    </section>
+
+    <section class="card" aria-label="세부 페이지">
+      <h2>세부 페이지</h2>
+      <p>각 장은 접히는 블록으로 정의, theorem, proposition, example, exercise를 따로 펼쳐 읽게 만들었다.</p>
+      <div class="deep-grid">
+        <a href="./sections/16.html"><b>Section 16</b><span>Group Action on a Set</span></a>
+        <a href="./sections/17.html"><b>Section 17</b><span>Applications of G-Sets to Counting</span></a>
+        <a href="./sections/18.html"><b>Section 18</b><span>Rings and Fields</span></a>
+        <a href="./sections/19.html"><b>Section 19</b><span>Integral Domains</span></a>
+        <a href="./sections/20.html"><b>Section 20</b><span>Fermat's and Euler's Theorems</span></a>
+        <a href="./sections/21.html"><b>Section 21</b><span>The Field of Quotients</span></a>
+        <a href="./sections/22.html"><b>Section 22</b><span>Rings of Polynomials</span></a>
+        <a href="./sections/23.html"><b>Section 23</b><span>Polynomial Factorization</span></a>
+        <a href="./sections/24.html"><b>Section 24</b><span>Noncommutative Examples</span></a>
+        <a href="./sections/25.html"><b>Section 25</b><span>Ordered Rings and Fields</span></a>
+        <a href="./sections/26.html"><b>Section 26</b><span>Homomorphisms and Factor Rings</span></a>
+        <a href="./sections/27.html"><b>Section 27</b><span>Prime and Maximal Ideals</span></a>
+        <a href="./sections/28.html"><b>Section 28</b><span>Groebner Bases for Ideals</span></a>
+        <a href="./sections/29.html"><b>Section 29</b><span>Introduction to Extension Fields</span></a>
+        <a href="./sections/30.html"><b>Section 30</b><span>Vector Spaces</span></a>
+        <a href="./sections/31.html"><b>Section 31</b><span>Algebraic Extensions</span></a>
+        <a href="./sections/32.html"><b>Section 32</b><span>Geometric Constructions</span></a>
+      </div>
+    </section>
+
+    <article id="c16" class="chapter">
+      <div class="head">
+        <span class="tag">Section 16</span>
+        <h2>Group Action on a Set</h2>
+        <p>군을 “대칭들의 집합”으로 읽는 장. 원소 하나가 아니라 집합 전체 위에서 군이 움직인다.</p>
+        <span class="formula">action: G x X -> X, (g, x) |-> g x<br />e x = x, (gh)x = g(hx)</span>
+      </div>
+      <div class="body">
+        <h3>정의</h3>
+        <ul>
+          <li>G-set: 군 G가 집합 X에 위의 두 법칙으로 작용하는 구조.</li>
+          <li>orbit: Gx = {gx | g in G}. x가 갈 수 있는 모든 위치.</li>
+          <li>stabilizer: G_x = {g in G | gx = x}. x를 고정하는 부분군.</li>
+          <li>transitive: orbit이 하나뿐인 작용.</li>
+        </ul>
+        <h3>핵심 정리</h3>
+        <span class="formula">Orbit-Stabilizer: |Gx| = [G : G_x].<br />finite이면 |Gx| = |G| / |G_x|.</span>
+        <span class="formula proof">증명 골격: gG_x -> gx를 보낸다. 같은 coset이면 같은 점, 같은 점이면 같은 coset. 따라서 orbit과 left coset 집합이 일대일 대응.</span>
+        <h3>필수 예시</h3>
+        <ul>
+          <li>G가 자기 자신에 left multiplication으로 작용하면 stabilizer는 {e}, orbit은 G.</li>
+          <li>G가 coset 집합 G/H에 g(aH)=(ga)H로 작용하면 stabilizer는 H의 conjugate.</li>
+          <li>D4가 정사각형 꼭짓점에 작용하면 “회전/반사 대칭”이 실제 permutation으로 보인다.</li>
+        </ul>
+        <span class="formula exam">시험 신호: “고정하는 원소”, “같은 위치로 보내는 원소”, “몇 개의 서로 다른 위치”가 나오면 stabilizer와 orbit을 먼저 계산한다.</span>
+      </div>
+    </article>
+
+    <article id="c17" class="chapter">
+      <div class="head">
+        <span class="tag">Section 17</span>
+        <h2>Applications of G-Sets to Counting</h2>
+        <p>중복을 제거해 세는 장. “대칭으로 같은 것”을 하나로 묶는다.</p>
+        <span class="formula">Fix(g) = {x in X | gx = x}</span>
+      </div>
+      <div class="body">
+        <h3>핵심 정리</h3>
+        <span class="formula">Burnside: number of orbits = (1/|G|) sum_{g in G} |Fix(g)|.</span>
+        <span class="formula proof">증명 골격: 쌍 S={(g,x) | gx=x}를 두 방식으로 센다. g를 고정하면 |Fix(g)|, x를 고정하면 |G_x|. Orbit-stabilizer로 각 orbit의 합이 |G|가 된다.</span>
+        <h3>class equation</h3>
+        <span class="formula">conjugation action: g x = gxg^{-1}.<br />orbit = conjugacy class, stabilizer = centralizer C_G(x).</span>
+        <p>중심 Z(G)의 원소는 orbit 크기가 1이다. 그래서 유한군은 중심 부분과 나머지 conjugacy class들의 합으로 분해된다.</p>
+        <h3>필수 예시</h3>
+        <ul>
+          <li>목걸이 색칠: 회전군이 색칠 집합에 작용한다. 각 회전이 고정하는 색칠 수를 센다.</li>
+          <li>정사각형 색칠: D4의 8개 대칭마다 고정 색칠 수가 다르다.</li>
+        </ul>
+        <span class="formula exam">시험 신호: “up to symmetry”, “essentially different”, “conjugacy class”가 나오면 Burnside 또는 conjugation action.</span>
+      </div>
+    </article>
+
+    <article id="c18" class="chapter">
+      <div class="head">
+        <span class="tag">Section 18</span>
+        <h2>Rings and Fields</h2>
+        <p>덧셈은 abelian group, 곱셈은 associative, 두 연산은 distributive. 이것이 ring이다.</p>
+        <span class="formula">(R,+) abelian group<br />(ab)c=a(bc)<br />a(b+c)=ab+ac, (a+b)c=ac+bc</span>
+      </div>
+      <div class="body">
+        <h3>정의</h3>
+        <ul>
+          <li>commutative ring: ab=ba.</li>
+          <li>unity: 곱셈 항등원 1. 보통 1 != 0을 요구할 때가 많다.</li>
+          <li>unit: 곱셈 역원을 가진 원소.</li>
+          <li>field: 0이 아닌 모든 원소가 unit인 commutative ring with unity.</li>
+          <li>ring homomorphism: 덧셈과 곱셈을 모두 보존하는 함수.</li>
+        </ul>
+        <h3>자동 성질</h3>
+        <span class="formula">0a=a0=0<br />(-a)b=a(-b)=-(ab)<br />(-a)(-b)=ab</span>
+        <h3>필수 예시</h3>
+        <ul>
+          <li>Z, Q, R, C는 표준적인 commutative rings. Q, R, C는 fields.</li>
+          <li>Z_n은 ring. n이 prime일 때 field가 된다.</li>
+          <li>M_n(R)은 ring with unity이나 n >= 2이면 일반적으로 noncommutative.</li>
+          <li>함수들의 집합은 pointwise addition/multiplication으로 ring.</li>
+        </ul>
+        <span class="formula exam">시험 신호: “field인지 판정”은 unit과 zero divisor를 본다. “isomorphism인지”는 덧셈 보존과 곱셈 보존을 따로 확인한다.</span>
+      </div>
+    </article>
+
+    <article id="c19" class="chapter">
+      <div class="head">
+        <span class="tag">Section 19</span>
+        <h2>Integral Domains</h2>
+        <p>환에서 나눗셈이 망가지는 원인은 zero divisor다. integral domain은 그 원인을 제거한 commutative ring이다.</p>
+        <span class="formula">ab=0, a != 0, b != 0 -> zero divisors</span>
+      </div>
+      <div class="body">
+        <h3>핵심 정리</h3>
+        <ul>
+          <li>ring에서 cancellation law가 성립할 필요충분조건은 zero divisor가 없는 것.</li>
+          <li>integral domain: commutative ring with unity 1 != 0 and no zero divisors.</li>
+          <li>finite integral domain은 field.</li>
+          <li>integral domain의 characteristic은 0 또는 prime.</li>
+        </ul>
+        <span class="formula proof">finite domain -> field: a != 0에 대해 x |-> ax는 injective. 유한집합에서는 injective가 surjective. 따라서 ax=1인 x가 존재한다.</span>
+        <h3>필수 예시</h3>
+        <ul>
+          <li>Z는 integral domain이지만 field는 아니다.</li>
+          <li>Z_p는 p가 prime이면 field, 따라서 domain.</li>
+          <li>Z_n은 n이 composite이면 zero divisor가 있어 domain이 아니다.</li>
+        </ul>
+        <span class="formula exam">시험 신호: “cancel해도 되는가?”는 domain 조건을 확인한다. 유한 domain이면 즉시 field로 승격한다.</span>
+      </div>
+    </article>
+
+    <article id="c20" class="chapter">
+      <div class="head">
+        <span class="tag">Section 20</span>
+        <h2>Fermat's and Euler's Theorems</h2>
+        <p>정수 합동식을 unit group의 계산으로 바꾼다.</p>
+        <span class="formula">U(n) = units of Z_n<br />phi(n)=|U(n)|</span>
+      </div>
+      <div class="body">
+        <h3>핵심 정리</h3>
+        <span class="formula">Fermat: p prime, p not divide a -> a^{p-1} = 1 mod p.</span>
+        <span class="formula">Euler: gcd(a,n)=1 -> a^{phi(n)} = 1 mod n.</span>
+        <span class="formula">linear congruence ax=b mod m has a solution iff gcd(a,m) divides b.</span>
+        <h3>증명 골격</h3>
+        <p>Fermat와 Euler는 모두 “유한군에서 원소의 거듭제곱은 군의 크기로 1이 된다”는 Lagrange 정리의 환 버전이다. 여기서 군은 Z_n의 unit들이다.</p>
+        <h3>필수 예시</h3>
+        <ul>
+          <li>큰 거듭제곱의 나머지: 지수를 p-1 또는 phi(n)로 줄인다.</li>
+          <li>ax=b mod m: d=gcd(a,m)를 보고, 가능하면 d로 나눈 뒤 역원을 곱한다.</li>
+        </ul>
+        <span class="formula exam">시험 신호: “remainder”, “large power”, “linear congruence”는 이 장이다.</span>
+      </div>
+    </article>
+
+    <article id="c21" class="chapter">
+      <div class="head">
+        <span class="tag">Section 21</span>
+        <h2>The Field of Quotients</h2>
+        <p>integral domain 안에서 안 되던 나눗셈을 새 체에서 가능하게 만든다.</p>
+        <span class="formula">(a,b), b != 0, represents a/b</span>
+      </div>
+      <div class="body">
+        <h3>구성</h3>
+        <span class="formula">(a,b) ~ (c,d) iff ad=bc.<br />a/b + c/d = (ad+bc)/bd.<br />(a/b)(c/d)=ac/bd.</span>
+        <p>zero divisor가 없기 때문에 이 동치관계와 연산이 잘 정의된다.</p>
+        <h3>핵심 정리</h3>
+        <ul>
+          <li>모든 integral domain D는 field of quotients F를 가진다.</li>
+          <li>D는 d |-> d/1로 F 안에 들어간다.</li>
+          <li>Z의 field of quotients는 Q.</li>
+        </ul>
+        <span class="formula proof">증명 골격: 분수꼴 동치류를 만들고 연산을 정의한다. field axioms를 확인한 뒤, b != 0이면 a/b의 역원이 b/a임을 보인다.</span>
+        <span class="formula exam">시험 신호: “domain을 field 안에 넣어라”, “fractions of D”는 이 구성이다.</span>
+      </div>
+    </article>
+
+    <article id="c22" class="chapter">
+      <div class="head">
+        <span class="tag">Section 22</span>
+        <h2>Rings of Polynomials</h2>
+        <p>계수가 환 R에 있는 다항식들의 환 R[x]. 계수가 field이면 나눗셈 알고리즘이 작동한다.</p>
+        <span class="formula">R[x] = finite sums a_0 + a_1 x + ... + a_n x^n</span>
+      </div>
+      <div class="body">
+        <h3>핵심 정리</h3>
+        <ul>
+          <li>D가 integral domain이면 D[x]도 integral domain.</li>
+          <li>F가 field이면 F[x]에서 division algorithm이 성립한다.</li>
+          <li>evaluation map phi_a: F[x] -> E, f -> f(a)는 ring homomorphism.</li>
+          <li>f(a)=0 iff x-a divides f(x).</li>
+        </ul>
+        <span class="formula">Division: f(x)=q(x)g(x)+r(x), where r=0 or deg r &lt; deg g.</span>
+        <h3>필수 예시</h3>
+        <ul>
+          <li>R[x]에서는 leading coefficient가 unit이 아닐 수 있어 일반 나눗셈이 실패한다.</li>
+          <li>F[x]에서는 유클리드식 계산으로 gcd와 인수분해가 가능해진다.</li>
+        </ul>
+        <span class="formula exam">시험 신호: “root”, “factor x-a”, “divide polynomials”는 evaluation homomorphism과 division algorithm.</span>
+      </div>
+    </article>
+
+    <article id="c23" class="chapter">
+      <div class="head">
+        <span class="tag">Section 23</span>
+        <h2>Factorization of Polynomials over a Field</h2>
+        <p>F[x]는 정수 Z처럼 인수분해가 유일한 세계다. 다만 기준은 “field 위의 polynomial”이다.</p>
+        <span class="formula">irreducible: nonconstant, not product of two lower-degree nonunits</span>
+      </div>
+      <div class="body">
+        <h3>핵심 정리</h3>
+        <ul>
+          <li>F[x]에서 모든 nonconstant polynomial은 irreducible들의 곱으로 분해된다.</li>
+          <li>그 분해는 순서와 unit 배를 제외하고 유일하다.</li>
+          <li>degree 2 또는 3인 polynomial은 root가 있을 때만 reducible.</li>
+          <li>field의 finite multiplicative subgroup은 cyclic이다.</li>
+        </ul>
+        <span class="formula proof">유일성 골격: irreducible p가 ab를 나누면 p가 a 또는 b를 나눈다. 이 prime 성질로 두 분해의 인수를 하나씩 맞춘다.</span>
+        <h3>필수 예시</h3>
+        <ul>
+          <li>x^2+1은 R[x]에서는 irreducible, C[x]에서는 (x-i)(x+i).</li>
+          <li>Z_2[x]에서 x^2+x+1은 0,1을 넣어도 0이 아니므로 irreducible.</li>
+        </ul>
+        <span class="formula exam">시험 신호: “irreducible over F”, “unique factorization”, “zero test”가 나오면 field가 무엇인지 먼저 확인한다.</span>
+      </div>
+    </article>
+
+    <article id="c24" class="chapter">
+      <div class="head">
+        <span class="tag">Section 24</span>
+        <h2>Noncommutative Examples</h2>
+        <p>환의 곱셈은 교환법칙을 요구하지 않는다. 이 장은 그 차이를 예시로 각인한다.</p>
+        <span class="formula">ab may differ from ba</span>
+      </div>
+      <div class="body">
+        <h3>핵심 예시</h3>
+        <ul>
+          <li>matrix ring M_n(F): 덧셈과 곱셈은 자연스럽지만 AB != BA일 수 있다.</li>
+          <li>quaternions H: i^2=j^2=k^2=-1, ij=k, ji=-k.</li>
+          <li>division ring: 0이 아닌 모든 원소가 역원을 갖지만 multiplication이 commutative일 필요는 없다.</li>
+        </ul>
+        <h3>봐야 할 점</h3>
+        <ul>
+          <li>field와 division ring의 차이는 commutativity다.</li>
+          <li>noncommutative ring에서는 left/right ideal, 곱의 순서, inverse 계산을 조심한다.</li>
+          <li>matrix 예시는 “계산은 가능하지만 정수식 직관은 깨진다”는 표준 반례다.</li>
+        </ul>
+        <span class="formula exam">시험 신호: 반례가 필요하면 M_2(F)나 H를 먼저 떠올린다. AB=BA를 몰래 쓰면 틀린다.</span>
+      </div>
+    </article>
+
+    <article id="c25" class="chapter">
+      <div class="head">
+        <span class="tag">Section 25</span>
+        <h2>Ordered Rings and Fields</h2>
+        <p>순서 &lt; 가 덧셈과 곱셈과 호환되는 환. 양수 집합 P 하나로 순서를 정의한다.</p>
+        <span class="formula">a &lt; b iff b-a in P</span>
+      </div>
+      <div class="body">
+        <h3>positive set 조건</h3>
+        <ul>
+          <li>P는 덧셈에 닫혀 있다.</li>
+          <li>P는 곱셈에 닫혀 있다.</li>
+          <li>각 a에 대해 정확히 하나: a=0, a in P, -a in P.</li>
+        </ul>
+        <h3>핵심 결과</h3>
+        <ul>
+          <li>ordered ring with unity에서는 1 &gt; 0이고 square는 양수 또는 0.</li>
+          <li>ordered integral domain은 characteristic 0.</li>
+          <li>따라서 finite field와 Z_p는 ordered field가 될 수 없다.</li>
+        </ul>
+        <h3>필수 예시</h3>
+        <ul>
+          <li>Q, R은 표준 ordered fields.</li>
+          <li>R[x]는 “x를 매우 큰 양수로 보는 순서”처럼 여러 ordering을 가질 수 있다.</li>
+        </ul>
+        <span class="formula exam">시험 신호: “ordered?”를 묻는다면 1+1+...+1=0이 되는지, -1이 square인지 먼저 본다.</span>
+      </div>
+    </article>
+
+    <article id="c26" class="chapter">
+      <div class="head">
+        <span class="tag">Section 26</span>
+        <h2>Homomorphisms and Factor Rings</h2>
+        <p>군의 quotient와 isomorphism theorem이 환으로 넘어온다. 핵심 단어는 ideal이다.</p>
+        <span class="formula">Ker(phi) = {r in R | phi(r)=0}</span>
+      </div>
+      <div class="body">
+        <h3>정의</h3>
+        <ul>
+          <li>ideal N: additive subgroup이고 rN, Nr가 N 안에 남는다.</li>
+          <li>commutative ring에서는 rN 조건 하나로 충분하다.</li>
+          <li>factor ring R/N: additive coset들에 자연스럽게 덧셈과 곱셈을 준다.</li>
+        </ul>
+        <h3>핵심 정리</h3>
+        <span class="formula">Fundamental Homomorphism Theorem:<br />R / Ker(phi) ≅ phi[R].</span>
+        <span class="formula proof">증명 골격: r+Ker(phi) |-> phi(r). well-defined는 r-s in Ker(phi) iff phi(r)=phi(s). 연산 보존은 homomorphism 성질에서 바로 온다.</span>
+        <h3>필수 예시</h3>
+        <ul>
+          <li>Z -> Z_n의 kernel은 nZ, 따라서 Z/nZ ≅ Z_n.</li>
+          <li>함수환에서 한 점에서 0이 되는 함수들의 집합은 ideal이다.</li>
+        </ul>
+        <span class="formula exam">시험 신호: quotient ring을 만들려면 subring이 아니라 ideal이어야 한다. kernel은 항상 ideal이다.</span>
+      </div>
+    </article>
+
+    <article id="c27" class="chapter">
+      <div class="head">
+        <span class="tag">Section 27</span>
+        <h2>Prime and Maximal Ideals</h2>
+        <p>quotient가 domain인가 field인가를 ideal의 성질로 읽는다.</p>
+        <span class="formula">R/M field <-> M maximal<br />R/P domain <-> P prime</span>
+      </div>
+      <div class="body">
+        <h3>정의</h3>
+        <ul>
+          <li>maximal ideal M: R이 아닌 ideal 중 M과 R 사이에 ideal이 없다.</li>
+          <li>prime ideal P: ab in P이면 a in P 또는 b in P.</li>
+          <li>principal ideal (a): a의 모든 배수.</li>
+        </ul>
+        <h3>핵심 정리</h3>
+        <ul>
+          <li>commutative ring with unity에서 M maximal iff R/M field.</li>
+          <li>P prime iff R/P integral domain.</li>
+          <li>maximal ideal은 prime ideal.</li>
+          <li>F가 field이면 F[x]의 모든 ideal은 principal.</li>
+          <li>F[x]/(p(x))가 field iff p(x)가 irreducible.</li>
+        </ul>
+        <span class="formula proof">maximal -> field: R/M의 nonzero coset a+M을 잡는다. M+(a)가 R 전체가 되므로 1=m+ra. 따라서 (r+M)(a+M)=1+M.</span>
+        <span class="formula exam">시험 신호: quotient가 field인지 묻는 문제는 maximality, quotient가 domain인지 묻는 문제는 primality.</span>
+      </div>
+    </article>
+
+    <article id="c28" class="chapter">
+      <div class="head">
+        <span class="tag">Section 28</span>
+        <h2>Groebner Bases for Ideals</h2>
+        <p>여러 변수 다항식 ideal에서 “나눗셈의 나머지”를 통제하는 장. 깊은 이론보다 알고리즘 신호만 잡는다.</p>
+        <span class="formula">term order -> leading term -> reduction</span>
+      </div>
+      <div class="body">
+        <h3>정의</h3>
+        <ul>
+          <li>monomial order: 단항식들을 1, x, y, x^2, xy 같은 순서로 정렬하는 규칙.</li>
+          <li>leading term: 그 순서에서 가장 큰 항.</li>
+          <li>Groebner basis G: ideal의 모든 leading term이 G의 leading term들로 잡히는 basis.</li>
+        </ul>
+        <h3>핵심 사용법</h3>
+        <ul>
+          <li>f를 G로 나누어 normal form을 얻는다.</li>
+          <li>f in I인지 normal form이 0인지로 판정한다.</li>
+          <li>lex order를 쓰면 변수 제거와 연립다항식 풀이가 쉬워진다.</li>
+          <li>Buchberger 기준은 S-polynomial들이 0으로 reduce되는지를 본다.</li>
+        </ul>
+        <span class="formula exam">시험 신호: “membership in ideal”, “reduce by basis”, “lex order”, “elimination”이면 Groebner. 증명형 고난도보다 계산 절차를 우선한다.</span>
+      </div>
+    </article>
+
+    <article id="c29" class="chapter">
+      <div class="head">
+        <span class="tag">Section 29</span>
+        <h2>Introduction to Extension Fields</h2>
+        <p>체 F에 원래 없던 다항식의 근을 강제로 붙인다. quotient ring이 field가 되는 순간이 핵심이다.</p>
+        <span class="formula">F[x]/(irreducible f) is a field containing a root of f</span>
+      </div>
+      <div class="body">
+        <h3>핵심 정리</h3>
+        <ul>
+          <li>Kronecker: f가 F[x]에서 nonconstant이면 어떤 extension field에서 f는 root를 가진다. irreducible이면 F[x]/(f)로 충분하다.</li>
+          <li>a가 F 위 algebraic: f(a)=0인 nonzero f in F[x]가 존재.</li>
+          <li>transcendental: 그런 f가 없다.</li>
+          <li>minimal polynomial: a를 죽이는 monic irreducible polynomial.</li>
+          <li>F(a)는 F와 a를 포함하는 가장 작은 extension field.</li>
+        </ul>
+        <span class="formula">If deg m_a = n, every element of F(a) has unique form<br />c_0 + c_1 a + ... + c_{n-1} a^{n-1}.</span>
+        <h3>필수 예시</h3>
+        <ul>
+          <li>C는 R에 x^2+1의 근 i를 붙인 R(i)로 볼 수 있다.</li>
+          <li>Z_2[x]의 x^2+x+1을 mod로 나누면 4개 원소의 field가 생긴다.</li>
+        </ul>
+        <span class="formula exam">시험 신호: “adjoin a root”, “construct a field”, “minimal polynomial”이면 F[x]/(f)를 본다.</span>
+      </div>
+    </article>
+
+    <article id="c30" class="chapter">
+      <div class="head">
+        <span class="tag">Section 30</span>
+        <h2>Vector Spaces</h2>
+        <p>확대체를 vector space로 읽기 위한 최소 선형대수. scalars는 field F, vectors는 V.</p>
+        <span class="formula">linear combination = a_1 v_1 + ... + a_n v_n</span>
+      </div>
+      <div class="body">
+        <h3>정의</h3>
+        <ul>
+          <li>span: 선형결합으로 만들 수 있는 전체.</li>
+          <li>linearly independent: 유일한 0 선형결합이 trivial one.</li>
+          <li>basis: span하면서 independent.</li>
+          <li>dimension: finite basis의 원소 수. 모든 finite basis의 크기는 같다.</li>
+        </ul>
+        <h3>핵심 정리</h3>
+        <ul>
+          <li>finite spanning set 안에서 basis를 뽑을 수 있다.</li>
+          <li>finite-dimensional space에서 independent set의 크기는 spanning set의 크기를 넘지 못한다.</li>
+          <li>a가 F 위 algebraic이고 deg(a,F)=n이면 [F(a):F]=n.</li>
+        </ul>
+        <span class="formula">basis of F(a) over F: {1, a, a^2, ..., a^{n-1}}</span>
+        <span class="formula exam">시험 신호: “degree of extension”은 vector space dimension이다. basis를 찾으면 degree가 끝난다.</span>
+      </div>
+    </article>
+
+    <article id="c31" class="chapter">
+      <div class="head">
+        <span class="tag">Section 31</span>
+        <h2>Algebraic Extensions</h2>
+        <p>한 근을 붙이는 일을 여러 번 해도 degree는 곱으로 관리된다.</p>
+        <span class="formula">[E:F] = dim_F E</span>
+      </div>
+      <div class="body">
+        <h3>핵심 정리</h3>
+        <span class="formula">Tower Law: F <= K <= E이면 [E:F] = [E:K][K:F].</span>
+        <ul>
+          <li>finite extension은 algebraic extension.</li>
+          <li>algebraic over algebraic은 algebraic.</li>
+          <li>F 위 algebraic인 원소들의 집합은 field를 이룬다.</li>
+          <li>algebraically closed: 모든 nonconstant polynomial이 root를 가진다.</li>
+          <li>C는 algebraically closed. 이것이 Fundamental Theorem of Algebra.</li>
+        </ul>
+        <span class="formula proof">Tower law 골격: K/F의 basis {u_i}, E/K의 basis {v_j}. 그러면 {u_i v_j}가 E/F의 basis가 된다.</span>
+        <h3>필수 예시</h3>
+        <ul>
+          <li>[Q(sqrt2):Q]=2.</li>
+          <li>[Q(cuberoot2, sqrt2):Q]=[Q(cuberoot2, sqrt2):Q(cuberoot2)] [Q(cuberoot2):Q].</li>
+          <li>Q 위 algebraic numbers는 field지만 C 전체는 아니다.</li>
+        </ul>
+        <span class="formula exam">시험 신호: 여러 근이 붙으면 tower law. “algebraic임을 보여라”는 finite-dimensional subfield를 만들면 된다.</span>
+      </div>
+    </article>
+
+    <article id="c32" class="chapter">
+      <div class="head">
+        <span class="tag">Section 32</span>
+        <h2>Geometric Constructions</h2>
+        <p>자와 컴퍼스로 만들 수 있는 수는 field operation과 square root만으로 생긴다.</p>
+        <span class="formula">constructible -> lies in a tower of quadratic extensions</span>
+      </div>
+      <div class="body">
+        <h3>핵심 정리</h3>
+        <ul>
+          <li>constructible real numbers는 +, -, *, /에 닫혀 있다.</li>
+          <li>a가 constructible이고 a &gt; 0이면 sqrt(a)도 constructible.</li>
+          <li>constructible number는 Q에서 시작해 degree 2 extension들을 유한 번 거친 field 안에 있다.</li>
+          <li>따라서 constructible algebraic number의 degree는 2의 거듭제곱을 나눈다.</li>
+        </ul>
+        <h3>표준 불가능성</h3>
+        <ul>
+          <li>doubling the cube: cuberoot2는 degree 3이라 constructible이 아니다.</li>
+          <li>trisecting a general angle: cos 20도 같은 cubic obstruction을 만든다.</li>
+          <li>squaring the circle: pi의 transcendence 때문에 불가능하다.</li>
+        </ul>
+        <span class="formula proof">증명 골격: 직선과 원의 교점 좌표를 풀면 선형식 또는 이차방정식만 나온다. 그래서 새 좌표는 이전 field에 square root 하나를 붙인 곳에 산다.</span>
+        <span class="formula exam">시험 신호: constructible 판정은 실제 그림보다 degree를 본다. degree가 2-power가 아니면 불가능.</span>
+      </div>
+    </article>
+
+    <section class="card">
+      <h2>전체 의존 관계</h2>
+      <div class="ladder">
+        <div>16-17: 군 작용은 counting과 conjugacy class를 설명한다.</div>
+        <div>18-21: ring -> domain -> field of quotients로 “나눗셈 가능한 세계”를 만든다.</div>
+        <div>22-23: F[x]는 나눗셈과 유일인수분해가 되는 polynomial 세계다.</div>
+        <div>26-27: ideal은 ring homomorphism의 kernel이고 quotient의 품질을 결정한다.</div>
+        <div>29-31: irreducible polynomial의 quotient로 root를 붙이고, 그 크기를 vector space degree로 잰다.</div>
+        <div>32: geometric construction은 degree가 2-power인 extension tower 문제로 환원된다.</div>
+      </div>
+    </section>
+
+    <footer>
+      <p>Based on the chapter range and headings OCR-checked from the provided Fraleigh PDF. This page is a compressed study text, not a reproduction of the book.</p>
+    </footer>
+  </div>
+</body>
+</html>

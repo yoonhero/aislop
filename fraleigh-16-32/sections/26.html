@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Section 26: Homomorphisms and Factor Rings</title>
+  <link rel="stylesheet" href="../assets/detail.css" />
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+  <div class="shell">
+    <div class="topbar">
+      <a class="button" href="../index.html">Overview</a>
+      <nav aria-label="section pager">
+        <a class="mini-link" href="25.html">Prev 25</a>
+        <a class="mini-link" href="27.html">Next 27</a>
+      </nav>
+    </div>
+
+    <header>
+      <div>
+        <p class="eyebrow">Fraleigh 7th Section 26</p>
+        <h1>Homomorphisms and Factor Rings</h1>
+        <p class="lead">kernel이 ideal이기 때문에 ring quotient가 가능해진다.</p>
+      </div>
+      <aside class="meta">
+        <span><b>Read first</b><br />subring으로는 quotient ring을 만들 수 없다. 곱셈이 well-defined 되려면 ideal이어야 한다.</span>
+        <span><b>Folded blocks</b><br />definitions, theorems, propositions, examples, exercises</span>
+      </aside>
+    </header>
+
+    <section class="quick" aria-label="chapter map">
+      <article class="card">
+        <h2>Goal</h2>
+        <p>kernel이 ideal이기 때문에 ring quotient가 가능해진다.</p>
+      </article>
+      <article class="card">
+        <h2>Exam posture</h2>
+        <p>subring으로는 quotient ring을 만들 수 없다. 곱셈이 well-defined 되려면 ideal이어야 한다.</p>
+      </article>
+      <article class="card">
+        <h2>Neighbor chapters</h2>
+        <p><a href="25.html">Prev 25</a> / <a href="27.html">Next 27</a></p>
+      </article>
+    </section>
+
+    <details class="fold" open><summary>Definitions <span>4</span></summary><div class="fold-body"><article class="item"><ul><li>A ring homomorphism preserves addition and multiplication.</li><li>\(\ker\varphi=\{r\in R\mid\varphi(r)=0\}\).</li><li>An ideal N of R is an additive subgroup such that rN and Nr lie in N for all r in R.</li><li>The factor ring \(R/N\) consists of additive cosets r+N with induced addition and multiplication.</li></ul></article></div></details>
+    <details class="fold" open>
+<summary>Theorems <span>4</span></summary>
+<div class="fold-body">
+<article class="item kind-theorem">
+<h3>Kernel ideal theorem</h3>
+<span class="formula">The kernel of a ring homomorphism phi:\(R\to R'\) is an ideal of R.</span>
+<p><b>Proof spine.</b> Additive subgroup follows from group homomorphism. If a in \(\ker\varphi\), then phi(ra)=phi(r)phi(a)=0 and similarly phi(ar)=0.</p>
+</article>
+<article class="item kind-theorem">
+<h3>Factor ring construction</h3>
+<span class="formula">If N is an ideal of R, then \((a+N)(b+N)=ab+N\) is well-defined and makes \(R/N\) a ring.</span>
+<p><b>Proof spine.</b> Changing representatives adds terms in N: an, mb, nm. Ideal absorption keeps them in N.</p>
+</article>
+<article class="item kind-theorem">
+<h3>Fundamental homomorphism theorem</h3>
+<span class="formula">For a ring homomorphism phi:\(R\to R'\), \(R/\ker\varphi\) is isomorphic to the image phi[R].</span>
+<p><b>Proof spine.</b> Map r+\(\ker\varphi\) to phi(r). The kernel condition is exactly the well-definedness condition.</p>
+</article>
+<article class="item kind-theorem">
+<h3>Coset multiplication criterion</h3>
+<span class="formula">For a subring H of R, multiplication on additive cosets by \((a+H)(b+H)=ab+H\) is well-defined exactly when H absorbs multiplication as an ideal.</span>
+<p><b>Proof spine.</b> Representative changes introduce ah, hb, and h1h2 terms; these must always lie in H.</p>
+</article>
+</div>
+</details>
+    <details class="fold" open>
+<summary>Propositions <span>2</span></summary>
+<div class="fold-body">
+<article class="item kind-proposition">
+<h3>Natural projection</h3>
+<span class="formula">The map \(\pi:R\to R/N\), \(\pi(r)=r+N\), is a surjective ring homomorphism with kernel N.</span>
+<p><b>Proof spine.</b> Directly check operations and pi(r)=N iff r in N.</p>
+</article>
+<article class="item kind-proposition">
+<h3>Ideal test in commutative rings</h3>
+<span class="formula">In a commutative ring, an additive subgroup N is an ideal iff r n in N for all r in R and n in N.</span>
+<p><b>Proof spine.</b> Left and right absorption coincide.</p>
+</article>
+</div>
+</details>
+    <details class="fold" open>
+<summary>Examples <span>4</span></summary>
+<div class="fold-body">
+<article class="item kind-example">
+<h3>Z/nZ</h3>
+<span class="formula">The map Z-&gt;\(\mathbb Z_n\) has kernel \(n\mathbb Z\), so \(\mathbb Z/n\mathbb Z\) ≅ \(\mathbb Z_n\).</span>
+<p><b>Use.</b> the prototype quotient ring.</p>
+</article>
+<article class="item kind-example">
+<h3>Evaluation quotient</h3>
+<span class="formula">For phi_a:\(F[x]\)-&gt;F, phi_a(f)=f(a), the kernel is (\(x-a\)), so \(F[x]/(x-a)\)≅F.</span>
+<p><b>Use.</b> root/factor theorem as homomorphism theorem.</p>
+</article>
+<article class="item kind-example">
+<h3>Function vanishing ideal</h3>
+<span class="formula">Continuous or arbitrary functions vanishing at a point form an ideal in a function ring.</span>
+<p><b>Use.</b> geometric intuition: quotient remembers the value at that point.</p>
+</article>
+<article class="item kind-example">
+<h3>Factor ring Z/nZ</h3>
+<span class="formula">Since \(n\mathbb Z\) is an ideal of Z, the additive cosets form the ring \(\mathbb Z/n\mathbb Z\).</span>
+<p><b>Use.</b> This connects factor rings back to modular arithmetic.</p>
+</article>
+</div>
+</details>
+    <details class="fold" open>
+<summary>Exercises <span>5</span></summary>
+<div class="fold-body">
+<article class="item kind-exercise">
+<h3>Kernel</h3>
+<span class="formula">Find the kernel of phi:\(\mathbb Z[x]\)-&gt;Z, phi(f)=f(0).</span>
+<p><b>Proof spine.</b> Polynomials with constant term 0, i.e. (x).</p>
+</article>
+<article class="item kind-exercise">
+<h3>Well-defined</h3>
+<span class="formula">Show multiplication in \(R/N\) is well-defined when N is an ideal.</span>
+<p><b>Proof spine.</b> Expand (a+n)(b+m)-ab.</p>
+</article>
+<article class="item kind-exercise">
+<h3>Not ideal</h3>
+<span class="formula">Give a subring of a ring that is not an ideal.</span>
+<p><b>Proof spine.</b> Z as scalar matrices? Easier: diagonal matrices inside \(M_2(F)\) are not ideal.</p>
+</article>
+<article class="item kind-exercise">
+<h3>Image quotient</h3>
+<span class="formula">Compute \(\mathbb R[x]/(x^2+1)\) over R as a familiar field.</span>
+<p><b>Proof spine.</b> It is isomorphic to C.</p>
+</article>
+<article class="item kind-exercise">
+<h3>Ideal necessity</h3>
+<span class="formula">Find where the proof of quotient multiplication fails if H is merely a subring.</span>
+<p><b>Proof spine.</b> The cross terms ah and hb need not lie in H.</p>
+</article>
+</div>
+</details>
+    <details class="fold"><summary>Proof Patterns <span>2</span></summary><div class="fold-body"><article class="item kind-proof"><ul><li>For quotient multiplication, always compare two representatives and show the difference is in N.</li><li>For homomorphism theorem, define the map on cosets and prove well-definedness first.</li></ul></article></div></details>
+
+    <section class="card">
+      <h2>All sections</h2>
+      <div class="chapter-grid"><a href="16.html">16. Group Action on a Set</a>
+<a href="17.html">17. Applications of G-Sets to Counting</a>
+<a href="18.html">18. Rings and Fields</a>
+<a href="19.html">19. Integral Domains</a>
+<a href="20.html">20. Fermat&#x27;s and Euler&#x27;s Theorems</a>
+<a href="21.html">21. The Field of Quotients of an Integral Domain</a>
+<a href="22.html">22. Rings of Polynomials</a>
+<a href="23.html">23. Factorization of Polynomials over a Field</a>
+<a href="24.html">24. Noncommutative Examples</a>
+<a href="25.html">25. Ordered Rings and Fields</a>
+<a href="26.html" aria-current="page">26. Homomorphisms and Factor Rings</a>
+<a href="27.html">27. Prime and Maximal Ideals</a>
+<a href="28.html">28. Groebner Bases for Ideals</a>
+<a href="29.html">29. Introduction to Extension Fields</a>
+<a href="30.html">30. Vector Spaces</a>
+<a href="31.html">31. Algebraic Extensions</a>
+<a href="32.html">32. Geometric Constructions</a></div>
+    </section>
+
+    <footer>
+      <p>This page is a study reconstruction based on the provided chapter range. The statements are paraphrased for exam preparation rather than copied from the source text.</p>
+    </footer>
+  </div>
+</body>
+</html>

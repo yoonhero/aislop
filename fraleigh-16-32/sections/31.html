@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Section 31: Algebraic Extensions</title>
+  <link rel="stylesheet" href="../assets/detail.css" />
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+  <div class="shell">
+    <div class="topbar">
+      <a class="button" href="../index.html">Overview</a>
+      <nav aria-label="section pager">
+        <a class="mini-link" href="30.html">Prev 30</a>
+        <a class="mini-link" href="32.html">Next 32</a>
+      </nav>
+    </div>
+
+    <header>
+      <div>
+        <p class="eyebrow">Fraleigh 7th Section 31</p>
+        <h1>Algebraic Extensions</h1>
+        <p class="lead">여러 algebraic element를 붙일 때 degree와 algebraicity가 어떻게 누적되는지 배운다.</p>
+      </div>
+      <aside class="meta">
+        <span><b>Read first</b><br />tower law 하나로 extension degree 계산의 대부분이 끝난다.</span>
+        <span><b>Folded blocks</b><br />definitions, theorems, propositions, examples, exercises</span>
+      </aside>
+    </header>
+
+    <section class="quick" aria-label="chapter map">
+      <article class="card">
+        <h2>Goal</h2>
+        <p>여러 algebraic element를 붙일 때 degree와 algebraicity가 어떻게 누적되는지 배운다.</p>
+      </article>
+      <article class="card">
+        <h2>Exam posture</h2>
+        <p>tower law 하나로 extension degree 계산의 대부분이 끝난다.</p>
+      </article>
+      <article class="card">
+        <h2>Neighbor chapters</h2>
+        <p><a href="30.html">Prev 30</a> / <a href="32.html">Next 32</a></p>
+      </article>
+    </section>
+
+    <details class="fold" open><summary>Definitions <span>4</span></summary><div class="fold-body"><article class="item"><ul><li>The degree \([E:F]\) of a field extension is dim_F E.</li><li>A finite extension has finite degree.</li><li>An algebraic extension is one in which every element of E is algebraic over F.</li><li>A field is algebraically closed if every nonconstant polynomial over it has a root in it.</li></ul></article></div></details>
+    <details class="fold" open>
+<summary>Theorems <span>7</span></summary>
+<div class="fold-body">
+<article class="item kind-theorem">
+<h3>Tower law</h3>
+<span class="formula">If \(F\le K\le E\) and the relevant degrees are finite, then \([E:F]=[E:K][K:F]\).</span>
+<p><b>Proof spine.</b> Multiply a basis of K over F with a basis of E over K; products form a basis of E over F.</p>
+</article>
+<article class="item kind-theorem">
+<h3>Finite extensions are algebraic</h3>
+<span class="formula">If \([E:F]\) is finite, then every element of E is algebraic over F.</span>
+<p><b>Proof spine.</b> For alpha in E, the list 1,alpha,...,alpha^n is linearly dependent once n=\([E:F]\), producing a polynomial relation.</p>
+</article>
+<article class="item kind-theorem">
+<h3>Algebraic elements form a field</h3>
+<span class="formula">Inside an extension E of F, the set of all elements algebraic over F is a subfield of E.</span>
+<p><b>Proof spine.</b> For alpha,beta algebraic, \(F(\alpha,\beta)\) is finite over F; sums, products, negatives, inverses lie in that finite extension and are algebraic.</p>
+</article>
+<article class="item kind-theorem">
+<h3>Algebraically closed criterion</h3>
+<span class="formula">A field F is algebraically closed iff every nonconstant polynomial in \(F[x]\) splits into linear factors over F.</span>
+<p><b>Proof spine.</b> A root gives a linear factor; repeat by induction on degree.</p>
+</article>
+<article class="item kind-theorem">
+<h3>Algebraic closure exists</h3>
+<span class="formula">Every field has an algebraic closure: an algebraic extension that is algebraically closed.</span>
+<p><b>Proof spine.</b> The proof uses a maximality argument; keep the statement as a structural endpoint.</p>
+</article>
+<article class="item kind-theorem">
+<h3>Fundamental theorem of algebra</h3>
+<span class="formula">The field C of complex numbers is algebraically closed.</span>
+<p><b>Proof spine.</b> The usual proof is analytic; algebraically, the key consequence is that every complex polynomial splits into linear factors.</p>
+</article>
+<article class="item kind-theorem">
+<h3>No proper algebraic extension of algebraically closed field</h3>
+<span class="formula">If F is algebraically closed, then it has no proper algebraic extension.</span>
+<p><b>Proof spine.</b> An algebraic element over F has a minimal polynomial, which must be linear over an algebraically closed field.</p>
+</article>
+</div>
+</details>
+    <details class="fold" open>
+<summary>Propositions <span>2</span></summary>
+<div class="fold-body">
+<article class="item kind-proposition">
+<h3>Divisibility of degrees</h3>
+<span class="formula">If beta lies in \(F(\alpha)\), then [F(beta):F] divides [\(F(\alpha)\):F].</span>
+<p><b>Proof spine.</b> Use F &lt;= F(beta) &lt;= \(F(\alpha)\) and tower law.</p>
+</article>
+<article class="item kind-proposition">
+<h3>Algebraic over algebraic</h3>
+<span class="formula">If E is algebraic over K and K is algebraic over F, then E is algebraic over F.</span>
+<p><b>Proof spine.</b> Each element is contained in a finite extension generated by finitely many algebraic coefficients.</p>
+</article>
+</div>
+</details>
+    <details class="fold" open>
+<summary>Examples <span>4</span></summary>
+<div class="fold-body">
+<article class="item kind-example">
+<h3>Q(sqrt2,sqrt3)</h3>
+<span class="formula">The degree is 4: \(\mathbb Q(\sqrt2,\sqrt3)\) has basis {1,\(\sqrt2\),\(\sqrt3\),sqrt6} \(\text{over }\mathbb Q\).</span>
+<p><b>Use.</b> tower law plus noncontainment.</p>
+</article>
+<article class="item kind-example">
+<h3>Nested radicals</h3>
+<span class="formula">Q(\(\sqrt2\), \(\sqrt[3]{2}\)) has degree 6 if \(x^3-2\) remains irreducible over \(\mathbb Q(\sqrt2)\).</span>
+<p><b>Use.</b> multiply degrees when the second polynomial remains irreducible.</p>
+</article>
+<article class="item kind-example">
+<h3>Algebraic numbers</h3>
+<span class="formula">All complex numbers algebraic \(\text{over }\mathbb Q\) form a field.</span>
+<p><b>Use.</b> closure under field operations is nontrivial and useful.</p>
+</article>
+<article class="item kind-example">
+<h3>C versus R</h3>
+<span class="formula">C is algebraically closed, while R is not because \(x^2+1\) has no root in R.</span>
+<p><b>Use.</b> This is the shortest contrast between algebraically closed and not.</p>
+</article>
+</div>
+</details>
+    <details class="fold" open>
+<summary>Exercises <span>5</span></summary>
+<div class="fold-body">
+<article class="item kind-exercise">
+<h3>Tower law use</h3>
+<span class="formula">If \([E:K]\)=3 and \([K:F]\)=4, find \([E:F]\).</span>
+<p><b>Proof spine.</b> 12.</p>
+</article>
+<article class="item kind-exercise">
+<h3>Finite implies algebraic</h3>
+<span class="formula">Produce the polynomial relation for alpha in a 3-dimensional extension.</span>
+<p><b>Proof spine.</b> The four vectors 1,alpha,alpha^2,alpha^3 are dependent.</p>
+</article>
+<article class="item kind-exercise">
+<h3>Degree divisibility</h3>
+<span class="formula">Can \(\mathbb Q(\sqrt2)\) contain \(\sqrt[3]{2}\)?</span>
+<p><b>Proof spine.</b> No, degree 3 would divide degree 2 if it did.</p>
+</article>
+<article class="item kind-exercise">
+<h3>Algebraically closed</h3>
+<span class="formula">Why is R not algebraically closed?</span>
+<p><b>Proof spine.</b> \(x^2+1\) has no real root.</p>
+</article>
+<article class="item kind-exercise">
+<h3>Algebraically closed consequence</h3>
+<span class="formula">If F is algebraically closed and alpha is algebraic over F, prove alpha in F.</span>
+<p><b>Proof spine.</b> The minimal polynomial of alpha over F is linear.</p>
+</article>
+</div>
+</details>
+    <details class="fold"><summary>Proof Patterns <span>2</span></summary><div class="fold-body"><article class="item kind-proof"><ul><li>When stuck on algebraicity of a combination, put all ingredients in one finite extension.</li><li>Degree impossibility is often divisibility via tower law.</li></ul></article></div></details>
+
+    <section class="card">
+      <h2>All sections</h2>
+      <div class="chapter-grid"><a href="16.html">16. Group Action on a Set</a>
+<a href="17.html">17. Applications of G-Sets to Counting</a>
+<a href="18.html">18. Rings and Fields</a>
+<a href="19.html">19. Integral Domains</a>
+<a href="20.html">20. Fermat&#x27;s and Euler&#x27;s Theorems</a>
+<a href="21.html">21. The Field of Quotients of an Integral Domain</a>
+<a href="22.html">22. Rings of Polynomials</a>
+<a href="23.html">23. Factorization of Polynomials over a Field</a>
+<a href="24.html">24. Noncommutative Examples</a>
+<a href="25.html">25. Ordered Rings and Fields</a>
+<a href="26.html">26. Homomorphisms and Factor Rings</a>
+<a href="27.html">27. Prime and Maximal Ideals</a>
+<a href="28.html">28. Groebner Bases for Ideals</a>
+<a href="29.html">29. Introduction to Extension Fields</a>
+<a href="30.html">30. Vector Spaces</a>
+<a href="31.html" aria-current="page">31. Algebraic Extensions</a>
+<a href="32.html">32. Geometric Constructions</a></div>
+    </section>
+
+    <footer>
+      <p>This page is a study reconstruction based on the provided chapter range. The statements are paraphrased for exam preparation rather than copied from the source text.</p>
+    </footer>
+  </div>
+</body>
+</html>

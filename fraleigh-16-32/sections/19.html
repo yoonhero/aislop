@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Section 19: Integral Domains</title>
+  <link rel="stylesheet" href="../assets/detail.css" />
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+  <div class="shell">
+    <div class="topbar">
+      <a class="button" href="../index.html">Overview</a>
+      <nav aria-label="section pager">
+        <a class="mini-link" href="18.html">Prev 18</a>
+        <a class="mini-link" href="20.html">Next 20</a>
+      </nav>
+    </div>
+
+    <header>
+      <div>
+        <p class="eyebrow">Fraleigh 7th Section 19</p>
+        <h1>Integral Domains</h1>
+        <p class="lead">zero divisor를 제거해 cancellation이 가능한 commutative ring을 얻는다.</p>
+      </div>
+      <aside class="meta">
+        <span><b>Read first</b><br />finite integral domain -&gt; field 증명은 이 범위에서 가장 중요한 한 줄짜리 finite argument다.</span>
+        <span><b>Folded blocks</b><br />definitions, theorems, propositions, examples, exercises</span>
+      </aside>
+    </header>
+
+    <section class="quick" aria-label="chapter map">
+      <article class="card">
+        <h2>Goal</h2>
+        <p>zero divisor를 제거해 cancellation이 가능한 commutative ring을 얻는다.</p>
+      </article>
+      <article class="card">
+        <h2>Exam posture</h2>
+        <p>finite integral domain -&gt; field 증명은 이 범위에서 가장 중요한 한 줄짜리 finite argument다.</p>
+      </article>
+      <article class="card">
+        <h2>Neighbor chapters</h2>
+        <p><a href="18.html">Prev 18</a> / <a href="20.html">Next 20</a></p>
+      </article>
+    </section>
+
+    <details class="fold" open><summary>Definitions <span>3</span></summary><div class="fold-body"><article class="item"><ul><li>A zero divisor is a nonzero a for which some nonzero b satisfies ab=0.</li><li>An integral domain is a commutative ring with unity 1 != 0 and no zero divisors.</li><li>The characteristic of a ring with unity is the least positive n with n*1=0, if it exists; otherwise it is 0.</li></ul></article></div></details>
+    <details class="fold" open>
+<summary>Theorems <span>5</span></summary>
+<div class="fold-body">
+<article class="item kind-theorem">
+<h3>Cancellation criterion</h3>
+<span class="formula">In a ring, cancellation by every nonzero element is valid exactly when the ring has no zero divisors.</span>
+<p><b>Proof spine.</b> If ac=bc, then a(c-b)=0. Without zero divisors and a != 0, c=b. Conversely, a zero divisor kills cancellation.</p>
+</article>
+<article class="item kind-theorem">
+<h3>Finite integral domain is field</h3>
+<span class="formula">Every finite integral domain is a field.</span>
+<p><b>Proof spine.</b> For a nonzero a, the map x -&gt; ax is injective by cancellation. A finite injective map is surjective, so ax=1 has a solution.</p>
+</article>
+<article class="item kind-theorem">
+<h3>Characteristic of a domain</h3>
+<span class="formula">The characteristic of an integral domain is either 0 or a prime number.</span>
+<p><b>Proof spine.</b> If char is mn with 1&lt;m,n&lt;char, then (m*1)(n*1)=0 gives zero divisors.</p>
+</article>
+<article class="item kind-theorem">
+<h3>Every field is a domain</h3>
+<span class="formula">Every field is an integral domain.</span>
+<p><b>Proof spine.</b> If ab=0 and a != 0, multiply by a^{-1} to get b=0.</p>
+</article>
+<article class="item kind-theorem">
+<h3>Z_p field criterion</h3>
+<span class="formula">\(\mathbb Z_p\) is a field exactly when p is prime.</span>
+<p><b>Proof spine.</b> Prime p gives no zero divisors; if n is composite, \(\mathbb Z_n\) has zero divisors.</p>
+</article>
+</div>
+</details>
+    <details class="fold" open>
+<summary>Propositions <span>2</span></summary>
+<div class="fold-body">
+<article class="item kind-proposition">
+<h3>Z_n zero divisors</h3>
+<span class="formula">In \(\mathbb Z_n\), a nonzero class is a zero divisor iff gcd(a,n) != 1.</span>
+<p><b>Proof spine.</b> If d=gcd(a,n)&gt;1 then a*(n/d)=0 mod n. If \(\gcd(a,n)=1\), multiplication by a is invertible.</p>
+</article>
+<article class="item kind-proposition">
+<h3>Subrings of domains</h3>
+<span class="formula">A subring with the same nonzero unity inside an integral domain has no zero divisors.</span>
+<p><b>Proof spine.</b> A zero divisor relation in the subring would be one in the domain.</p>
+</article>
+</div>
+</details>
+    <details class="fold" open>
+<summary>Examples <span>4</span></summary>
+<div class="fold-body">
+<article class="item kind-example">
+<h3>Z and Z_p</h3>
+<span class="formula">Z is a domain but not a field. \(\mathbb Z_p\) is a finite domain and therefore a field.</span>
+<p><b>Use.</b> infinite domain과 finite domain의 차이를 고정한다.</p>
+</article>
+<article class="item kind-example">
+<h3>Z_6</h3>
+<span class="formula">In \(\mathbb Z_6\), 2*3=0 while 2 and 3 are nonzero. Hence \(\mathbb Z_6\) is not a domain.</span>
+<p><b>Use.</b> composite modulus gives zero divisors.</p>
+</article>
+<article class="item kind-example">
+<h3>Polynomial domain</h3>
+<span class="formula">If D is a domain, D[x] is again a domain.</span>
+<p><b>Use.</b> leading terms multiply without disappearing.</p>
+</article>
+<article class="item kind-example">
+<h3>Matrix zero divisors over a field</h3>
+<span class="formula">Even if F is a field, \(M_2(F)\) has zero divisors such as nonzero singular matrices.</span>
+<p><b>Use.</b> domain requires commutativity and no zero divisors; matrix rings fail both patterns.</p>
+</article>
+</div>
+</details>
+    <details class="fold" open>
+<summary>Exercises <span>5</span></summary>
+<div class="fold-body">
+<article class="item kind-exercise">
+<h3>Cancellation</h3>
+<span class="formula">In an integral domain, prove that ax=ay and a != 0 imply x=y.</span>
+<p><b>Proof spine.</b> Move to a(x-y)=0.</p>
+</article>
+<article class="item kind-exercise">
+<h3>Characteristic</h3>
+<span class="formula">Show a finite field has prime characteristic.</span>
+<p><b>Proof spine.</b> A field is a domain.</p>
+</article>
+<article class="item kind-exercise">
+<h3>Z_15</h3>
+<span class="formula">List the zero divisors of \(\mathbb Z_{15}\).</span>
+<p><b>Proof spine.</b> Nonzero nonunits: 3,5,6,9,10,12.</p>
+</article>
+<article class="item kind-exercise">
+<h3>Finite domain</h3>
+<span class="formula">Let D have 10 elements and no zero divisors. Explain why every nonzero a has inverse.</span>
+<p><b>Proof spine.</b> Use injective x-&gt;ax.</p>
+</article>
+<article class="item kind-exercise">
+<h3>Field to domain</h3>
+<span class="formula">Write the one-line proof that a field has no zero divisors.</span>
+<p><b>Proof spine.</b> Multiply ab=0 by a^{-1} when a is nonzero.</p>
+</article>
+</div>
+</details>
+    <details class="fold"><summary>Proof Patterns <span>2</span></summary><div class="fold-body"><article class="item kind-proof"><ul><li>Finite + injective = surjective is the standard engine.</li><li>Characteristic arguments turn composite n into (m*1)(k*1)=0.</li></ul></article></div></details>
+
+    <section class="card">
+      <h2>All sections</h2>
+      <div class="chapter-grid"><a href="16.html">16. Group Action on a Set</a>
+<a href="17.html">17. Applications of G-Sets to Counting</a>
+<a href="18.html">18. Rings and Fields</a>
+<a href="19.html" aria-current="page">19. Integral Domains</a>
+<a href="20.html">20. Fermat&#x27;s and Euler&#x27;s Theorems</a>
+<a href="21.html">21. The Field of Quotients of an Integral Domain</a>
+<a href="22.html">22. Rings of Polynomials</a>
+<a href="23.html">23. Factorization of Polynomials over a Field</a>
+<a href="24.html">24. Noncommutative Examples</a>
+<a href="25.html">25. Ordered Rings and Fields</a>
+<a href="26.html">26. Homomorphisms and Factor Rings</a>
+<a href="27.html">27. Prime and Maximal Ideals</a>
+<a href="28.html">28. Groebner Bases for Ideals</a>
+<a href="29.html">29. Introduction to Extension Fields</a>
+<a href="30.html">30. Vector Spaces</a>
+<a href="31.html">31. Algebraic Extensions</a>
+<a href="32.html">32. Geometric Constructions</a></div>
+    </section>
+
+    <footer>
+      <p>This page is a study reconstruction based on the provided chapter range. The statements are paraphrased for exam preparation rather than copied from the source text.</p>
+    </footer>
+  </div>
+</body>
+</html>

@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Section 29: Introduction to Extension Fields</title>
+  <link rel="stylesheet" href="../assets/detail.css" />
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+  <div class="shell">
+    <div class="topbar">
+      <a class="button" href="../index.html">Overview</a>
+      <nav aria-label="section pager">
+        <a class="mini-link" href="28.html">Prev 28</a>
+        <a class="mini-link" href="30.html">Next 30</a>
+      </nav>
+    </div>
+
+    <header>
+      <div>
+        <p class="eyebrow">Fraleigh 7th Section 29</p>
+        <h1>Introduction to Extension Fields</h1>
+        <p class="lead">체 F에 없는 다항식의 근을 quotient로 붙인다.</p>
+      </div>
+      <aside class="meta">
+        <span><b>Read first</b><br />F[x]/(irreducible f)는 f의 새 근을 포함하는 field다.</span>
+        <span><b>Folded blocks</b><br />definitions, theorems, propositions, examples, exercises</span>
+      </aside>
+    </header>
+
+    <section class="quick" aria-label="chapter map">
+      <article class="card">
+        <h2>Goal</h2>
+        <p>체 F에 없는 다항식의 근을 quotient로 붙인다.</p>
+      </article>
+      <article class="card">
+        <h2>Exam posture</h2>
+        <p>F[x]/(irreducible f)는 f의 새 근을 포함하는 field다.</p>
+      </article>
+      <article class="card">
+        <h2>Neighbor chapters</h2>
+        <p><a href="28.html">Prev 28</a> / <a href="30.html">Next 30</a></p>
+      </article>
+    </section>
+
+    <details class="fold" open><summary>Definitions <span>7</span></summary><div class="fold-body"><article class="item"><ul><li>An extension field E of F is a field containing a copy of F.</li><li>An element alpha in E is algebraic over F if f(alpha)=0 for some nonzero f in \(F[x]\).</li><li>If no such f exists, alpha is transcendental over F.</li><li>The minimal polynomial of alpha over F is the monic irreducible polynomial in \(F[x]\) of least degree killing alpha.</li><li>\(F(\alpha)\) is the smallest subfield of E containing F and alpha.</li><li>An algebraic number is a complex number algebraic \(\text{over }\mathbb Q\).</li><li>The degree deg(alpha,F) is the degree of the minimal polynomial of alpha over F.</li></ul></article></div></details>
+    <details class="fold" open>
+<summary>Theorems <span>5</span></summary>
+<div class="fold-body">
+<article class="item kind-theorem">
+<h3>Kronecker theorem</h3>
+<span class="formula">For any nonconstant f in \(F[x]\), there is an extension field E of F in which f has a zero.</span>
+<p><b>Proof spine.</b> Take an irreducible factor p of f. Since (p) is maximal, \(F[x]/(p)\) is a field. The class of x is a root of p, hence of f if p divides f.</p>
+</article>
+<article class="item kind-theorem">
+<h3>Evaluation kernel theorem</h3>
+<span class="formula">For alpha in an extension E, the evaluation map \(F[x]\)-&gt;E has kernel {0} if alpha is transcendental, and kernel (m_alpha) if alpha is algebraic.</span>
+<p><b>Proof spine.</b> The kernel is an ideal of \(F[x]\). Since \(F[x]\) is principal, a nonzero kernel has a monic generator, which is the minimal polynomial.</p>
+</article>
+<article class="item kind-theorem">
+<h3>Simple algebraic extension form</h3>
+<span class="formula">If deg m_alpha=n, every element of \(F(\alpha)\) has a unique expression \(c_0+c_1\alpha+\cdots+c_{n-1}\alpha^{n-1}\).</span>
+<p><b>Proof spine.</b> Reduce higher powers by m_alpha(alpha)=0; uniqueness follows from minimality.</p>
+</article>
+<article class="item kind-theorem">
+<h3>Minimal polynomial uniqueness</h3>
+<span class="formula">An algebraic element has a unique monic irreducible polynomial over F that generates the kernel of evaluation.</span>
+<p><b>Proof spine.</b> The kernel is a principal ideal in \(F[x]\); choosing the monic generator makes it unique.</p>
+</article>
+<article class="item kind-theorem">
+<h3>Degree equals basis length</h3>
+<span class="formula">If deg(alpha,F)=n, then \(F(\alpha)\) has F-basis \(1,\alpha,\ldots,\alpha^{n-1}\).</span>
+<p><b>Proof spine.</b> Reduce by the minimal polynomial and use uniqueness of remainders.</p>
+</article>
+</div>
+</details>
+    <details class="fold" open>
+<summary>Propositions <span>2</span></summary>
+<div class="fold-body">
+<article class="item kind-proposition">
+<h3>Minimal polynomial is irreducible</h3>
+<span class="formula">The minimal polynomial of an algebraic element over F is irreducible in \(F[x]\).</span>
+<p><b>Proof spine.</b> If it factored, one factor would vanish at alpha with smaller positive degree.</p>
+</article>
+<article class="item kind-proposition">
+<h3>F[alpha]=F(alpha) for algebraic alpha</h3>
+<span class="formula">When alpha is algebraic over F, the ring generated by alpha is already a field.</span>
+<p><b>Proof spine.</b> Every nonzero polynomial in alpha has an inverse modulo the minimal polynomial.</p>
+</article>
+</div>
+</details>
+    <details class="fold" open>
+<summary>Examples <span>4</span></summary>
+<div class="fold-body">
+<article class="item kind-example">
+<h3>Complex numbers from R</h3>
+<span class="formula">\(\mathbb R[x]/(x^2+1)\) is a field where the class of x squares to -1; it is isomorphic to C.</span>
+<p><b>Use.</b> adjoining i is quotienting by \(x^2+1\).</p>
+</article>
+<article class="item kind-example">
+<h3>Four-element field</h3>
+<span class="formula">\(\mathbb Z_2[x]\)/(x^2+x+1) has elements 0,1,a,1+a with a^2+a+1=0.</span>
+<p><b>Use.</b> finite fields begin as quotient fields.</p>
+</article>
+<article class="item kind-example">
+<h3>sqrt(1+sqrt3)</h3>
+<span class="formula">This real number is algebraic \(\text{over }\mathbb Q\) because repeated squaring gives a polynomial equation with rational coefficients.</span>
+<p><b>Use.</b> algebraic does not mean easy-looking.</p>
+</article>
+<article class="item kind-example">
+<h3>Transcendental examples</h3>
+<span class="formula">The numbers pi and e are transcendental \(\text{over }\mathbb Q\), though proving this is outside the section.</span>
+<p><b>Use.</b> They contrast with algebraic radicals such as \(\sqrt2\).</p>
+</article>
+</div>
+</details>
+    <details class="fold" open>
+<summary>Exercises <span>5</span></summary>
+<div class="fold-body">
+<article class="item kind-exercise">
+<h3>Minimal polynomial</h3>
+<span class="formula">Find the minimal polynomial of \(\sqrt2\) \(\text{over }\mathbb Q\).</span>
+<p><b>Proof spine.</b> \(x^2-2\).</p>
+</article>
+<article class="item kind-exercise">
+<h3>Quotient root</h3>
+<span class="formula">In \(F[x]/(f)\), prove the class of x is a root of f.</span>
+<p><b>Proof spine.</b> Evaluate f at x+(f).</p>
+</article>
+<article class="item kind-exercise">
+<h3>Element form</h3>
+<span class="formula">List all elements of \(\mathbb Z_2\)(a) where a^2+a+1=0.</span>
+<p><b>Proof spine.</b> 0,1,a,1+a.</p>
+</article>
+<article class="item kind-exercise">
+<h3>Transcendental contrast</h3>
+<span class="formula">Explain why \(\mathbb Q(\pi)\) is not covered by the finite-basis statement unless pi is algebraic.</span>
+<p><b>Proof spine.</b> pi is transcendental \(\text{over }\mathbb Q\).</p>
+</article>
+<article class="item kind-exercise">
+<h3>Degree</h3>
+<span class="formula">Find deg(i,R) and deg(i,Q).</span>
+<p><b>Proof spine.</b> Over R it is 2 via \(x^2+1\); \(\text{over }\mathbb Q\) it is also 2.</p>
+</article>
+</div>
+</details>
+    <details class="fold"><summary>Proof Patterns <span>2</span></summary><div class="fold-body"><article class="item kind-proof"><ul><li>Adjoin a root by quotienting \(F[x]\) by an irreducible polynomial.</li><li>To show algebraic, produce any nonzero polynomial over the base field that vanishes.</li></ul></article></div></details>
+
+    <section class="card">
+      <h2>All sections</h2>
+      <div class="chapter-grid"><a href="16.html">16. Group Action on a Set</a>
+<a href="17.html">17. Applications of G-Sets to Counting</a>
+<a href="18.html">18. Rings and Fields</a>
+<a href="19.html">19. Integral Domains</a>
+<a href="20.html">20. Fermat&#x27;s and Euler&#x27;s Theorems</a>
+<a href="21.html">21. The Field of Quotients of an Integral Domain</a>
+<a href="22.html">22. Rings of Polynomials</a>
+<a href="23.html">23. Factorization of Polynomials over a Field</a>
+<a href="24.html">24. Noncommutative Examples</a>
+<a href="25.html">25. Ordered Rings and Fields</a>
+<a href="26.html">26. Homomorphisms and Factor Rings</a>
+<a href="27.html">27. Prime and Maximal Ideals</a>
+<a href="28.html">28. Groebner Bases for Ideals</a>
+<a href="29.html" aria-current="page">29. Introduction to Extension Fields</a>
+<a href="30.html">30. Vector Spaces</a>
+<a href="31.html">31. Algebraic Extensions</a>
+<a href="32.html">32. Geometric Constructions</a></div>
+    </section>
+
+    <footer>
+      <p>This page is a study reconstruction based on the provided chapter range. The statements are paraphrased for exam preparation rather than copied from the source text.</p>
+    </footer>
+  </div>
+</body>
+</html>

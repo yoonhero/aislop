@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Section 16: Group Action on a Set</title>
+  <link rel="stylesheet" href="../assets/detail.css" />
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+  <div class="shell">
+    <div class="topbar">
+      <a class="button" href="../index.html">Overview</a>
+      <nav aria-label="section pager">
+        <a class="mini-link" href="../index.html">Overview</a>
+        <a class="mini-link" href="17.html">Next 17</a>
+      </nav>
+    </div>
+
+    <header>
+      <div>
+        <p class="eyebrow">Fraleigh 7th Section 16</p>
+        <h1>Group Action on a Set</h1>
+        <p class="lead">군을 원소들의 추상 집합이 아니라, 어떤 집합 X 위에서 실제로 움직이는 대칭으로 읽는다.</p>
+      </div>
+      <aside class="meta">
+        <span><b>Read first</b><br />action의 두 공리, orbit, stabilizer만 정확히 잡으면 나머지는 coset 계산이다.</span>
+        <span><b>Folded blocks</b><br />definitions, theorems, propositions, examples, exercises</span>
+      </aside>
+    </header>
+
+    <section class="quick" aria-label="chapter map">
+      <article class="card">
+        <h2>Goal</h2>
+        <p>군을 원소들의 추상 집합이 아니라, 어떤 집합 X 위에서 실제로 움직이는 대칭으로 읽는다.</p>
+      </article>
+      <article class="card">
+        <h2>Exam posture</h2>
+        <p>action의 두 공리, orbit, stabilizer만 정확히 잡으면 나머지는 coset 계산이다.</p>
+      </article>
+      <article class="card">
+        <h2>Neighbor chapters</h2>
+        <p><a href="../index.html">Overview</a> / <a href="17.html">Next 17</a></p>
+      </article>
+    </section>
+
+    <details class="fold" open><summary>Definitions <span>4</span></summary><div class="fold-body"><article class="item"><ul><li>A left action of G on X is a map \(G\times X\to X\) with \(e x=x\) and \((gh)x=g(hx)\).</li><li>The orbit of x is \(Gx=\{gx\mid g\in G\}\). It is x가 작용으로 도달 가능한 모든 위치다.</li><li>The stabilizer of x is \(G_x=\{g\in G\mid gx=x\}\). It is x를 고정하는 G의 부분군이다.</li><li>A G-map \(f:X\to Y\) satisfies \(f(gx)=g f(x)\) Bijective G-map은 G-set isomorphism이다.</li></ul></article></div></details>
+    <details class="fold" open>
+<summary>Theorems <span>3</span></summary>
+<div class="fold-body">
+<article class="item kind-theorem">
+<h3>Orbit partition theorem</h3>
+<span class="formula">The orbits of a G-set X form a partition of X: every x lies in exactly one orbit, and two orbits are either equal or disjoint.</span>
+<p><b>Proof spine.</b> Define \(x\sim y\) iff \(y=gx\) for some g. The action laws give reflexive, symmetric, transitive. Equivalence classes are exactly orbits.</p>
+<p><b>Use.</b> 서로 다른 상태 수를 셀 때 먼저 X를 orbit들로 찢는다.</p>
+</article>
+<article class="item kind-theorem">
+<h3>Orbit-stabilizer theorem</h3>
+<span class="formula">For x in X, the orbit Gx is in bijection with the left cosets \(G/G_x\). Hence, if G is finite, \(|Gx|=[G:G_x]=|G|/|G_x|\).</span>
+<p><b>Proof spine.</b> Send \(gG_x\) to gx. This is well-defined because ghx=gx for h in G_x. Conversely \(gx=kx\) implies \(k^{-1}g\in G_x\), so \(gG_x\)=kG_x.</p>
+<p><b>Use.</b> 몇 개로 움직이는지와 몇 개가 고정하는지는 곱해서 |G|가 된다.</p>
+</article>
+<article class="item kind-theorem">
+<h3>Transitive G-sets are coset spaces</h3>
+<span class="formula">If X is transitive and x0 in X, then X is isomorphic as a G-set to \(G/G_{x_0}\).</span>
+<p><b>Proof spine.</b> Map gG_{x0} to gx0. Orbit-stabilizer의 대응이 G-action과도 호환된다.</p>
+<p><b>Use.</b> transitive action 문제는 사실 coset action 문제로 바꿔 풀 수 있다.</p>
+</article>
+</div>
+</details>
+    <details class="fold" open>
+<summary>Propositions <span>2</span></summary>
+<div class="fold-body">
+<article class="item kind-proposition">
+<h3>Stabilizers are subgroups</h3>
+<span class="formula">For every x in X, G_x is a subgroup of G.</span>
+<p><b>Proof spine.</b> e fixes x. If g,h fix x, then gh fixes x. If g fixes x, then \(g^{-1}\) fixes x by applying \(g^{-1}\) to gx=x.</p>
+</article>
+<article class="item kind-proposition">
+<h3>Conjugate points have conjugate stabilizers</h3>
+<span class="formula">If \(y=gx\), then \(G_y=gG_xg^{-1}\).</span>
+<p><b>Proof spine.</b> k fixes gx iff \(g^{-1}\)kg fixes x.</p>
+</article>
+</div>
+</details>
+    <details class="fold" open>
+<summary>Examples <span>3</span></summary>
+<div class="fold-body">
+<article class="item kind-example">
+<h3>Left regular action</h3>
+<span class="formula">G acts on itself by g*x=gx. The orbit of any x is all of G, and the stabilizer is {e}.</span>
+<p><b>Use.</b> This is the cleanest model of a free transitive action.</p>
+</article>
+<article class="item kind-example">
+<h3>D4 acting on square vertices</h3>
+<span class="formula">Let D4 act on the four vertices of a square. The action is transitive; the stabilizer of one vertex has two elements, so the orbit size is 8/2=4.</span>
+<p><b>Use.</b> 대칭군 문제에서 stabilizer를 세면 orbit 크기가 즉시 나온다.</p>
+</article>
+<article class="item kind-example">
+<h3>Coset action</h3>
+<span class="formula">G acts on G/H by g*(aH)=(ga)H. The stabilizer of H is H itself.</span>
+<p><b>Use.</b> 이 예시는 모든 transitive action의 표준형이다.</p>
+</article>
+</div>
+</details>
+    <details class="fold" open>
+<summary>Exercises <span>4</span></summary>
+<div class="fold-body">
+<article class="item kind-exercise">
+<h3>Orbit check</h3>
+<span class="formula">Let G act on X. Prove that x and y are in the same orbit iff Gx=Gy.</span>
+<p><b>Proof spine.</b> Use \(y=gx\), then show each element of Gy is also in Gx and conversely.</p>
+</article>
+<article class="item kind-exercise">
+<h3>Stabilizer computation</h3>
+<span class="formula">For the natural action of S3 on {1,2,3}, compute the orbit and stabilizer of 1.</span>
+<p><b>Proof spine.</b> Orbit is all three points; stabilizer consists of permutations fixing 1.</p>
+</article>
+<article class="item kind-exercise">
+<h3>Coset model</h3>
+<span class="formula">If X is transitive and |G|=24, |G_x|=6, how many elements does X have?</span>
+<p><b>Proof spine.</b> Orbit-stabilizer gives |X|=4.</p>
+</article>
+<article class="item kind-exercise">
+<h3>G-map test</h3>
+<span class="formula">For a conjugation action of G on itself, decide whether f(x)=x^{-1} is a G-map.</span>
+<p><b>Proof spine.</b> Check \(f(gxg^{-1})\) against \(g f(x)g^{-1}\).</p>
+</article>
+</div>
+</details>
+    <details class="fold"><summary>Proof Patterns <span>2</span></summary><div class="fold-body"><article class="item kind-proof"><ul><li>To prove an action is well-defined, check representative choices before checking the two action axioms.</li><li>To prove a stabilizer statement, start from k(gx)=gx and multiply by \(g^{-1}\) on the correct side.</li></ul></article></div></details>
+
+    <section class="card">
+      <h2>All sections</h2>
+      <div class="chapter-grid"><a href="16.html" aria-current="page">16. Group Action on a Set</a>
+<a href="17.html">17. Applications of G-Sets to Counting</a>
+<a href="18.html">18. Rings and Fields</a>
+<a href="19.html">19. Integral Domains</a>
+<a href="20.html">20. Fermat&#x27;s and Euler&#x27;s Theorems</a>
+<a href="21.html">21. The Field of Quotients of an Integral Domain</a>
+<a href="22.html">22. Rings of Polynomials</a>
+<a href="23.html">23. Factorization of Polynomials over a Field</a>
+<a href="24.html">24. Noncommutative Examples</a>
+<a href="25.html">25. Ordered Rings and Fields</a>
+<a href="26.html">26. Homomorphisms and Factor Rings</a>
+<a href="27.html">27. Prime and Maximal Ideals</a>
+<a href="28.html">28. Groebner Bases for Ideals</a>
+<a href="29.html">29. Introduction to Extension Fields</a>
+<a href="30.html">30. Vector Spaces</a>
+<a href="31.html">31. Algebraic Extensions</a>
+<a href="32.html">32. Geometric Constructions</a></div>
+    </section>
+
+    <footer>
+      <p>This page is a study reconstruction based on the provided chapter range. The statements are paraphrased for exam preparation rather than copied from the source text.</p>
+    </footer>
+  </div>
+</body>
+</html>

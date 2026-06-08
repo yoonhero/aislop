@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Section 30: Vector Spaces</title>
+  <link rel="stylesheet" href="../assets/detail.css" />
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+  <div class="shell">
+    <div class="topbar">
+      <a class="button" href="../index.html">Overview</a>
+      <nav aria-label="section pager">
+        <a class="mini-link" href="29.html">Prev 29</a>
+        <a class="mini-link" href="31.html">Next 31</a>
+      </nav>
+    </div>
+
+    <header>
+      <div>
+        <p class="eyebrow">Fraleigh 7th Section 30</p>
+        <h1>Vector Spaces</h1>
+        <p class="lead">extension field의 크기를 vector space dimension으로 잰다.</p>
+      </div>
+      <aside class="meta">
+        <span><b>Read first</b><br />이 장의 선형대수는 F(alpha)의 basis와 degree 계산을 위한 도구다.</span>
+        <span><b>Folded blocks</b><br />definitions, theorems, propositions, examples, exercises</span>
+      </aside>
+    </header>
+
+    <section class="quick" aria-label="chapter map">
+      <article class="card">
+        <h2>Goal</h2>
+        <p>extension field의 크기를 vector space dimension으로 잰다.</p>
+      </article>
+      <article class="card">
+        <h2>Exam posture</h2>
+        <p>이 장의 선형대수는 F(alpha)의 basis와 degree 계산을 위한 도구다.</p>
+      </article>
+      <article class="card">
+        <h2>Neighbor chapters</h2>
+        <p><a href="29.html">Prev 29</a> / <a href="31.html">Next 31</a></p>
+      </article>
+    </section>
+
+    <details class="fold" open><summary>Definitions <span>5</span></summary><div class="fold-body"><article class="item"><ul><li>A vector space over F is an abelian group V with scalar multiplication by F satisfying the usual distributive and identity laws.</li><li>A set spans V if every vector is a finite linear combination of its elements.</li><li>A set is linearly independent if only the trivial finite linear combination gives 0.</li><li>A basis is a spanning linearly independent set.</li><li>The dimension of a finite-dimensional vector space is the size of a basis.</li></ul></article></div></details>
+    <details class="fold" open>
+<summary>Theorems <span>5</span></summary>
+<div class="fold-body">
+<article class="item kind-theorem">
+<h3>Spanning set contains a basis</h3>
+<span class="formula">Every finite spanning set of a vector space contains a basis.</span>
+<p><b>Proof spine.</b> Remove dependent vectors one at a time without changing the span until independence remains.</p>
+</article>
+<article class="item kind-theorem">
+<h3>Independent set bound</h3>
+<span class="formula">In a finite-dimensional vector space, any linearly independent set has at most as many elements as any spanning set.</span>
+<p><b>Proof spine.</b> Exchange one independent vector into a spanning set at a time.</p>
+</article>
+<article class="item kind-theorem">
+<h3>Degree of simple extension</h3>
+<span class="formula">If alpha is algebraic over F with minimal polynomial degree n, then [\(F(\alpha)\):F]=n and {\(1,\alpha,\ldots,\alpha^{n-1}\)} is a basis.</span>
+<p><b>Proof spine.</b> Section 29 gives unique expression; that is exactly basis existence and uniqueness.</p>
+</article>
+<article class="item kind-theorem">
+<h3>Vector space zero laws</h3>
+<span class="formula">In a vector space, 0v=0, a0=0, and (-a)v=-(av).</span>
+<p><b>Proof spine.</b> The proof mirrors ring zero laws using additive cancellation.</p>
+</article>
+<article class="item kind-theorem">
+<h3>Finite-dimensional space has finite basis</h3>
+<span class="formula">Every finite-dimensional vector space has a finite basis.</span>
+<p><b>Proof spine.</b> Start from a finite spanning set and remove dependent vectors.</p>
+</article>
+</div>
+</details>
+    <details class="fold" open>
+<summary>Propositions <span>2</span></summary>
+<div class="fold-body">
+<article class="item kind-proposition">
+<h3>All finite bases have same size</h3>
+<span class="formula">Any two finite bases of V have the same number of elements.</span>
+<p><b>Proof spine.</b> Apply the independent set bound in both directions.</p>
+</article>
+<article class="item kind-proposition">
+<h3>Finite-dimensional subspace bound</h3>
+<span class="formula">A linearly independent set in an n-dimensional space has at most n vectors.</span>
+<p><b>Proof spine.</b> Use any basis as a spanning set.</p>
+</article>
+</div>
+</details>
+    <details class="fold" open>
+<summary>Examples <span>4</span></summary>
+<div class="fold-body">
+<article class="item kind-example">
+<h3>R^n over R</h3>
+<span class="formula">The standard unit vectors form a basis, so dim_R R^n=n.</span>
+<p><b>Use.</b> baseline vector-space model.</p>
+</article>
+<article class="item kind-example">
+<h3>C over R</h3>
+<span class="formula">C has basis {1,i} over R, so \([\mathbb C:\mathbb R]=2\).</span>
+<p><b>Use.</b> extension degree as dimension.</p>
+</article>
+<article class="item kind-example">
+<h3>Q(sqrt2) over Q</h3>
+<span class="formula">Every element has form a+b \(\sqrt2\) with a,b in Q; basis {1,\(\sqrt2\)}.</span>
+<p><b>Use.</b> minimal polynomial degree 2 becomes vector-space degree 2.</p>
+</article>
+<article class="item kind-example">
+<h3>Extension as vector space</h3>
+<span class="formula">Every extension field E of F is a vector space over F by using field multiplication as scalar multiplication.</span>
+<p><b>Use.</b> This is why field degree is a dimension.</p>
+</article>
+</div>
+</details>
+    <details class="fold" open>
+<summary>Exercises <span>5</span></summary>
+<div class="fold-body">
+<article class="item kind-exercise">
+<h3>Basis check</h3>
+<span class="formula">Show {1,\(\sqrt2\)} is linearly independent \(\text{over }\mathbb Q\).</span>
+<p><b>Proof spine.</b> a+b \(\sqrt2\)=0 with rational a,b implies \(\sqrt2\) rational unless b=0.</p>
+</article>
+<article class="item kind-exercise">
+<h3>Dimension</h3>
+<span class="formula">Find [\(\mathbb Q(\sqrt[3]{2})\):Q].</span>
+<p><b>Proof spine.</b> Minimal polynomial \(x^3-2\) is irreducible \(\text{over }\mathbb Q\).</p>
+</article>
+<article class="item kind-exercise">
+<h3>Span</h3>
+<span class="formula">Explain why \(F[x]\) is infinite-dimensional over F.</span>
+<p><b>Proof spine.</b> The monomials 1,x,x^2,... cannot be spanned by finitely many of them.</p>
+</article>
+<article class="item kind-exercise">
+<h3>Exchange</h3>
+<span class="formula">If V is spanned by 3 vectors, can it contain 4 linearly independent vectors?</span>
+<p><b>Proof spine.</b> No.</p>
+</article>
+<article class="item kind-exercise">
+<h3>Zero scalar</h3>
+<span class="formula">Prove 0v=0 in a vector space.</span>
+<p><b>Proof spine.</b> Use (0+0)v=0v+0v and cancel.</p>
+</article>
+</div>
+</details>
+    <details class="fold"><summary>Proof Patterns <span>2</span></summary><div class="fold-body"><article class="item kind-proof"><ul><li>Basis proofs split into spanning and independence.</li><li>Extension degree questions become minimal polynomial degree questions for simple algebraic extensions.</li></ul></article></div></details>
+
+    <section class="card">
+      <h2>All sections</h2>
+      <div class="chapter-grid"><a href="16.html">16. Group Action on a Set</a>
+<a href="17.html">17. Applications of G-Sets to Counting</a>
+<a href="18.html">18. Rings and Fields</a>
+<a href="19.html">19. Integral Domains</a>
+<a href="20.html">20. Fermat&#x27;s and Euler&#x27;s Theorems</a>
+<a href="21.html">21. The Field of Quotients of an Integral Domain</a>
+<a href="22.html">22. Rings of Polynomials</a>
+<a href="23.html">23. Factorization of Polynomials over a Field</a>
+<a href="24.html">24. Noncommutative Examples</a>
+<a href="25.html">25. Ordered Rings and Fields</a>
+<a href="26.html">26. Homomorphisms and Factor Rings</a>
+<a href="27.html">27. Prime and Maximal Ideals</a>
+<a href="28.html">28. Groebner Bases for Ideals</a>
+<a href="29.html">29. Introduction to Extension Fields</a>
+<a href="30.html" aria-current="page">30. Vector Spaces</a>
+<a href="31.html">31. Algebraic Extensions</a>
+<a href="32.html">32. Geometric Constructions</a></div>
+    </section>
+
+    <footer>
+      <p>This page is a study reconstruction based on the provided chapter range. The statements are paraphrased for exam preparation rather than copied from the source text.</p>
+    </footer>
+  </div>
+</body>
+</html>

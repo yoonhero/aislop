@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Section 23: Factorization of Polynomials over a Field</title>
+  <link rel="stylesheet" href="../assets/detail.css" />
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+  <div class="shell">
+    <div class="topbar">
+      <a class="button" href="../index.html">Overview</a>
+      <nav aria-label="section pager">
+        <a class="mini-link" href="22.html">Prev 22</a>
+        <a class="mini-link" href="24.html">Next 24</a>
+      </nav>
+    </div>
+
+    <header>
+      <div>
+        <p class="eyebrow">Fraleigh 7th Section 23</p>
+        <h1>Factorization of Polynomials over a Field</h1>
+        <p class="lead">F[x]에서 irreducible factorization과 유일성을 확보한다.</p>
+      </div>
+      <aside class="meta">
+        <span><b>Read first</b><br />degree 2,3에서는 root test가 irreducibility test다. 그 이상에서는 더 많은 도구가 필요하다.</span>
+        <span><b>Folded blocks</b><br />definitions, theorems, propositions, examples, exercises</span>
+      </aside>
+    </header>
+
+    <section class="quick" aria-label="chapter map">
+      <article class="card">
+        <h2>Goal</h2>
+        <p>F[x]에서 irreducible factorization과 유일성을 확보한다.</p>
+      </article>
+      <article class="card">
+        <h2>Exam posture</h2>
+        <p>degree 2,3에서는 root test가 irreducibility test다. 그 이상에서는 더 많은 도구가 필요하다.</p>
+      </article>
+      <article class="card">
+        <h2>Neighbor chapters</h2>
+        <p><a href="22.html">Prev 22</a> / <a href="24.html">Next 24</a></p>
+      </article>
+    </section>
+
+    <details class="fold" open><summary>Definitions <span>3</span></summary><div class="fold-body"><article class="item"><ul><li>A nonconstant polynomial p in \(F[x]\) is irreducible if p=ab implies a or b is constant.</li><li>Two factorizations are the same up to order and nonzero scalar factors.</li><li>A prime polynomial p divides ab only when p divides a or p divides b.</li></ul></article></div></details>
+    <details class="fold" open>
+<summary>Theorems <span>6</span></summary>
+<div class="fold-body">
+<article class="item kind-theorem">
+<h3>Euclidean gcd theorem</h3>
+<span class="formula">In \(F[x]\), gcds exist and can be expressed as sf+tg for polynomials s,t.</span>
+<p><b>Proof spine.</b> Use the division algorithm exactly as in the Euclidean algorithm for integers.</p>
+</article>
+<article class="item kind-theorem">
+<h3>Irreducible implies prime in F[x]</h3>
+<span class="formula">If p is irreducible in \(F[x]\) and p divides ab, then p divides a or p divides b.</span>
+<p><b>Proof spine.</b> If p does not divide a, gcd(p,a)=1; Bezout gives sp+ta=1. Multiply by b.</p>
+</article>
+<article class="item kind-theorem">
+<h3>Unique factorization in F[x]</h3>
+<span class="formula">Every nonconstant polynomial in \(F[x]\) factors into irreducibles, and the factorization is unique up to order and units.</span>
+<p><b>Proof spine.</b> Existence by induction on degree. Uniqueness by irreducible implies prime.</p>
+</article>
+<article class="item kind-theorem">
+<h3>Gauss-type reducibility over Q</h3>
+<span class="formula">A polynomial in \(\mathbb Z[x]\) that factors \(\text{over }\mathbb Q\) into lower-degree polynomials also factors over Z after clearing unit factors appropriately.</span>
+<p><b>Proof spine.</b> Clear denominators and use primitive parts; this moves rational factorization back to integer coefficients.</p>
+</article>
+<article class="item kind-theorem">
+<h3>Rational zero theorem</h3>
+<span class="formula">If a monic or integer polynomial has a rational zero m/n in lowest terms, then numerator and denominator divide the appropriate constant and leading coefficients.</span>
+<p><b>Proof spine.</b> Substitute m/n and compare divisibility after multiplying by n^d.</p>
+</article>
+<article class="item kind-theorem">
+<h3>Eisenstein criterion</h3>
+<span class="formula">If a prime p divides every coefficient except the leading coefficient, p does not divide the leading coefficient, and p^2 does not divide the constant term, then the polynomial is irreducible \(\text{over }\mathbb Q\).</span>
+<p><b>Proof spine.</b> Assume a factorization in \(\mathbb Z[x]\); reduction of coefficients forces both constant terms to be divisible by p, contradicting the p^2 condition.</p>
+</article>
+</div>
+</details>
+    <details class="fold" open>
+<summary>Propositions <span>2</span></summary>
+<div class="fold-body">
+<article class="item kind-proposition">
+<h3>Degree 2 or 3 criterion</h3>
+<span class="formula">A polynomial over F of degree 2 or 3 is reducible iff it has a root in F.</span>
+<p><b>Proof spine.</b> A proper factorization must include a linear factor.</p>
+</article>
+<article class="item kind-proposition">
+<h3>Root bound</h3>
+<span class="formula">A nonzero polynomial of degree n over a field has at most n roots.</span>
+<p><b>Proof spine.</b> Each root contributes a factor \(x-a\); degree limits how many can occur.</p>
+</article>
+</div>
+</details>
+    <details class="fold" open>
+<summary>Examples <span>5</span></summary>
+<div class="fold-body">
+<article class="item kind-example">
+<h3>x^2+x+1 over Z_2</h3>
+<span class="formula">Evaluate at 0 and 1. Both are nonzero, so the quadratic is irreducible over \(\mathbb Z_2\).</span>
+<p><b>Use.</b> This polynomial constructs the field with four elements later.</p>
+</article>
+<article class="item kind-example">
+<h3>x^4-1 over Q</h3>
+<span class="formula">\(x^4-1\)=(x-1)(x+1)(\(x^2+1\)), and \(x^2+1\) is irreducible \(\text{over }\mathbb Q\).</span>
+<p><b>Use.</b> factorization depends on the base field.</p>
+</article>
+<article class="item kind-example">
+<h3>Finite subgroup of a field</h3>
+<span class="formula">A finite subgroup of F* is cyclic.</span>
+<p><b>Use.</b> This result explains multiplicative groups of finite fields later.</p>
+</article>
+<article class="item kind-example">
+<h3>Eisenstein example</h3>
+<span class="formula">\(x^5+6x+3\) is irreducible \(\text{over }\mathbb Q\) by Eisenstein with p=3.</span>
+<p><b>Use.</b> A fast irreducibility certificate.</p>
+</article>
+<article class="item kind-example">
+<h3>Rational zero example</h3>
+<span class="formula">For \(x^3-2\), the rational zero theorem leaves possible rational roots ±1, ±2; none work, so the cubic is irreducible \(\text{over }\mathbb Q\).</span>
+<p><b>Use.</b> Degree 3 plus no rational root gives irreducible.</p>
+</article>
+</div>
+</details>
+    <details class="fold" open>
+<summary>Exercises <span>6</span></summary>
+<div class="fold-body">
+<article class="item kind-exercise">
+<h3>Irreducible cubic</h3>
+<span class="formula">Determine whether x^3+x+1 is irreducible over \(\mathbb Z_2\).</span>
+<p><b>Proof spine.</b> Check roots 0 and 1.</p>
+</article>
+<article class="item kind-exercise">
+<h3>Root bound proof</h3>
+<span class="formula">Prove a degree n polynomial has at most n roots.</span>
+<p><b>Proof spine.</b> Induct using the factor theorem.</p>
+</article>
+<article class="item kind-exercise">
+<h3>Factor over fields</h3>
+<span class="formula">Factor \(x^2-2\) \(\text{over }\mathbb Q\) and over R.</span>
+<p><b>Proof spine.</b> Irreducible \(\text{over }\mathbb Q\), linear factors over R.</p>
+</article>
+<article class="item kind-exercise">
+<h3>GCD</h3>
+<span class="formula">Find gcd(x^2-1, \(x^2-2x+1\)) in \(\mathbb Q[x]\).</span>
+<p><b>Proof spine.</b> Common factor is x-1.</p>
+</article>
+<article class="item kind-exercise">
+<h3>Use Eisenstein</h3>
+<span class="formula">Prove \(x^4+10x^2+5\) is irreducible \(\text{over }\mathbb Q\).</span>
+<p><b>Proof spine.</b> Use p=5.</p>
+</article>
+<article class="item kind-exercise">
+<h3>Rational root list</h3>
+<span class="formula">List all possible rational roots of \(2x^3-3x+6\).</span>
+<p><b>Proof spine.</b> Numerators divide 6 and denominators divide 2.</p>
+</article>
+</div>
+</details>
+    <details class="fold"><summary>Proof Patterns <span>2</span></summary><div class="fold-body"><article class="item kind-proof"><ul><li>Irreducibility is always relative to the field.</li><li>For uniqueness proofs, use Bezout to turn irreducible into prime.</li></ul></article></div></details>
+
+    <section class="card">
+      <h2>All sections</h2>
+      <div class="chapter-grid"><a href="16.html">16. Group Action on a Set</a>
+<a href="17.html">17. Applications of G-Sets to Counting</a>
+<a href="18.html">18. Rings and Fields</a>
+<a href="19.html">19. Integral Domains</a>
+<a href="20.html">20. Fermat&#x27;s and Euler&#x27;s Theorems</a>
+<a href="21.html">21. The Field of Quotients of an Integral Domain</a>
+<a href="22.html">22. Rings of Polynomials</a>
+<a href="23.html" aria-current="page">23. Factorization of Polynomials over a Field</a>
+<a href="24.html">24. Noncommutative Examples</a>
+<a href="25.html">25. Ordered Rings and Fields</a>
+<a href="26.html">26. Homomorphisms and Factor Rings</a>
+<a href="27.html">27. Prime and Maximal Ideals</a>
+<a href="28.html">28. Groebner Bases for Ideals</a>
+<a href="29.html">29. Introduction to Extension Fields</a>
+<a href="30.html">30. Vector Spaces</a>
+<a href="31.html">31. Algebraic Extensions</a>
+<a href="32.html">32. Geometric Constructions</a></div>
+    </section>
+
+    <footer>
+      <p>This page is a study reconstruction based on the provided chapter range. The statements are paraphrased for exam preparation rather than copied from the source text.</p>
+    </footer>
+  </div>
+</body>
+</html>

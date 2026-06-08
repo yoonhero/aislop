@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Section 18: Rings and Fields</title>
+  <link rel="stylesheet" href="../assets/detail.css" />
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+  <div class="shell">
+    <div class="topbar">
+      <a class="button" href="../index.html">Overview</a>
+      <nav aria-label="section pager">
+        <a class="mini-link" href="17.html">Prev 17</a>
+        <a class="mini-link" href="19.html">Next 19</a>
+      </nav>
+    </div>
+
+    <header>
+      <div>
+        <p class="eyebrow">Fraleigh 7th Section 18</p>
+        <h1>Rings and Fields</h1>
+        <p class="lead">두 연산을 동시에 가진 구조를 시작한다. 덧셈은 군, 곱셈은 결합법칙, 둘 사이는 분배법칙.</p>
+      </div>
+      <aside class="meta">
+        <span><b>Read first</b><br />field 판정은 ring axioms보다 unit 판정이 핵심이다.</span>
+        <span><b>Folded blocks</b><br />definitions, theorems, propositions, examples, exercises</span>
+      </aside>
+    </header>
+
+    <section class="quick" aria-label="chapter map">
+      <article class="card">
+        <h2>Goal</h2>
+        <p>두 연산을 동시에 가진 구조를 시작한다. 덧셈은 군, 곱셈은 결합법칙, 둘 사이는 분배법칙.</p>
+      </article>
+      <article class="card">
+        <h2>Exam posture</h2>
+        <p>field 판정은 ring axioms보다 unit 판정이 핵심이다.</p>
+      </article>
+      <article class="card">
+        <h2>Neighbor chapters</h2>
+        <p><a href="17.html">Prev 17</a> / <a href="19.html">Next 19</a></p>
+      </article>
+    </section>
+
+    <details class="fold" open><summary>Definitions <span>5</span></summary><div class="fold-body"><article class="item"><ul><li>A ring R is an abelian group under +, has associative multiplication, and satisfies both distributive laws.</li><li>A ring with unity has a multiplicative identity 1. A commutative ring has ab=ba.</li><li>A unit is an element with a multiplicative inverse.</li><li>A field is a commutative ring with unity 1 != 0 in which every nonzero element is a unit.</li><li>A ring homomorphism preserves addition and multiplication; when unity matters, check whether it is required to preserve 1.</li></ul></article></div></details>
+    <details class="fold" open>
+<summary>Theorems <span>5</span></summary>
+<div class="fold-body">
+<article class="item kind-theorem">
+<h3>Zero multiplication laws</h3>
+<span class="formula">In every ring, 0a=a0=0 and (-a)b=a(-b)=-(ab).</span>
+<p><b>Proof spine.</b> Use distributivity: 0a=(0+0)a=0a+0a, then cancel in the additive group.</p>
+</article>
+<article class="item kind-theorem">
+<h3>Product rings</h3>
+<span class="formula">If R1,...,Rn are rings, their cartesian product is a ring under componentwise operations.</span>
+<p><b>Proof spine.</b> All axioms reduce coordinate by coordinate.</p>
+</article>
+<article class="item kind-theorem">
+<h3>Ring isomorphism transfer</h3>
+<span class="formula">A ring isomorphism transports all purely ring-theoretic properties, such as commutativity, unity, units, and zero divisors.</span>
+<p><b>Proof spine.</b> Apply the bijective homomorphism and its inverse to the defining equations.</p>
+</article>
+<article class="item kind-theorem">
+<h3>Subring test</h3>
+<span class="formula">A nonempty subset S of a ring R is a subring if it is closed under subtraction and multiplication.</span>
+<p><b>Proof spine.</b> Closure under subtraction gives an additive subgroup; multiplication closure supplies the inherited product.</p>
+</article>
+<article class="item kind-theorem">
+<h3>Chinese remainder model for coprime moduli</h3>
+<span class="formula">If gcd(r,s)=1, then \(\mathbb Z_{rs}\) is isomorphic to \(\mathbb Z_r\times\mathbb Z_s\) as rings.</span>
+<p><b>Proof spine.</b> Send n mod rs to (n mod r, n mod s); Bezout gives bijectivity.</p>
+</article>
+</div>
+</details>
+    <details class="fold" open>
+<summary>Propositions <span>2</span></summary>
+<div class="fold-body">
+<article class="item kind-proposition">
+<h3>Units form a group</h3>
+<span class="formula">In a ring with unity, the set of units is a group under multiplication.</span>
+<p><b>Proof spine.</b> Identity is a unit, products of units invert in reverse order, and inverses remain units.</p>
+</article>
+<article class="item kind-proposition">
+<h3>Finite product fields are usually not fields</h3>
+<span class="formula">F x K is never a field when F and K are nonzero rings, because (1,0)(0,1)=(0,0).</span>
+<p><b>Proof spine.</b> It has zero divisors.</p>
+</article>
+</div>
+</details>
+    <details class="fold" open>
+<summary>Examples <span>4</span></summary>
+<div class="fold-body">
+<article class="item kind-example">
+<h3>Z_n</h3>
+<span class="formula">\(\mathbb Z_n\) is a commutative ring with unity. Its units are residue classes relatively prime to n.</span>
+<p><b>Use.</b> 이후 Fermat/Euler가 이 unit group을 사용한다.</p>
+</article>
+<article class="item kind-example">
+<h3>Matrix rings</h3>
+<span class="formula">\(M_n(R)\) is a ring with unity. For n&gt;=2 it is typically noncommutative.</span>
+<p><b>Use.</b> noncommutative 반례를 찾을 때 첫 후보.</p>
+</article>
+<article class="item kind-example">
+<h3>Function rings</h3>
+<span class="formula">All functions R-&gt;R form a commutative ring under pointwise addition and multiplication.</span>
+<p><b>Use.</b> ideal 예제에서 특정 점에서 0인 함수들이 다시 등장한다.</p>
+</article>
+<article class="item kind-example">
+<h3>Chinese remainder example</h3>
+<span class="formula">\(\mathbb Z_{15}\) is isomorphic to \(\mathbb Z_3\times\mathbb Z_5\).</span>
+<p><b>Use.</b> This explains why arithmetic modulo a composite can split into prime-power pieces.</p>
+</article>
+</div>
+</details>
+    <details class="fold" open>
+<summary>Exercises <span>6</span></summary>
+<div class="fold-body">
+<article class="item kind-exercise">
+<h3>Unit list</h3>
+<span class="formula">Find all units in \(\mathbb Z_{12}\).</span>
+<p><b>Proof spine.</b> The units are classes represented by 1,5,7,11.</p>
+</article>
+<article class="item kind-exercise">
+<h3>Field test</h3>
+<span class="formula">Decide whether \(\mathbb Z_9\) is a field.</span>
+<p><b>Proof spine.</b> 3 is nonzero and 3*3=0 mod 9, so no.</p>
+</article>
+<article class="item kind-exercise">
+<h3>Homomorphism check</h3>
+<span class="formula">Check whether phi:Z-&gt;\(\mathbb Z_n\), phi(m)=m mod n, is a ring homomorphism.</span>
+<p><b>Proof spine.</b> Verify both operations. Kernel will be \(n\mathbb Z\) later.</p>
+</article>
+<article class="item kind-exercise">
+<h3>Matrix noncommutativity</h3>
+<span class="formula">Give two 2x2 matrices over R with AB != BA.</span>
+<p><b>Proof spine.</b> Elementary matrices E12 and E21 work.</p>
+</article>
+<article class="item kind-exercise">
+<h3>Subring test</h3>
+<span class="formula">Use the subring test to show \(2\mathbb Z\) is a subring of Z without unity.</span>
+<p><b>Proof spine.</b> It is closed under subtraction and multiplication but does not contain 1.</p>
+</article>
+<article class="item kind-exercise">
+<h3>CRT calculation</h3>
+<span class="formula">Find the element of \(\mathbb Z_{15}\) corresponding to (1,2) in \(\mathbb Z_3\times\mathbb Z_5\).</span>
+<p><b>Proof spine.</b> Solve n=1 mod 3 and n=2 mod 5.</p>
+</article>
+</div>
+</details>
+    <details class="fold"><summary>Proof Patterns <span>2</span></summary><div class="fold-body"><article class="item kind-proof"><ul><li>When proving ring identities, use additive cancellation; do not divide unless a unit is known.</li><li>When disproving field, exhibit one nonzero nonunit or one zero divisor.</li></ul></article></div></details>
+
+    <section class="card">
+      <h2>All sections</h2>
+      <div class="chapter-grid"><a href="16.html">16. Group Action on a Set</a>
+<a href="17.html">17. Applications of G-Sets to Counting</a>
+<a href="18.html" aria-current="page">18. Rings and Fields</a>
+<a href="19.html">19. Integral Domains</a>
+<a href="20.html">20. Fermat&#x27;s and Euler&#x27;s Theorems</a>
+<a href="21.html">21. The Field of Quotients of an Integral Domain</a>
+<a href="22.html">22. Rings of Polynomials</a>
+<a href="23.html">23. Factorization of Polynomials over a Field</a>
+<a href="24.html">24. Noncommutative Examples</a>
+<a href="25.html">25. Ordered Rings and Fields</a>
+<a href="26.html">26. Homomorphisms and Factor Rings</a>
+<a href="27.html">27. Prime and Maximal Ideals</a>
+<a href="28.html">28. Groebner Bases for Ideals</a>
+<a href="29.html">29. Introduction to Extension Fields</a>
+<a href="30.html">30. Vector Spaces</a>
+<a href="31.html">31. Algebraic Extensions</a>
+<a href="32.html">32. Geometric Constructions</a></div>
+    </section>
+
+    <footer>
+      <p>This page is a study reconstruction based on the provided chapter range. The statements are paraphrased for exam preparation rather than copied from the source text.</p>
+    </footer>
+  </div>
+</body>
+</html>

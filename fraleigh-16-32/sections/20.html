@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Section 20: Fermat&#x27;s and Euler&#x27;s Theorems</title>
+  <link rel="stylesheet" href="../assets/detail.css" />
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+  <div class="shell">
+    <div class="topbar">
+      <a class="button" href="../index.html">Overview</a>
+      <nav aria-label="section pager">
+        <a class="mini-link" href="19.html">Prev 19</a>
+        <a class="mini-link" href="21.html">Next 21</a>
+      </nav>
+    </div>
+
+    <header>
+      <div>
+        <p class="eyebrow">Fraleigh 7th Section 20</p>
+        <h1>Fermat&#x27;s and Euler&#x27;s Theorems</h1>
+        <p class="lead">정수 합동식을 Z_n의 unit group에서 푸는 법을 배운다.</p>
+      </div>
+      <aside class="meta">
+        <span><b>Read first</b><br />Fermat와 Euler는 독립 공식이 아니라 Lagrange theorem의 unit-group 버전이다.</span>
+        <span><b>Folded blocks</b><br />definitions, theorems, propositions, examples, exercises</span>
+      </aside>
+    </header>
+
+    <section class="quick" aria-label="chapter map">
+      <article class="card">
+        <h2>Goal</h2>
+        <p>정수 합동식을 Z_n의 unit group에서 푸는 법을 배운다.</p>
+      </article>
+      <article class="card">
+        <h2>Exam posture</h2>
+        <p>Fermat와 Euler는 독립 공식이 아니라 Lagrange theorem의 unit-group 버전이다.</p>
+      </article>
+      <article class="card">
+        <h2>Neighbor chapters</h2>
+        <p><a href="19.html">Prev 19</a> / <a href="21.html">Next 21</a></p>
+      </article>
+    </section>
+
+    <details class="fold" open><summary>Definitions <span>3</span></summary><div class="fold-body"><article class="item"><ul><li>\(U(n)\) is the group of units in \(\mathbb Z_n\).</li><li>Euler phi function \(\varphi(n)\) is |\(U(n)\)|, the number of residues 1&lt;=a&lt;=n relatively prime to n.</li><li>A linear congruence \(ax\equiv b\pmod m\) is an equation in Z_m.</li></ul></article></div></details>
+    <details class="fold" open>
+<summary>Theorems <span>3</span></summary>
+<div class="fold-body">
+<article class="item kind-theorem">
+<h3>Fermat little theorem</h3>
+<span class="formula">If p is prime and p does not divide a, then \(a^{p-1}\equiv1\pmod p\).</span>
+<p><b>Proof spine.</b> The nonzero elements of \(\mathbb Z_p\) form a group of order p-1; apply Lagrange to a in that group.</p>
+</article>
+<article class="item kind-theorem">
+<h3>Euler theorem</h3>
+<span class="formula">If \(\gcd(a,n)=1\), then \(a^{\varphi(n)}\equiv1\pmod n\).</span>
+<p><b>Proof spine.</b> The class of a is in \(U(n)\), a finite group of order \(\varphi(n)\).</p>
+</article>
+<article class="item kind-theorem">
+<h3>Linear congruence criterion</h3>
+<span class="formula">The congruence \(ax\equiv b\pmod m\) has a solution iff \(d=\gcd(a,m)\) divides b. If it has solutions, it has d solutions modulo m.</span>
+<p><b>Proof spine.</b> Reduce by d; after division, a/d is a unit modulo m/d.</p>
+</article>
+</div>
+</details>
+    <details class="fold" open>
+<summary>Propositions <span>2</span></summary>
+<div class="fold-body">
+<article class="item kind-proposition">
+<h3>Unit criterion in Z_n</h3>
+<span class="formula">The class a in \(\mathbb Z_n\) is a unit iff \(\gcd(a,n)=1\).</span>
+<p><b>Proof spine.</b> Bezout gives inverse when gcd is 1; an inverse gives a Bezout relation.</p>
+</article>
+<article class="item kind-proposition">
+<h3>Power reduction</h3>
+<span class="formula">When \(\gcd(a,n)=1\), exponents of a modulo n may be reduced modulo the order of a, and therefore modulo \(\varphi(n)\).</span>
+<p><b>Proof spine.</b> The order of a divides \(\varphi(n)\).</p>
+</article>
+</div>
+</details>
+    <details class="fold" open>
+<summary>Examples <span>3</span></summary>
+<div class="fold-body">
+<article class="item kind-example">
+<h3>Remainder of a large power</h3>
+<span class="formula">To compute \(7^{100}\bmod 12\), note phi(12)=4 and gcd(7,12)=1, so 7^100=(7^4)^25=1 mod 12.</span>
+<p><b>Use.</b> 지수만 줄이면 계산이 끝난다.</p>
+</article>
+<article class="item kind-example">
+<h3>Solve 6x=9 mod 15</h3>
+<span class="formula">d=gcd(6,15)=3 divides 9. Divide to \(2x\equiv3\pmod5\). Since 2^{-1}=3 mod 5, x=9=4 mod 5, giving x=4,9,14 mod 15.</span>
+<p><b>Use.</b> d개의 해가 나온다.</p>
+</article>
+<article class="item kind-example">
+<h3>Fermat failure condition</h3>
+<span class="formula">Fermat cannot be used for 5^k mod 10 because gcd(5,10) != 1.</span>
+<p><b>Use.</b> 공식 적용 전 unit 여부를 본다.</p>
+</article>
+</div>
+</details>
+    <details class="fold" open>
+<summary>Exercises <span>4</span></summary>
+<div class="fold-body">
+<article class="item kind-exercise">
+<h3>Euler reduction</h3>
+<span class="formula">Find \(3^{100}\bmod 10\).</span>
+<p><b>Proof spine.</b> phi(10)=4 and 3^4=1 mod 10.</p>
+</article>
+<article class="item kind-exercise">
+<h3>Congruence</h3>
+<span class="formula">Solve \(14x\equiv21\pmod{35}\).</span>
+<p><b>Proof spine.</b> d=7; reduce to \(2x\equiv3\pmod5\).</p>
+</article>
+<article class="item kind-exercise">
+<h3>No solution</h3>
+<span class="formula">Show \(6x\equiv5\pmod{14}\) has no solution.</span>
+<p><b>Proof spine.</b> gcd(6,14)=2 does not divide 5.</p>
+</article>
+<article class="item kind-exercise">
+<h3>Phi count</h3>
+<span class="formula">Compute phi(18).</span>
+<p><b>Proof spine.</b> Units are 1,5,7,11,13,17, so phi(18)=6.</p>
+</article>
+</div>
+</details>
+    <details class="fold"><summary>Proof Patterns <span>2</span></summary><div class="fold-body"><article class="item kind-proof"><ul><li>Before using Euler, verify \(\gcd(a,n)=1\).</li><li>Linear congruence is unit inversion after dividing by gcd.</li></ul></article></div></details>
+
+    <section class="card">
+      <h2>All sections</h2>
+      <div class="chapter-grid"><a href="16.html">16. Group Action on a Set</a>
+<a href="17.html">17. Applications of G-Sets to Counting</a>
+<a href="18.html">18. Rings and Fields</a>
+<a href="19.html">19. Integral Domains</a>
+<a href="20.html" aria-current="page">20. Fermat&#x27;s and Euler&#x27;s Theorems</a>
+<a href="21.html">21. The Field of Quotients of an Integral Domain</a>
+<a href="22.html">22. Rings of Polynomials</a>
+<a href="23.html">23. Factorization of Polynomials over a Field</a>
+<a href="24.html">24. Noncommutative Examples</a>
+<a href="25.html">25. Ordered Rings and Fields</a>
+<a href="26.html">26. Homomorphisms and Factor Rings</a>
+<a href="27.html">27. Prime and Maximal Ideals</a>
+<a href="28.html">28. Groebner Bases for Ideals</a>
+<a href="29.html">29. Introduction to Extension Fields</a>
+<a href="30.html">30. Vector Spaces</a>
+<a href="31.html">31. Algebraic Extensions</a>
+<a href="32.html">32. Geometric Constructions</a></div>
+    </section>
+
+    <footer>
+      <p>This page is a study reconstruction based on the provided chapter range. The statements are paraphrased for exam preparation rather than copied from the source text.</p>
+    </footer>
+  </div>
+</body>
+</html>
