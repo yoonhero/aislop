@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pastel Pen Review</title>
+  <link rel="stylesheet" href="ui.css">
+</head>
+<body>
+  <main class="review-shell">
+    <aside>
+      <h1>Pastel Pen</h1>
+      <p>Local highlights, saved in this Firefox profile.</p>
+      <input id="q" type="search" placeholder="search saved text, title, url">
+      <div class="tools">
+        <button id="exportBtn">export</button>
+        <label class="file">import<input id="importFile" type="file" accept="application/json"></label>
+        <button id="clearBtn">clear all</button>
+      </div>
+      <output id="stats"></output>
+    </aside>
+    <section>
+      <div id="list" class="list"></div>
+    </section>
+  </main>
+  <script src="review.js"></script>
+</body>
+</html>

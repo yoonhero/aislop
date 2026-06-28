@@ -1,0 +1,47 @@
+.pastel-pen-mark {
+  --pastel-pen-color: #fff176;
+  --pastel-pen-rgb: 255, 241, 118;
+  --pastel-pen-ink: inherit;
+  background:
+    linear-gradient(100deg, rgba(var(--pastel-pen-rgb), .08), rgba(var(--pastel-pen-rgb), .66) 12%, rgba(var(--pastel-pen-rgb), .5) 88%, rgba(var(--pastel-pen-rgb), .12)),
+    linear-gradient(180deg, transparent 16%, var(--pastel-pen-color) 18% 86%, transparent 88%);
+  border-radius: .18em .55em .22em .45em;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  color: var(--pastel-pen-ink);
+  cursor: pointer;
+  margin: 0 -.03em;
+  padding: .02em .03em;
+  position: relative;
+  text-shadow: none;
+}
+
+.pastel-pen-mark--dark-surface {
+  --pastel-pen-ink: #18130a;
+  background:
+    linear-gradient(100deg, rgba(var(--pastel-pen-rgb), .28), rgba(var(--pastel-pen-rgb), .9) 10%, rgba(var(--pastel-pen-rgb), .78) 90%, rgba(var(--pastel-pen-rgb), .34)),
+    linear-gradient(180deg, transparent 8%, var(--pastel-pen-color) 10% 92%, transparent 94%);
+  box-shadow: 0 0 .04em rgba(0, 0, 0, .32);
+}
+
+.pastel-pen-mark:hover {
+  filter: saturate(1.08);
+  outline: 1px solid rgba(80, 70, 20, .18);
+}
+
+.pastel-pen-mark--dark-surface:hover {
+  outline-color: rgba(255, 255, 255, .4);
+}
+
+.pastel-pen-missing {
+  outline: 2px dashed rgba(255, 130, 160, .45);
+}
+
+@media (prefers-color-scheme: dark) {
+  .pastel-pen-mark:not(.pastel-pen-mark--light-surface) {
+    --pastel-pen-ink: #18130a;
+    background:
+      linear-gradient(100deg, rgba(var(--pastel-pen-rgb), .24), rgba(var(--pastel-pen-rgb), .88) 10%, rgba(var(--pastel-pen-rgb), .76) 90%, rgba(var(--pastel-pen-rgb), .32)),
+      linear-gradient(180deg, transparent 8%, var(--pastel-pen-color) 10% 92%, transparent 94%);
+  }
+}

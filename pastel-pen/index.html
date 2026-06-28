@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pastel Pen</title>
+  <style>
+    :root {
+      --paper: #fff9ec;
+      --ink: #332d22;
+      --muted: #756d5d;
+      --line: #eadfc8;
+      --lemon: #fff176;
+      --mint: #b8f7d4;
+      --rose: #ffb7cf;
+      --sky: #bfe4ff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        linear-gradient(90deg, #0000 31px, #f0e4ce 32px),
+        linear-gradient(#0000 31px, #f0e4ce 32px),
+        var(--paper);
+      background-size: 32px 32px;
+      font: 16px/1.6 ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    main { width: min(1120px, calc(100% - 32px)); margin: 0 auto; padding: 36px 0 56px; }
+    header { display: grid; grid-template-columns: 1fr minmax(280px, 420px); gap: 28px; align-items: end; min-height: 58vh; }
+    h1 {
+      font-family: ui-serif, Georgia, serif;
+      font-size: clamp(68px, 15vw, 176px);
+      letter-spacing: 0;
+      line-height: .78;
+      margin: 0;
+    }
+    .lead { color: var(--muted); font-size: clamp(18px, 2vw, 23px); max-width: 34rem; }
+    .stroke {
+      background: linear-gradient(180deg, #0000 34%, var(--lemon) 35% 82%, #0000 83%);
+      border-radius: .2em .7em .25em .55em;
+      box-decoration-break: clone;
+      -webkit-box-decoration-break: clone;
+      padding: 0 .08em;
+    }
+    .pen {
+      aspect-ratio: 1;
+      background:
+        linear-gradient(135deg, #0000 0 34%, #40382a 35% 39%, var(--rose) 40% 50%, var(--lemon) 51% 75%, #0000 76%),
+        radial-gradient(circle at 30% 74%, var(--mint) 0 13%, #0000 14%),
+        radial-gradient(circle at 75% 24%, var(--sky) 0 16%, #0000 17%),
+        #fffdf7;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: 0 24px 80px #5c451424;
+    }
+    section { margin-top: 30px; }
+    .grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+    article, .install {
+      background: #fffdf8d9;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+    }
+    h2 { font-size: 28px; margin: 0 0 12px; }
+    h3 { font-size: 16px; margin: 0 0 8px; }
+    p, li { color: var(--muted); }
+    ul, ol { padding-left: 1.2rem; }
+    code { background: #fff1c9; border-radius: 4px; padding: .12em .3em; }
+    .score { display: grid; gap: 8px; }
+    .score div { align-items: center; display: grid; gap: 10px; grid-template-columns: 100px 1fr; }
+    .bar { background: #f1e5cc; border-radius: 999px; height: 10px; overflow: hidden; }
+    .bar i { background: var(--mint); display: block; height: 100%; }
+    a { color: #5f4d09; font-weight: 800; }
+    @media (max-width: 780px) {
+      header { display: block; min-height: 0; }
+      .pen { margin-top: 24px; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <div>
+        <h1>Pastel<br>Pen</h1>
+        <p class="lead"><span class="stroke">STAEDTLER-ish soft highlighting</span> for Firefox: local-only, no account, no sync, no publishing pipeline. Select text, save it, review it later.</p>
+      </div>
+      <div class="pen" aria-hidden="true"></div>
+    </header>
+
+    <section class="install">
+      <h2>Load It</h2>
+      <ol>
+        <li>Open Firefox <code>about:debugging#/runtime/this-firefox</code>.</li>
+        <li>Click <code>Load Temporary Add-on</code>.</li>
+        <li>Select <code>pastel-pen/extension/manifest.json</code>.</li>
+      </ol>
+      <p>The extension stores highlights in Firefox <code>storage.local</code>. Open the toolbar popup or extension options to review, search, export, import, and delete saved marks.</p>
+    </section>
+
+    <section>
+      <h2>Architecture Choice</h2>
+      <div class="grid">
+        <article>
+          <h3>A. XPath-only anchor</h3>
+          <p>Small and tempting, but collapses when article templates insert ad boxes, comments, translated wrappers, or reactive message nodes.</p>
+          <div class="score"><div>survival <span class="bar"><i style="width:38%"></i></span></div><div>speed <span class="bar"><i style="width:88%"></i></span></div><div>beauty <span class="bar"><i style="width:52%"></i></span></div></div>
+        </article>
+        <article>
+          <h3>B. Text quote + context</h3>
+          <p>Stores exact text plus nearby prefix and suffix. It survives layout churn and works well on Wikipedia, blogs, news, and essays.</p>
+          <div class="score"><div>survival <span class="bar"><i style="width:82%"></i></span></div><div>speed <span class="bar"><i style="width:74%"></i></span></div><div>beauty <span class="bar"><i style="width:78%"></i></span></div></div>
+        </article>
+        <article>
+          <h3>C. Hybrid selector</h3>
+          <p>Chosen. Save text position, exact quote, context, and a DOM path fallback. Restore by the cheapest still-true fact.</p>
+          <div class="score"><div>survival <span class="bar"><i style="width:91%"></i></span></div><div>speed <span class="bar"><i style="width:78%"></i></span></div><div>beauty <span class="bar"><i style="width:86%"></i></span></div></div>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <h2>Edge Cases</h2>
+      <div class="grid">
+        <article><h3>Dynamic pages</h3><p>A debounced observer replays restoration when ChatGPT, Naver Blog, Tistory, and infinite articles mutate after load.</p></article>
+        <article><h3>Rich selections</h3><p>The marker wraps text nodes instead of surrounding whole DOM ranges, avoiding broken links, code spans, tables, and inline math.</p></article>
+        <article><h3>Duplicate quotes</h3><p>Context and distance from the original text position rank candidates when the same sentence appears repeatedly.</p></article>
+        <article><h3>Local review</h3><p>The review page is an extension page backed by local Firefox storage, with export/import as the no-cloud escape hatch.</p></article>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

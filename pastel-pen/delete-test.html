@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Pastel Pen Delete Test</title>
+  <link rel="stylesheet" href="./extension/content.css">
+  <style>
+    body { font: 18px/1.7 Georgia, serif; margin: 80px auto; max-width: 760px; }
+    body.dark { background: #121417; color: #f3f0e6; }
+    p { margin: 0 0 24px; }
+    .dark-card { background: #1d2128; border: 1px solid #343b46; border-radius: 8px; padding: 18px; }
+  </style>
+</head>
+<body class="dark">
+  <main>
+    <h1>Delete harness</h1>
+    <p id="target">Alpha beta gamma delta epsilon. This sentence should be highlighted, deleted, and not restored after reload.</p>
+    <p class="dark-card">Repeated text can be dangerous. Repeated text can be dangerous. Context must decide.</p>
+  </main>
+  <script>
+    window.__ppStore = JSON.parse(localStorage.__ppStore || "{}");
+    window.__ppSaveStore = () => localStorage.__ppStore = JSON.stringify(window.__ppStore);
+    window.__ppMessages = [];
+    window.browser = {
+      storage: {
+        local: {
+          async get(key) { return { [key]: window.__ppStore[key] }; },
+          async set(obj) { Object.assign(window.__ppStore, obj); window.__ppSaveStore(); }
+        }
+      },
+      runtime: {
+        onMessage: { addListener(fn) { window.__ppMessage = fn; } },
+        sendMessage(msg) { window.__ppMessages.push(msg); }
+      }
+    };
+  </script>
+  <script src="./extension/content.js"></script>
+</body>
+</html>
