@@ -1,28 +1,77 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Pastel Pen Review</title>
+  <title>Pastel Pen · Review desk</title>
   <link rel="stylesheet" href="ui.css">
 </head>
-<body>
-  <main class="review-shell">
-    <aside>
-      <h1>Pastel Pen</h1>
-      <p>Local highlights, saved in this Firefox profile.</p>
-      <input id="q" type="search" placeholder="search saved text, title, url">
-      <div class="tools">
-        <button id="exportBtn">export</button>
-        <label class="file">import<input id="importFile" type="file" accept="application/json"></label>
-        <button id="clearBtn">clear all</button>
+<body class="review-page">
+  <header class="masthead">
+    <div class="masthead-top">
+      <span>PASTEL PEN / READING ARCHIVE</span>
+      <time id="today"></time>
+    </div>
+    <div class="masthead-main">
+      <div>
+        <p class="kicker">Saved reading</p>
+        <h1>Clippings</h1>
+        <p class="dek">The lines you chose to keep.</p>
       </div>
-      <output id="stats"></output>
-    </aside>
-    <section>
-      <div id="list" class="list"></div>
+      <div class="masthead-mark" aria-hidden="true"><i></i><i></i><i></i></div>
+    </div>
+    <div class="rule"></div>
+  </header>
+
+  <main class="review-main">
+    <section class="deskbar" aria-label="Review controls">
+      <label class="search-wrap">
+        <span class="sr-only">Search saved clippings</span>
+        <input id="q" type="search" placeholder="Search your clippings…">
+      </label>
+      <div class="desk-actions">
+        <button id="exportBtn" class="button">export</button>
+        <label class="file button" title="Import JSON or JSONL">import<input id="importFile" type="file" accept=".json,.jsonl,application/json,application/x-ndjson,text/plain"></label>
+        <button id="printBtn" class="button quiet">print</button>
+        <button id="clearBtn" class="button quiet">clear</button>
+      </div>
+    </section>
+    <nav class="view-nav" aria-label="Reading views">
+      <button id="archiveView" class="view-tab is-active" aria-pressed="true" type="button">archive</button>
+      <button id="exploreView" class="view-tab" aria-pressed="false" type="button">explore</button>
+    </nav>
+    <section id="archivePane" aria-label="Saved clippings">
+      <div class="edition-line">
+        <output id="stats"></output>
+        <span>Saved locally · no expiry</span>
+      </div>
+      <section id="list" class="list" aria-live="polite"></section>
+    </section>
+    <section id="explorePane" class="explore-pane" aria-label="Explore saved reading" hidden>
+      <header class="explore-header">
+        <div>
+          <p class="kicker">Follow the thread</p>
+          <h2>Explore your reading</h2>
+          <p class="explore-dek">Open one line, then follow the source, the site, or the words it shares with another line.</p>
+        </div>
+        <div class="explore-actions">
+          <button id="backBtn" class="button quiet" type="button">back</button>
+          <button id="nextBtn" class="button" type="button">next line</button>
+        </div>
+      </header>
+      <div class="explore-layout">
+        <aside class="source-index" aria-label="Saved sources">
+          <p class="section-label">Sources</p>
+          <div id="sourceList" class="source-list"></div>
+        </aside>
+        <article id="focusCard" class="focus-card" aria-live="polite"></article>
+      </div>
     </section>
   </main>
+
+  <footer class="review-footer">
+    <strong>Pastel Pen</strong><span>Keep the line. Lose the noise.</span>
+  </footer>
   <script src="review.js"></script>
 </body>
 </html>

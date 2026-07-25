@@ -11,10 +11,19 @@ api.runtime.onInstalled.addListener(() => {
     title: "Open Pastel Pen Review",
     contexts: ["browser_action", "page", "selection"]
   });
+  api.menus.create({
+    id: "pastel-pen-toggle-page",
+    title: "Toggle Pastel Pen on this page",
+    contexts: ["page", "selection"]
+  });
 });
 
 api.menus.onClicked.addListener((info, tab) => {
   if (info.menuItemId === "pastel-pen-review") return openReview();
+  if (info.menuItemId === "pastel-pen-toggle-page" && tab?.id) {
+    api.tabs.sendMessage(tab.id, { type: "PASTEL_PEN_TOGGLE_PAGE" });
+    return;
+  }
   if (info.menuItemId === "pastel-pen-highlight" && tab?.id) {
     api.tabs.sendMessage(tab.id, { type: "PASTEL_PEN_HIGHLIGHT_CONTEXT" });
   }

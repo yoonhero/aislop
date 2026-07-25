@@ -9,12 +9,21 @@
 <body class="popup">
   <main>
     <header>
-      <b>Pastel Pen</b>
-      <button id="review">review</button>
+      <div>
+        <span class="eyebrow">PASTEL PEN</span>
+        <b>On this page</b>
+      </div>
+      <button id="review" class="quiet">review desk</button>
     </header>
-    <p>Select text, then tap a pastel dot near the selection. Right-click also works.</p>
-    <div id="colors" class="colors"></div>
-    <p class="fine"><span id="count">0</span> local highlights saved in Firefox.</p>
+    <p id="pageLabel" class="page-label">Checking the current page…</p>
+    <button id="pageToggle" class="page-toggle" type="button">
+      <span class="toggle-light" aria-hidden="true"></span>
+      <span><strong id="toggleTitle">Highlighting on</strong><small id="toggleHint">New and saved marks are visible.</small></span>
+      <span class="toggle-switch" aria-hidden="true"><i></i></span>
+    </button>
+    <div class="section-label">Pen colour</div>
+    <div id="colors" class="colors" aria-label="Default highlight colour"></div>
+    <p class="fine"><span id="count">0</span> highlights saved locally · they stay until you remove them.</p>
   </main>
   <script src="popup.js"></script>
 </body>

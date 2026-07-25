@@ -11,11 +11,11 @@
   ];
   const BAD = new Set(["SCRIPT", "STYLE", "TEXTAREA", "INPUT", "SELECT", "OPTION", "NOSCRIPT", "IFRAME"]);
   const css = String.raw;
-  const state = { items: [], lastRange: null, activeMarkId: null, tip: null, tipBody: null, deleteButton: null, color: COLORS[0][1] };
-  const page = () => location.href.split("#")[0];
+  const state = { items: [], lastRange: null, activeMarkId: null, tip: null, tipBody: null, deleteButton: null, color: COLORS[0][1], enabled: true };
+  const page = () => cleanPage(location.href);
   const clean = (s) => (s || "").replace(/\s+/g, " ").trim();
   const storage = {
-    async get() { return (await api.storage.local.get(KEY))[KEY] || { items: [], prefs: {} }; },
+    async get() { return normalize((await api.storage.local.get(KEY))[KEY]); },
     async set(data) { await api.storage.local.set({ [KEY]: data }); }
   };
 
@@ -26,13 +26,24 @@
     const data = await storage.get();
     state.items = data.items || [];
     state.color = data.prefs?.color || COLORS[0][1];
-    restoreSoon();
-    addEventListener("mouseup", captureSelection, true);
+    state.enabled = data.prefs?.disabledPages?.[page()] !== true;
+    if (state.enabled) restoreSoon();
+    addEventListener("pointerdown", prepareSelection, true);
+    addEventListener("pointerup", finishSelection, true);
+    addEventListener("mouseup", finishSelection, true);
+    addEventListener("selectionchange", captureSelection, true);
     addEventListener("keyup", (e) => /^(Shift|Arrow|Home|End)/.test(e.key) && captureSelection(), true);
     addEventListener("click", markMenu, true);
     addEventListener("scroll", hideTip, true);
-    api.runtime.onMessage.addListener((m) => m?.type === "PASTEL_PEN_HIGHLIGHT_CONTEXT" && commit(state.color));
-    new MutationObserver(debounce(restoreSoon, 600)).observe(document.body || document.documentElement, { childList: true, subtree: true });
+    api.runtime.onMessage.addListener((m) => {
+      if (m?.type === "PASTEL_PEN_HIGHLIGHT_CONTEXT") commit(state.color);
+      if (m?.type === "PASTEL_PEN_GET_PAGE_STATE") return Promise.resolve({ enabled: state.enabled, url: page() });
+      if (m?.type === "PASTEL_PEN_SET_PAGE_STATE") return setPageEnabled(m.enabled !== false);
+      if (m?.type === "PASTEL_PEN_TOGGLE_PAGE") return setPageEnabled(!state.enabled);
+      if (m?.type === "PASTEL_PEN_RECOLOR") return recolorHighlight(m.id, m.color);
+      if (m?.type === "PASTEL_PEN_REMOVE") return removeHighlight(m.id);
+    });
+    new MutationObserver(debounce(() => state.enabled && restoreSoon(), 600)).observe(document.body || document.documentElement, { childList: true, subtree: true });
   }
 
   function injectTip() {
@@ -50,8 +61,8 @@
         .act{background:#3f3828;border-radius:999px;color:#fff8df;padding:6px 10px}
         .ghost{background:transparent;border-radius:999px;color:#625946;padding:6px 8px}
         .danger{background:#ffe4e8;border-radius:999px;color:#8b3142;min-width:96px;padding:8px 16px}
-        .tip[data-mode="mark"]{min-width:128px}
-        .tip[data-mode="mark"] .dot,.tip[data-mode="mark"] .act,.tip[data-mode="mark"] .ghost{display:none}
+        .tip[data-mode="mark"]{min-width:184px}
+        .tip[data-mode="mark"] .act,.tip[data-mode="mark"] .ghost{display:none}
         .tip:not([data-mode="mark"]) .danger{display:none}
       `;
     const tip = document.createElement("div");
@@ -61,9 +72,10 @@
       const b = document.createElement("button");
       b.className = "dot";
       b.title = name;
+      b.ariaLabel = `Change highlight to ${name}`;
       b.dataset.color = color;
       b.style.background = color;
-      b.addEventListener("click", () => commit(color));
+      b.addEventListener("click", () => state.tipBody?.dataset.mode === "mark" ? recolorHighlight(state.activeMarkId, color) : commit(color));
       tip.append(b);
     }
     const save = Object.assign(document.createElement("button"), { className: "act", textContent: "save" });
@@ -79,26 +91,38 @@
     root.append(style, tip);
     state.tipBody = tip;
     state.deleteButton = del;
-    host.addEventListener("click", (e) => {
-      if (state.tipBody?.dataset.mode !== "mark") return;
-      e.preventDefault();
-      e.stopPropagation();
-      removeHighlight(state.deleteButton.dataset.targetId || state.activeMarkId);
-    });
     document.documentElement.append(host);
     state.tip = host;
     hideTip();
   }
 
   function captureSelection() {
+    if (!state.enabled) return false;
     const sel = getSelection();
-    if (!sel || sel.isCollapsed || !sel.rangeCount) return hideTip();
+    if (!sel || sel.isCollapsed || !sel.rangeCount) return false;
     const range = sel.getRangeAt(0);
-    if (!document.body.contains(range.commonAncestorContainer) || clean(range.toString()).length < 1) return hideTip();
+    if (!document.body.contains(range.commonAncestorContainer) || clean(range.toString()).length < 1) return false;
     state.lastRange = range.cloneRange();
     const rect = range.getClientRects()[0] || range.getBoundingClientRect();
-    if (!rect || !Number.isFinite(rect.left)) return;
+    if (!rect || !Number.isFinite(rect.left)) return false;
     showTip(rect, "select");
+    return true;
+  }
+
+  function finishSelection() {
+    setTimeout(() => {
+      if (!captureSelection() && !state.lastRange) hideTip();
+    }, 0);
+  }
+
+  function prepareSelection(event) {
+    const target = event.target instanceof Element ? event.target : null;
+    if (target?.closest?.("#pastel-pen,.pastel-pen-mark")) return;
+    state.lastRange = null;
+    hideTip();
+    document.documentElement.classList.add("pastel-pen-selection-active");
+    clearTimeout(state.selectionTimer);
+    state.selectionTimer = setTimeout(() => document.documentElement.classList.remove("pastel-pen-selection-active"), 1200);
   }
 
   function markMenu(event) {
@@ -108,10 +132,12 @@
     state.activeMarkId = mark.dataset.pastelPenId;
     state.deleteButton.dataset.targetId = state.activeMarkId;
     state.lastRange = null;
+    state.tipBody.querySelectorAll(".dot").forEach((b) => { b.ariaPressed = String(b.dataset.color === mark.style.getPropertyValue("--pastel-pen-color")); });
     showTip(mark.getBoundingClientRect(), "mark");
   }
 
   async function commit(color) {
+    if (!state.enabled) return hideTip();
     const range = state.lastRange?.cloneRange();
     if (!range || range.collapsed || !clean(range.toString())) return hideTip();
     state.color = color;
@@ -133,6 +159,38 @@
     await storage.set({ ...data, items });
     state.items = items;
     hideTip();
+    return { removed: true, id };
+  }
+
+  async function recolorHighlight(id, color) {
+    if (!id || !validColor(color)) return;
+    const data = await storage.get();
+    const rgb = rgbFor(color);
+    const items = data.items.map((item) => item.id === id ? { ...item, color, rgb } : item);
+    const prefs = { ...data.prefs, color };
+    document.querySelectorAll(`[data-pastel-pen-id="${CSS.escape(id)}"]`).forEach((mark) => {
+      mark.style.setProperty("--pastel-pen-color", color);
+      mark.style.setProperty("--pastel-pen-rgb", rgb);
+      mark.classList.toggle("pastel-pen-mark--dark-surface", darkSurface(mark.parentElement));
+      mark.classList.toggle("pastel-pen-mark--light-surface", !darkSurface(mark.parentElement));
+    });
+    await storage.set({ ...data, items, prefs });
+    state.items = items;
+    state.color = color;
+    return { recolored: true, id, color };
+  }
+
+  async function setPageEnabled(enabled) {
+    const data = await storage.get();
+    const disabledPages = { ...(data.prefs.disabledPages || {}) };
+    if (enabled) delete disabledPages[page()];
+    else disabledPages[page()] = true;
+    state.enabled = enabled;
+    await storage.set({ ...data, prefs: { ...data.prefs, disabledPages } });
+    if (enabled) restoreSoon();
+    else clearMarks();
+    if (!enabled) hideTip();
+    return { enabled, url: page() };
   }
 
   function serialize(range, color) {
@@ -141,7 +199,7 @@
     const exact = fragmentText(range);
     const prefix = text.slice(Math.max(0, start - 80), start);
     const suffix = text.slice(start + exact.length, start + exact.length + 80);
-    const rgb = COLORS.find((x) => x[1] === color)?.[2] || COLORS[0][2];
+    const rgb = rgbFor(color);
     return {
       id: hash([page(), exact, start, Date.now()].join("\n")),
       url: page(),
@@ -154,7 +212,7 @@
       end: start + exact.length,
       path: pathOf(range.startContainer),
       offset: range.startOffset,
-      color,
+      color: validColor(color) ? color : COLORS[0][1],
       rgb,
       createdAt: new Date().toISOString()
     };
@@ -165,6 +223,7 @@
   }
 
   async function restore() {
+    if (!state.enabled) return;
     const data = await storage.get();
     state.items = data.items || [];
     const mine = state.items.filter((x) => samePage(x.url) && !document.querySelector(`[data-pastel-pen-id="${CSS.escape(x.id)}"]`));
@@ -175,8 +234,7 @@
   }
 
   function samePage(url) {
-    try { return new URL(url).href.split("#")[0] === page(); }
-    catch { return url === page(); }
+    return cleanPage(url) === page();
   }
 
   function locate(item) {
@@ -204,6 +262,9 @@
   }
 
   function paint(range, item) {
+    if (!state.enabled) return;
+    item.color = validColor(item.color) ? item.color : COLORS[0][1];
+    item.rgb = item.rgb || rgbFor(item.color);
     for (const node of textNodes(range)) {
       let [a, b] = overlap(range, node);
       if (b <= a || !node.data.slice(a, b).trim()) continue;
@@ -254,6 +315,10 @@
     const parent = mark.parentNode;
     mark.replaceWith(document.createTextNode(mark.textContent));
     parent?.normalize();
+  }
+
+  function clearMarks() {
+    document.querySelectorAll(".pastel-pen-mark").forEach(unwrap);
   }
 
   function textNodes(range) {
@@ -344,6 +409,26 @@
   function indexes(hay, needle) { const a = []; for (let i = hay.indexOf(needle); i >= 0; i = hay.indexOf(needle, i + 1)) a.push(i); return a; }
   function distance(a, b) { return Math.abs(a.length - b.length) + (a === b ? 0 : a.slice(-24) === b.slice(-24) ? 3 : 12); }
   function hash(s) { let h = 2166136261; for (let i = 0; i < s.length; i++) h = Math.imul(h ^ s.charCodeAt(i), 16777619); return `pp_${(h >>> 0).toString(36)}`; }
+  function normalize(data = {}) {
+    data = data && typeof data === "object" ? data : {};
+    const prefs = data && typeof data.prefs === "object" ? data.prefs : {};
+    return {
+      items: Array.isArray(data.items) ? data.items.map((item) => ({
+        ...item,
+        color: validColor(item.color) ? item.color : COLORS[0][1],
+        rgb: item.rgb || rgbFor(item.color),
+        quote: item.quote || clean(item.exact),
+        exact: item.exact || item.quote || ""
+      })).filter((item) => item.id && item.url && item.exact) : [],
+      prefs: { ...prefs, disabledPages: { ...(prefs.disabledPages || {}) } }
+    };
+  }
+  function validColor(color) { return COLORS.some((x) => x[1] === color); }
+  function rgbFor(color) { return COLORS.find((x) => x[1] === color)?.[2] || COLORS[0][2]; }
+  function cleanPage(url = "") {
+    try { const u = new URL(url, location.href); u.hash = ""; return u.href; }
+    catch { return String(url).split("#")[0]; }
+  }
   function hideTip() {
     if (!state.tip) return;
     state.tip.style.display = "none";

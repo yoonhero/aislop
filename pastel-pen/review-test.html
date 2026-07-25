@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Pastel Pen review harness</title><link rel="stylesheet" href="./extension/ui.css"></head>
+<body class="review-page">
+  <header class="masthead"><div class="masthead-top"><span>PASTEL PEN / READING ARCHIVE</span><time id="today"></time></div><div class="masthead-main"><div><p class="kicker">Saved reading</p><h1>Clippings</h1><p class="dek">The lines you chose to keep.</p></div><div class="masthead-mark" aria-hidden="true"><i></i><i></i><i></i></div></div><div class="rule"></div></header>
+  <main class="review-main"><section class="deskbar"><label class="search-wrap"><span class="sr-only">Search saved clippings</span><input id="q" type="search" placeholder="Search your clippings…"></label><div class="desk-actions"><button id="exportBtn" class="button">export</button><label class="file button">import<input id="importFile" type="file"></label><button id="printBtn" class="button quiet">print</button><button id="clearBtn" class="button quiet">clear</button></div></section><nav class="view-nav" aria-label="Reading views"><button id="archiveView" class="view-tab is-active" aria-pressed="true" type="button">archive</button><button id="exploreView" class="view-tab" aria-pressed="false" type="button">explore</button></nav><section id="archivePane" aria-label="Saved clippings"><div class="edition-line"><output id="stats"></output><span>Saved locally · no expiry</span></div><section id="list" class="list"></section></section><section id="explorePane" class="explore-pane" aria-label="Explore saved reading" hidden><header class="explore-header"><div><p class="kicker">Follow the thread</p><h2>Explore your reading</h2><p class="explore-dek">Open one line, then follow the source, the site, or the words it shares with another line.</p></div><div class="explore-actions"><button id="backBtn" class="button quiet" type="button">back</button><button id="nextBtn" class="button" type="button">next line</button></div></header><div class="explore-layout"><aside class="source-index" aria-label="Saved sources"><p class="section-label">Sources</p><div id="sourceList" class="source-list"></div></aside><article id="focusCard" class="focus-card" aria-live="polite"></article></div></section></main>
+  <script>
+    window.__ppStore = {"pastelPen.highlights.v1":{"prefs":{"color":"#fff176"},"items":[
+      {"id":"demo-1","url":"https://putanumonit.com/2018/08/22/player-of-games/","title":"Player of Games","quote":"Understanding both sides can be quite a superpower.","exact":"Understanding both sides can be quite a superpower.","color":"#fff176","rgb":"255,241,118","createdAt":"2026-07-25T10:00:00.000Z"},
+      {"id":"demo-2","url":"https://putanumonit.com/2018/08/22/player-of-games/","title":"Player of Games","quote":"This stuff is hard, but it works.","exact":"This stuff is hard, but it works.","color":"#b8f7d4","rgb":"184,247,212","createdAt":"2026-07-24T10:00:00.000Z"}
+    ]}};
+    window.browser = {storage:{local:{async get(key){return {[key]:window.__ppStore[key]};},async set(value){Object.assign(window.__ppStore,value);}}},tabs:{async query(){return [];},async create(){}}};
+  </script>
+  <script src="./extension/review.js"></script>
+</body>
+</html>
