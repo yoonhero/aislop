@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Desktop Kanban</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%2382afea'/%3E%3Ctext x='32' y='46' fill='white' font-family='Arial,sans-serif' font-size='42' font-weight='800' text-anchor='middle'%3EA%3C/text%3E%3C/svg%3E" />
   <style>
     :root {
       --bg: #f4f1ea;
@@ -127,8 +128,16 @@
       line-height: 1.45;
     }
   </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=Noto+Sans+KR:wght@400;500;700;800;900&family=Noto+Serif+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../project-theme.css" />
 </head>
-<body>
+<body class="project-page project-light">
+  <nav class="project-nav" aria-label="AISLOP archive">
+    <a class="project-brand" href="../">aislop</a><span aria-hidden="true">/</span><span class="project-path">desktop-kanban</span>
+    <a class="project-archive" href="../#works">archive ↗</a>
+  </nav>
   <main>
     <div class="eyebrow">macOS experiment</div>
     <h1>Desktop Kanban</h1>
@@ -168,5 +177,6 @@ swift run DesktopKanban</code></pre>
       </ul>
     </section>
   </main>
+  <footer class="project-footer"><span>aislop / archive</span><a href="../#works">all experiments ↗</a></footer>
 </body>
 </html>

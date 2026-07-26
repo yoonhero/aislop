@@ -1,0 +1,867 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%2382afea'/%3E%3Ctext x='32' y='46' fill='white' font-family='Arial,sans-serif' font-size='42' font-weight='800' text-anchor='middle'%3EA%3C/text%3E%3C/svg%3E" />
+  <title>VIM//QUEST — muscle memory lab</title>
+  <style>
+    :root {
+      --void: #08090d;
+      --panel: #10131a;
+      --panel-2: #171c27;
+      --ink: #f6f3d5;
+      --muted: #8b91a7;
+      --acid: #b8ff4f;
+      --pink: #ff4fc8;
+      --cyan: #45dcff;
+      --orange: #ffad4f;
+      --line: #293144;
+      --danger: #ff6a71;
+      --cut: 3px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 76% 8%, #233e32 0 0.15%, transparent 22%),
+        linear-gradient(90deg, #0d1017 1px, transparent 1px),
+        linear-gradient(#0d1017 1px, transparent 1px),
+        var(--void);
+      background-size: auto, 28px 28px, 28px 28px, auto;
+      font: 15px/1.45 "Courier New", ui-monospace, SFMono-Regular, Menlo, monospace;
+      image-rendering: pixelated;
+    }
+
+    body::after {
+      position: fixed;
+      inset: 0;
+      z-index: 10;
+      pointer-events: none;
+      content: "";
+      background: repeating-linear-gradient(0deg, transparent 0 5px, #0003 6px 7px);
+      mix-blend-mode: multiply;
+    }
+
+    button { font: inherit; }
+
+    .shell {
+      width: min(1240px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 26px 0 34px;
+    }
+
+    .chrome {
+      border: var(--cut) solid var(--ink);
+      background: var(--panel);
+      box-shadow: 8px 8px 0 #000;
+    }
+
+    header {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 22px 24px 18px;
+      border-bottom: var(--cut) solid var(--ink);
+    }
+
+    .kicker {
+      display: inline-block;
+      padding: 4px 8px;
+      color: var(--void);
+      background: var(--acid);
+      box-shadow: 4px 4px 0 #000;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+    }
+
+    h1 {
+      margin: 12px 0 0;
+      color: var(--acid);
+      font-size: clamp(2.2rem, 7vw, 5rem);
+      line-height: 0.82;
+      letter-spacing: -0.08em;
+      text-shadow: 4px 0 var(--pink), 8px 8px #000;
+    }
+
+    .tagline {
+      max-width: 430px;
+      margin: 0;
+      color: var(--muted);
+      text-align: right;
+    }
+
+    .hud {
+      display: grid;
+      grid-template-columns: 1.35fr 2fr 0.7fr 0.7fr;
+      border-bottom: var(--cut) solid var(--ink);
+    }
+
+    .hud-cell {
+      min-height: 76px;
+      padding: 13px 16px;
+      border-right: 1px solid var(--line);
+    }
+
+    .hud-cell:last-child { border-right: 0; }
+
+    .label {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--muted);
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .value { color: var(--cyan); font-weight: 700; }
+    .value.acid { color: var(--acid); }
+    .value.pink { color: var(--pink); }
+
+    .meter {
+      display: flex;
+      gap: 5px;
+      margin-top: 9px;
+    }
+
+    .meter i {
+      width: 24px;
+      height: 10px;
+      background: var(--line);
+    }
+
+    .meter i.on { background: var(--acid); box-shadow: 3px 3px 0 #000; }
+
+    .game {
+      display: grid;
+      grid-template-columns: 250px minmax(0, 1fr) 244px;
+      min-height: 620px;
+    }
+
+    aside { background: #0d1118; }
+    aside:first-child { border-right: 1px solid var(--line); }
+    aside:last-child { border-left: 1px solid var(--line); }
+
+    .side-title {
+      padding: 16px;
+      color: var(--orange);
+      border-bottom: 1px solid var(--line);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+    }
+
+    .quests { padding: 10px; }
+
+    .quest {
+      width: 100%;
+      margin: 0 0 7px;
+      padding: 10px 11px;
+      color: var(--muted);
+      border: 1px solid transparent;
+      background: transparent;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .quest:hover, .quest:focus-visible { color: var(--ink); border-color: var(--line); }
+    .quest.active { color: var(--acid); border-color: var(--acid); background: #172316; }
+    .quest.done { color: var(--cyan); }
+    .quest b { display: block; margin-bottom: 2px; color: inherit; font-size: 0.72rem; }
+    .quest span { display: block; font-size: 0.78rem; }
+
+    .lesson {
+      margin: 20px 16px 0;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+
+    .lesson strong { display: block; margin-bottom: 8px; color: var(--pink); }
+
+    .terminal-wrap { min-width: 0; padding: 18px; }
+
+    .mission {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 14px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      background: var(--panel-2);
+    }
+
+    .mission strong { color: var(--ink); }
+    .mission p { margin: 5px 0 0; color: var(--muted); font-size: 0.82rem; }
+    .mission-mark { color: var(--pink); font-size: 1.4rem; }
+
+    .editor {
+      position: relative;
+      min-height: 344px;
+      padding: 18px 0;
+      overflow: auto;
+      border: var(--cut) solid #59627a;
+      background: #090b10;
+      box-shadow: inset 0 0 0 1px #000, 5px 5px 0 #000;
+      cursor: text;
+    }
+
+    .editor:focus-within { border-color: var(--cyan); }
+
+    .line {
+      display: flex;
+      min-width: max-content;
+      min-height: 25px;
+      padding-right: 24px;
+      white-space: pre;
+    }
+
+    .line-no {
+      width: 48px;
+      padding-right: 13px;
+      color: #566078;
+      text-align: right;
+      user-select: none;
+    }
+
+    .line.current { background: #121b22; }
+    .line.current .line-no { color: var(--acid); }
+    .source { color: #e7e4c9; }
+
+    .cursor {
+      display: inline-block;
+      min-width: 9px;
+      color: var(--void);
+      background: var(--acid);
+      animation: blink 1s steps(1, end) infinite;
+    }
+
+    .cursor.insert { min-width: 2px; color: var(--ink); background: var(--pink); }
+
+    @keyframes blink { 50% { opacity: 0.35; } }
+
+    .command-line {
+      min-height: 30px;
+      padding: 9px 12px 0 49px;
+      color: var(--ink);
+    }
+
+    .command-line .prompt { color: var(--pink); }
+    .command-line .placeholder { color: #566078; }
+
+    .goal {
+      margin-top: 14px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      background: #0c1017;
+    }
+
+    .goal pre {
+      margin: 8px 0 0;
+      color: var(--acid);
+      font: inherit;
+      white-space: pre-wrap;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 15px;
+    }
+
+    .controls button, .win button {
+      padding: 8px 11px;
+      color: var(--ink);
+      border: 1px solid var(--line);
+      background: var(--panel-2);
+      cursor: pointer;
+    }
+
+    .controls button:hover, .controls button:focus-visible, .win button:hover { color: var(--void); background: var(--acid); }
+
+    .log {
+      height: 160px;
+      margin: 0;
+      padding: 14px 16px;
+      overflow: auto;
+      color: var(--muted);
+      font-size: 0.76rem;
+      white-space: pre-wrap;
+    }
+
+    .log b { color: var(--cyan); }
+    .legend { padding: 15px 16px; border-top: 1px solid var(--line); }
+    .legend code { color: var(--acid); }
+    .legend p { margin: 8px 0; color: var(--muted); font-size: 0.75rem; }
+
+    .win {
+      display: none;
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      place-items: center;
+      padding: 24px;
+      background: #08090ded;
+      text-align: center;
+    }
+
+    .win.show { display: grid; }
+    .win-card { max-width: 430px; padding: 28px; border: var(--cut) solid var(--acid); background: var(--panel); box-shadow: 8px 8px 0 #000; }
+    .win-card h2 { margin: 0 0 10px; color: var(--acid); font-size: 2rem; }
+    .win-card p { color: var(--muted); }
+
+    .flash { animation: flash 0.35s ease-out; }
+    @keyframes flash { 50% { background-color: #314f2d; } }
+
+    @media (max-width: 980px) {
+      .game { grid-template-columns: 190px minmax(0, 1fr); }
+      aside:last-child { grid-column: 1 / -1; border-top: 1px solid var(--line); border-left: 0; }
+      .log { height: 90px; }
+      .legend { display: none; }
+    }
+
+    @media (max-width: 680px) {
+      .shell { width: min(100% - 14px, 560px); padding-top: 8px; }
+      header { align-items: start; flex-direction: column; padding: 16px; }
+      .tagline { text-align: left; }
+      .hud { grid-template-columns: 1fr 1fr; }
+      .hud-cell:nth-child(2) { border-right: 0; }
+      .game { display: block; }
+      aside:first-child { border-right: 0; border-bottom: 1px solid var(--line); }
+      .quests { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
+      .quest { margin: 0; }
+      .lesson { display: none; }
+      aside:last-child { border-left: 0; }
+      .mission { display: block; }
+    }
+  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=Noto+Sans+KR:wght@400;500;700;800;900&family=Noto+Serif+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../project-theme.css" />
+</head>
+<body class="project-page project-dark">
+  <nav class="project-nav" aria-label="AISLOP archive">
+    <a class="project-brand" href="../">aislop</a><span aria-hidden="true">/</span><span class="project-path">vim-quest</span>
+    <a class="project-archive" href="../#works">archive ↗</a>
+  </nav>
+  <main class="shell">
+    <div class="chrome">
+      <header>
+        <div>
+          <span class="kicker">muscle memory laboratory / v1.0</span>
+          <h1>VIM//QUEST</h1>
+        </div>
+        <p class="tagline">A tiny dungeon where every monster is a repetitive edit.<br />No mouse. No mercy. Just grammar.</p>
+      </header>
+
+      <section class="hud" aria-label="game status">
+        <div class="hud-cell"><span class="label">quest</span><span id="questValue" class="value">01 / 06</span></div>
+        <div class="hud-cell"><span class="label">muscle meter</span><div id="meter" class="meter" aria-label="completed quests"></div></div>
+        <div class="hud-cell"><span class="label">xp</span><span id="xpValue" class="value acid">000</span></div>
+        <div class="hud-cell"><span class="label">moves</span><span id="moveValue" class="value pink">000</span></div>
+      </section>
+
+      <section class="game">
+        <aside>
+          <div class="side-title">QUEST MAP // 6 ROOMS</div>
+          <nav id="quests" class="quests" aria-label="quests"></nav>
+          <div class="lesson"><strong>THE SPELLBOOK</strong>Commands are grammar. <code>c</code> is the verb, <code>i</code> is “inside”, and <code>"</code> is the noun. Compose them.</div>
+        </aside>
+
+        <section class="terminal-wrap">
+          <div class="mission">
+            <div><strong id="missionTitle">THE DELETE</strong><p id="missionText">Remove the intruder without touching the signal.</p></div>
+            <div id="missionMark" class="mission-mark">◆</div>
+          </div>
+          <div id="editor" class="editor" tabindex="0" aria-label="Vim practice editor"></div>
+          <div class="goal"><span class="label">target state // make the buffer look like this</span><pre id="goalText"></pre></div>
+          <div class="controls">
+            <button id="hintButton" type="button">HINT [H]</button>
+            <button id="resetButton" type="button">RESET [R]</button>
+            <button id="helpButton" type="button">SPELLBOOK [?]</button>
+          </div>
+        </section>
+
+        <aside>
+          <div class="side-title">DEBRIEF // LIVE FEED</div>
+          <pre id="log" class="log" aria-live="polite"></pre>
+          <div class="legend">
+            <span class="label">core syntax</span>
+            <p><code>operator + object</code><br />Try <code>daw</code>, <code>ci"</code>, <code>3@q</code>.</p>
+            <p><code>Esc</code> returns to NORMAL. <code>:</code> opens the command altar.</p>
+          </div>
+        </aside>
+      </section>
+    </div>
+  </main>
+
+  <div id="win" class="win" role="dialog" aria-modal="true">
+    <div class="win-card">
+      <h2>ROOM CLEARED</h2>
+      <p id="winText">Your fingers learned something.</p>
+      <button id="nextButton" type="button">NEXT ROOM →</button>
+    </div>
+  </div>
+
+  <script>
+    const levels = [
+      {
+        title: "THE DELETE", blurb: "Remove the intruder without touching the signal.",
+        lesson: "a = around", hint: "Put the cursor on GARBAGE. The spell is daw: delete around word.",
+        lines: ["mission // GARBAGE signal", "keep the signal clean"], goal: ["mission // signal", "keep the signal clean"], cursor: [0, 11]
+      },
+      {
+        title: "THE QUOTE VAULT", blurb: "Change what is inside the vault. Leave its walls intact.",
+        lesson: "i = inside", hint: "Put the cursor inside the quotes. Use ci\" then type awake_mode and press Esc.",
+        lines: ["status = \"sleepy_mode\";", "power = 100%;"], goal: ["status = \"awake_mode\";", "power = 100%;"], cursor: [0, 11]
+      },
+      {
+        title: "MACRO PARADE", blurb: "Train one soldier, then clone the movement.",
+        lesson: "q = record / @ = replay", hint: "On alpha: qqI- <Space><Esc>jq. Then 3@q. (The first q starts register q.)",
+        lines: ["alpha", "bravo", "charlie", "delta"], goal: ["- alpha", "- bravo", "- charlie", "- delta"], cursor: [0, 0]
+      },
+      {
+        title: "THE SUBSTITUTE ALTAR", blurb: "Turn every TODO into a DONE in one ex-command.",
+        lesson: ":%s = whole-buffer spell", hint: "Type :%s/TODO/DONE/g and press Enter. The colon line is at the bottom.",
+        lines: ["TODO: wire the red cable", "TODO: test the blue cable", "TODO: ship the green cable"], goal: ["DONE: wire the red cable", "DONE: test the blue cable", "DONE: ship the green cable"], cursor: [0, 0]
+      },
+      {
+        title: "THE BRACKET BEAST", blurb: "Replace the volatile payload, keep the brackets.",
+        lesson: "text objects are nouns", hint: "Stand on UNSAFE. Use ci] then type SAFE and press Esc.",
+        lines: ["send packet [UNSAFE] now", "wait for receipt"], goal: ["send packet [SAFE] now", "wait for receipt"], cursor: [0, 13]
+      },
+      {
+        title: "THE FINAL RAID", blurb: "Two compositions. One clean deployment buffer.",
+        lesson: "compose, then repeat", hint: "First :%s/TODO/DONE/g. Then macro qq0I- <Esc>jq followed by 3@q.",
+        lines: ["red // TODO", "blue // TODO", "green // TODO", "gold // TODO"], goal: ["- red // DONE", "- blue // DONE", "- green // DONE", "- gold // DONE"], cursor: [0, 0]
+      }
+    ];
+
+    const state = {
+      level: 0, lines: [], goal: [], cursor: [0, 0], mode: "NORMAL", pending: "", pendingCount: 1,
+      count: "", command: "", insert: null, undo: [], register: "", macros: {}, recording: null,
+      recordRequest: false, playRequest: false, lastMacro: null, moves: 0, xp: 0, hints: 0,
+      cleared: new Set(), lastChange: null, completed: false, message: "booting spellbook..."
+    };
+
+    const $ = (id) => document.getElementById(id);
+    const escapeHtml = (value) => value.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
+    const clone = (value) => JSON.parse(JSON.stringify(value));
+    const currentLine = () => state.lines[state.cursor[0]] || "";
+    const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
+
+    function snapshot() { return { lines: clone(state.lines), cursor: clone(state.cursor) }; }
+
+    function saveUndo() {
+      state.undo.push(snapshot());
+      if (state.undo.length > 30) state.undo.shift();
+    }
+
+    function mutate(fn) {
+      saveUndo();
+      fn();
+      state.cursor[0] = clamp(state.cursor[0], 0, state.lines.length - 1);
+      state.cursor[1] = clamp(state.cursor[1], 0, Math.max(0, currentLine().length - 1));
+      checkGoal();
+      render();
+    }
+
+    function setMessage(message) {
+      state.message = message;
+      renderLog();
+    }
+
+    function renderLog() {
+      const register = state.recording ? "recording @" + state.recording : state.register ? "register: " + state.register : "register: empty";
+      $("log").innerHTML = `<b>${state.mode}</b>  ${register}\n${state.message}\n\noperator: ${state.pending || "—"}\ncount: ${state.count || "—"}`;
+    }
+
+    function renderQuests() {
+      $("quests").innerHTML = levels.map((level, i) => {
+        const status = state.cleared.has(i) ? "✓" : String(i + 1).padStart(2, "0");
+        return `<button class="quest ${i === state.level ? "active" : ""} ${state.cleared.has(i) ? "done" : ""}" data-level="${i}" type="button"><b>${status} // ${level.lesson}</b><span>${level.title}</span></button>`;
+      }).join("");
+      document.querySelectorAll(".quest").forEach((button) => button.addEventListener("click", () => loadLevel(Number(button.dataset.level))));
+    }
+
+    function renderEditor() {
+      const rows = state.lines.map((line, row) => {
+        const active = row === state.cursor[0];
+        const col = active ? clamp(state.cursor[1], 0, line.length) : -1;
+        let body = escapeHtml(line);
+        if (active) {
+          if (state.mode === "INSERT") {
+            body = escapeHtml(line.slice(0, col)) + `<span class="cursor insert"> </span>` + escapeHtml(line.slice(col));
+          } else {
+            const at = col >= line.length ? line.length : col;
+            body = escapeHtml(line.slice(0, at)) + `<span class="cursor">${escapeHtml(line[at] || " ")}</span>` + escapeHtml(line.slice(at + 1));
+          }
+        }
+        return `<div class="line ${active ? "current" : ""}"><span class="line-no">${String(row + 1).padStart(2, " ")}</span><span class="source">${body || (active ? "" : " ")}</span></div>`;
+      }).join("");
+      const command = state.mode === "COMMAND" ? `<div class="command-line"><span class="prompt">:</span>${escapeHtml(state.command.slice(1))}<span class="cursor insert"> </span></div>` : `<div class="command-line"><span class="placeholder">${state.mode === "INSERT" ? "-- INSERT --" : ""}</span></div>`;
+      $("editor").innerHTML = rows + command;
+    }
+
+    function render() {
+      const level = levels[state.level];
+      $("questValue").textContent = `${String(state.level + 1).padStart(2, "0")} / ${String(levels.length).padStart(2, "0")}`;
+      $("xpValue").textContent = String(state.xp).padStart(3, "0");
+      $("moveValue").textContent = String(state.moves).padStart(3, "0");
+      $("missionTitle").textContent = level.title;
+      $("missionText").textContent = level.blurb;
+      $("goalText").textContent = state.goal.join("\n");
+      $("meter").innerHTML = levels.map((_, i) => `<i class="${state.cleared.has(i) ? "on" : ""}"></i>`).join("");
+      renderQuests();
+      renderEditor();
+      renderLog();
+    }
+
+    function loadLevel(index) {
+      state.level = clamp(index, 0, levels.length - 1);
+      const level = levels[state.level];
+      state.lines = clone(level.lines);
+      state.goal = clone(level.goal);
+      state.cursor = clone(level.cursor);
+      state.mode = "NORMAL";
+      state.pending = ""; state.pendingCount = 1; state.count = ""; state.command = "";
+      state.insert = null; state.undo = []; state.register = ""; state.recording = null;
+      state.recordRequest = false; state.playRequest = false; state.lastMacro = null; state.completed = false;
+      setMessage(`room ${String(state.level + 1).padStart(2, "0")} loaded — ${level.lesson}`);
+      $("win").classList.remove("show");
+      render();
+      $("editor").focus();
+    }
+
+    function nextLevel() {
+      if (state.level < levels.length - 1) loadLevel(state.level + 1);
+      else { loadLevel(0); setMessage("all rooms cleared — loop again, faster this time"); }
+    }
+
+    function movement(key, amount = 1) {
+      for (let i = 0; i < amount; i += 1) {
+        let [row, col] = state.cursor;
+        if (key === "h") col -= 1;
+        if (key === "l") col += 1;
+        if (key === "j") { row = clamp(row + 1, 0, state.lines.length - 1); col = clamp(col, 0, Math.max(0, state.lines[row].length - 1)); }
+        if (key === "k") { row = clamp(row - 1, 0, state.lines.length - 1); col = clamp(col, 0, Math.max(0, state.lines[row].length - 1)); }
+        if (key === "0") col = 0;
+        if (key === "$") col = Math.max(0, currentLine().length - 1);
+        if (key === "w") {
+          const rest = currentLine().slice(col + 1);
+          const match = rest.search(/\w/);
+          if (match >= 0) col += match + 1;
+          else if (row < state.lines.length - 1) { row += 1; col = 0; }
+        }
+        if (key === "b") {
+          const left = currentLine().slice(0, col).match(/\w+/g);
+          if (left && left.length) col = currentLine().lastIndexOf(left[left.length - 1], col - 1);
+          else if (row > 0) { row -= 1; col = Math.max(0, state.lines[row].length - 1); }
+        }
+        if (key === "e") {
+          const tail = currentLine().slice(col).match(/^\w+/);
+          if (tail) col += tail[0].length - 1;
+          else movement("w", 1);
+        }
+        state.cursor = [row, clamp(col, 0, Math.max(0, state.lines[row].length - 1))];
+      }
+    }
+
+    function wordRange(around) {
+      const line = currentLine();
+      let start = state.cursor[1];
+      while (start > 0 && /\w/.test(line[start - 1])) start -= 1;
+      let end = state.cursor[1];
+      while (end < line.length && /\w/.test(line[end])) end += 1;
+      if (start === end) return null;
+      if (around) {
+        while (end < line.length && /\s/.test(line[end])) end += 1;
+        if (end === start + (line.slice(start, end).trimEnd().length) && start > 0) while (start > 0 && /\s/.test(line[start - 1])) start -= 1;
+      }
+      return [start, end];
+    }
+
+    function pairedRange(open, close, around) {
+      const line = currentLine();
+      const left = line.lastIndexOf(open, state.cursor[1]);
+      const right = line.indexOf(close, state.cursor[1]);
+      if (left < 0 || right < 0 || right <= left) return null;
+      return around ? [left, right + 1] : [left + 1, right];
+    }
+
+    function objectRange(modifier, object) {
+      if (object === "w") return wordRange(modifier === "a");
+      if (object === '"' || object === "'") return pairedRange(object, object, modifier === "a");
+      if (object === "]") return pairedRange("[", "]", modifier === "a");
+      if (object === ")") return pairedRange("(", ")", modifier === "a");
+      return null;
+    }
+
+    function deleteRange(row, start, end) {
+      const line = state.lines[row];
+      state.register = line.slice(start, end);
+      state.lines[row] = line.slice(0, start) + line.slice(end);
+      state.cursor = [row, clamp(start, 0, Math.max(0, state.lines[row].length - 1))];
+    }
+
+    function beginInsert(kind, at, alreadySaved = false) {
+      if (!alreadySaved) saveUndo();
+      state.insert = { kind, start: clone(at), text: "" };
+      state.mode = "INSERT";
+      state.cursor = clone(at);
+      setMessage("INSERT — type the payload, then Esc");
+    }
+
+    function finishInsert() {
+      const session = state.insert;
+      if (!session) { state.mode = "NORMAL"; return; }
+      const text = session.text;
+      state.mode = "NORMAL";
+      state.insert = null;
+      state.cursor[1] = clamp(state.cursor[1] - (text.length ? 1 : 0), 0, Math.max(0, currentLine().length - 1));
+      if (text) state.lastChange = session.replay ? () => session.replay(text) : () => replayInsertion(session.kind, text);
+      setMessage(text ? `inserted ${text.length} character${text.length === 1 ? "" : "s"}` : "insert cancelled");
+      checkGoal();
+      render();
+    }
+
+    function replayInsertion(kind, text) {
+      const line = currentLine();
+      let at = state.cursor[1];
+      if (kind === "a") at += 1;
+      if (kind === "I") at = line.search(/\S|$/);
+      if (kind === "A") at = line.length;
+      state.lines[state.cursor[0]] = line.slice(0, at) + text + line.slice(at);
+      state.cursor[1] = clamp(at + text.length - 1, 0, Math.max(0, state.lines[state.cursor[0]].length - 1));
+    }
+
+    function applyTextObject(operator, modifier, object, amount) {
+      const range = objectRange(modifier, object);
+      if (!range) { setMessage(`no ${modifier}${object} object found here`); return; }
+      mutate(() => {
+        deleteRange(state.cursor[0], range[0], range[1]);
+        state.cursor[1] = clamp(range[0], 0, Math.max(0, currentLine().length - 1));
+        if (operator === "c") beginInsert("i", [state.cursor[0], range[0]], true);
+      });
+      state.lastChange = () => {
+        const again = objectRange(modifier, object);
+        if (again) deleteRange(state.cursor[0], again[0], again[1]);
+      };
+      if (operator === "c") {
+        state.insert = {
+          kind: "i", start: clone(state.cursor), text: "",
+          replay: (text) => {
+            const again = objectRange(modifier, object);
+            if (!again) return;
+            const row = state.cursor[0];
+            const line = currentLine();
+            state.lines[row] = line.slice(0, again[0]) + text + line.slice(again[1]);
+            state.cursor = [row, clamp(again[0] + text.length - 1, 0, Math.max(0, state.lines[row].length - 1))];
+          }
+        };
+        state.mode = "INSERT";
+      }
+      setMessage(`${operator}${modifier}${object} — ${operator === "c" ? "type replacement, then Esc" : "object cleared"}`);
+      render();
+    }
+
+    function applyOperator(operator, key, amount) {
+      if (key === "d" || key === "c" || key === "y") {
+        const row = state.cursor[0];
+        saveUndo();
+        if (key === "y") state.register = state.lines[row];
+        else state.lines.splice(row, amount);
+        state.cursor = [clamp(row, 0, state.lines.length - 1), 0];
+        state.lastChange = () => { if (key !== "y") state.lines.splice(state.cursor[0], amount); };
+        state.pending = "";
+        checkGoal(); render(); setMessage(`${operator}${key} — line operation complete`); return;
+      }
+      if (["h", "l", "0", "$", "w", "b", "e"].includes(key)) {
+        const start = state.cursor[1];
+        movement(key, amount);
+        const end = state.cursor[1] + (key === "w" ? 0 : 1);
+        const from = Math.min(start, end), to = Math.max(start, end);
+        mutate(() => { if (operator === "y") state.register = currentLine().slice(from, to); else deleteRange(state.cursor[0], from, Math.max(from + 1, to)); });
+        state.lastChange = () => { if (operator !== "y") deleteRange(state.cursor[0], from, Math.max(from + 1, to)); };
+        setMessage(`${operator}${key} — motion composed`); return;
+      }
+      setMessage(`operator ${operator} is waiting for a motion or text object`);
+    }
+
+    function executeCommand(value) {
+      const command = value.slice(1);
+      const match = command.match(/^(%?)s\/([^/]*)\/([^/]*)\/(g?)$/);
+      if (match) {
+        const [, whole, needle, replacement, global] = match;
+        const rows = whole ? state.lines.map((_, i) => i) : [state.cursor[0]];
+        mutate(() => rows.forEach((row) => {
+          const flags = global ? "g" : "";
+          state.lines[row] = state.lines[row].replace(new RegExp(needle.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), flags), replacement);
+        }));
+        state.lastChange = null;
+        setMessage(`${value} — ${whole ? "whole buffer" : "current line"} transformed`);
+      } else if (/^(w|wq|q)$/.test(command)) setMessage(`:${command} accepted — this dungeon autosaves`);
+      else setMessage(`unknown spell :${command} (try :%s/old/new/g)`);
+      state.mode = "NORMAL"; state.command = ""; render();
+    }
+
+    function undo() {
+      const previous = state.undo.pop();
+      if (!previous) { setMessage("nothing to undo"); return; }
+      state.lines = previous.lines; state.cursor = previous.cursor; state.mode = "NORMAL"; state.insert = null;
+      setMessage("undo — the buffer rewinds, the lesson remains");
+      render();
+    }
+
+    function startOrStopRecording(key) {
+      if (state.recordRequest) {
+        state.recordRequest = false;
+        state.recording = key;
+        state.macros[key] = [];
+        setMessage(`recording macro @${key} — finish with q`);
+        render(); return true;
+      }
+      if (state.recording && state.mode === "NORMAL" && key === "q" && !state.pending) {
+        const register = state.recording;
+        state.recording = null;
+        state.lastMacro = register;
+        setMessage(`macro @${register} sealed — replay with @${register}`);
+        render(); return true;
+      }
+      if (!state.recording && state.mode === "NORMAL" && key === "q" && !state.pending) {
+        state.recordRequest = true; setMessage("press a register key — qq is the classic choice"); render(); return true;
+      }
+      return false;
+    }
+
+    function playMacro(register, amount) {
+      const macro = state.macros[register];
+      if (!macro || !macro.length) { setMessage(`macro @${register} is empty`); return; }
+      state.lastMacro = register;
+      for (let i = 0; i < amount; i += 1) macro.forEach((key) => dispatch(key, true));
+      setMessage(`@${register} × ${amount} — muscle cloned`);
+      render();
+    }
+
+    function checkGoal() {
+      if (state.completed || JSON.stringify(state.lines) !== JSON.stringify(state.goal)) return;
+      state.completed = true;
+      state.cleared.add(state.level);
+      const bonus = Math.max(0, 30 - state.hints * 10);
+      state.xp += 100 + bonus;
+      $("winText").textContent = `+${100 + bonus} XP // ${state.moves} moves // ${state.hints ? "hint-assisted" : "clean clear"}. Your fingers now know ${levels[state.level].lesson}.`;
+      $("win").classList.add("show");
+      setMessage("ROOM CLEARED — muscle memory acquired");
+      render();
+    }
+
+    function hint() {
+      state.hints += 1;
+      setMessage(`HINT ${state.hints}: ${levels[state.level].hint}`);
+      render();
+    }
+
+    function reset() { loadLevel(state.level); setMessage("buffer reset — try the spell from muscle memory"); }
+
+    function handleNormal(key) {
+      if (state.playRequest) {
+        state.playRequest = false;
+        const register = key === "@" ? state.lastMacro : key;
+        if (register) playMacro(register, state.pendingCount || 1);
+        state.pendingCount = 1; state.count = ""; return;
+      }
+      if (state.recordRequest || state.recording || key === "q") if (startOrStopRecording(key)) return;
+      if (state.pending) {
+        if (!state.pendingModifier && (key === "i" || key === "a")) { state.pendingModifier = key; setMessage(`${state.pending}${key} — choose the object`); render(); return; }
+        if (state.pendingModifier) {
+          const operator = state.pending; const modifier = state.pendingModifier;
+          state.pending = ""; state.pendingModifier = "";
+          applyTextObject(operator, modifier, key, state.pendingCount); state.pendingCount = 1; state.count = ""; return;
+        }
+        const operator = state.pending; state.pending = "";
+        applyOperator(operator, key, state.pendingCount); state.pendingCount = 1; state.count = ""; return;
+      }
+      if (state.count === "" && /^[1-9]$/.test(key)) { state.count = key; return; }
+      if (/^\d$/.test(key)) { state.count += key; return; }
+      const amount = Number(state.count || 1); state.count = "";
+      if (["d", "c", "y"].includes(key)) { state.pending = key; state.pendingCount = amount; setMessage(`${key} — waiting for motion/object`); render(); return; }
+      if (key === "@") { state.playRequest = true; state.pendingCount = amount; setMessage("@ — choose a macro register"); render(); return; }
+      if (key === "i" || key === "a" || key === "I" || key === "A") {
+        let at = state.cursor[1];
+        if (key === "a") at += 1;
+        if (key === "I") at = currentLine().search(/\S|$/);
+        if (key === "A") at = currentLine().length;
+        beginInsert(key, [state.cursor[0], at]); render(); return;
+      }
+      if (["h", "j", "k", "l", "0", "$", "w", "b", "e"].includes(key)) { movement(key, amount); state.moves += 1; render(); return; }
+      if (key === "x") { mutate(() => deleteRange(state.cursor[0], state.cursor[1], state.cursor[1] + amount)); state.lastChange = () => deleteRange(state.cursor[0], state.cursor[1], state.cursor[1] + amount); setMessage(`x × ${amount} — deleted`); return; }
+      if (key === "u") { undo(); return; }
+      if (key === "." && state.lastChange) { mutate(state.lastChange); state.moves += 1; setMessage(". — last change repeated"); return; }
+      if (key === ":") { state.mode = "COMMAND"; state.command = ":"; render(); return; }
+      if (key === "f" || key === "t" || key === "r") { state.pending = key; state.pendingCount = amount; setMessage(`${key} — waiting for a character`); render(); return; }
+      if (state.pending === "f" || state.pending === "t" || state.pending === "r") { /* guarded by pending branch in future */ }
+      if (key === "p" && state.register) { mutate(() => { const at = state.cursor[1] + 1; state.lines[state.cursor[0]] = currentLine().slice(0, at) + state.register + currentLine().slice(at); state.cursor[1] = at; }); setMessage("p — register pasted"); return; }
+      if (key === "?") { hint(); return; }
+      setMessage(`${key} is not in this room's spellbook yet`); render();
+    }
+
+    function dispatch(key, replay = false) {
+      if (state.completed && !replay) return;
+      if (!replay && state.recording && !(state.mode === "NORMAL" && key === "q" && !state.pending)) state.macros[state.recording].push(key);
+      state.moves += replay ? 0 : 1;
+      if (state.mode === "INSERT") {
+        if (key === "Esc") { finishInsert(); return; }
+        if (key === "Enter") { saveUndo(); const rest = currentLine().slice(state.cursor[1]); state.lines[state.cursor[0]] = currentLine().slice(0, state.cursor[1]); state.lines.splice(state.cursor[0] + 1, 0, rest); state.cursor[0] += 1; state.cursor[1] = 0; if (state.insert) state.insert.text += "\n"; render(); return; }
+        if (key === "Backspace") { if (state.cursor[1] > 0) { state.lines[state.cursor[0]] = currentLine().slice(0, state.cursor[1] - 1) + currentLine().slice(state.cursor[1]); state.cursor[1] -= 1; if (state.insert) state.insert.text = state.insert.text.slice(0, -1); } render(); return; }
+        if (key.length === 1 && !key.ctrlKey) { state.lines[state.cursor[0]] = currentLine().slice(0, state.cursor[1]) + key + currentLine().slice(state.cursor[1]); state.cursor[1] += 1; if (state.insert) state.insert.text += key; render(); return; }
+        return;
+      }
+      if (state.mode === "COMMAND") {
+        if (key === "Esc") { state.mode = "NORMAL"; state.command = ""; setMessage("command cancelled"); render(); return; }
+        if (key === "Backspace") { state.command = state.command.length > 1 ? state.command.slice(0, -1) : ":"; render(); return; }
+        if (key === "Enter") { executeCommand(state.command); return; }
+        if (key.length === 1) { state.command += key; render(); }
+        return;
+      }
+      if (key === "Esc") { state.pending = ""; state.pendingModifier = ""; state.count = ""; render(); return; }
+      if (state.pending === "f" || state.pending === "t" || state.pending === "r") {
+        const action = state.pending; state.pending = "";
+        if (action === "r") { mutate(() => { const line = currentLine(); state.lines[state.cursor[0]] = line.slice(0, state.cursor[1]) + key + line.slice(state.cursor[1] + 1); }); setMessage("r — character replaced"); }
+        else { const index = action === "f" ? currentLine().indexOf(key, state.cursor[1] + 1) : currentLine().indexOf(key, state.cursor[1] + 1) - 1; if (index >= state.cursor[1]) movement("l", 0), state.cursor[1] = index; setMessage(`${action}${key} — target found`); render(); }
+        return;
+      }
+      handleNormal(key);
+    }
+
+    function keyName(event) {
+      if (event.key === "Escape") return "Esc";
+      if (event.key === " ") return " ";
+      return event.key;
+    }
+
+    $("editor").addEventListener("keydown", (event) => {
+      if (event.metaKey || event.altKey || event.ctrlKey && !["r"].includes(event.key)) return;
+      const key = keyName(event);
+      if (key.length === 1 || ["Esc", "Enter", "Backspace"].includes(key)) { event.preventDefault(); dispatch(key); }
+    });
+    $("editor").addEventListener("click", () => $("editor").focus());
+    $("hintButton").addEventListener("click", hint);
+    $("resetButton").addEventListener("click", reset);
+    $("helpButton").addEventListener("click", () => setMessage("operator + object: daw / ci\" / ci]  |  macro: qq ... q, @q, 3@q  |  ex: :%s/old/new/g"));
+    $("nextButton").addEventListener("click", nextLevel);
+    window.addEventListener("keydown", (event) => { if (event.key.toLowerCase() === "h" && document.activeElement !== $("editor")) hint(); if (event.key.toLowerCase() === "r" && document.activeElement !== $("editor")) reset(); });
+
+    loadLevel(0);
+  </script>
+  <footer class="project-footer"><span>aislop / archive</span><a href="../#works">all experiments ↗</a></footer>
+</body>
+</html>

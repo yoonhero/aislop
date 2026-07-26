@@ -9,3 +9,23 @@
 - 긴 시험범위 교재 사이트는 장별 원고 데이터를 생성기에 모으고, HTML은 접힘 블록으로 뽑아야 overview와 deep read를 함께 유지할 수 있다.
 - 브라우저 형광펜은 XPath 하나보다 quote, context, position, DOM path를 같이 들고 있다가 가장 덜 틀린 단서부터 쓰는 편이 오래 버틴다.
 - 다크 페이지 형광펜은 OS 테마보다 실제 배경/글자 luminance를 보고 잉크를 바꿔야 한다.
+- Firefox 형광펜을 재설치처럼 보이지 않게 하려면 XPI를 다시 만들 때도 `pastel-pen@aislop.local` 같은 고정 Gecko id를 끝까지 유지해야 한다.
+- 페이지별 상태는 저장된 마크와 분리해야 한다: `disabledPages`로 화면만 조용히 만들고, 리뷰 데스크에서는 색상 변경과 JSON/JSONL 백업을 같은 데이터 계약으로 처리한다.
+- Firefox의 `storage.local`은 데이터 만료를 막지만 임시 애드온의 수명까지 늘리지는 않는다. 영구 사용에는 고정 ID를 가진 서명 XPI가 필요하다.
+- 개인 디자인 시스템은 색상표보다 상태 문법이 먼저다: 요괴풍이어도 버튼, 입력, 모드, 경고가 같은 물리 규칙을 공유해야 오래 간다.
+- Shift_JIS풍 UI는 많은 설명보다 AA, 픽셀 실루엣, 짧은 컴포넌트 상태명이 더 강하게 분위기를 만든다.
+- 흰 바탕의 Shift_JIS UI는 박스 선을 줄이고 `※`, `《》`, `▽△` 같은 문자가 경계를 맡을 때 더 낯설고 독자적이다.
+- 조작법을 설명하는 교재보다 짧은 목표 버퍼와 즉시 리셋되는 게임 루프가 Vim의 명령 조합을 몸에 남긴다.
+- 서명된 데스크톱 앱의 입력 방식을 바꿀 때는 번들 패치보다 앱 식별자에 묶인 외부 키 레이어가 업데이트와 롤백에 강하다.
+- Karabiner는 DOM 포커스를 모르므로, macOS `AXTextArea` 감시 결과를 변수로 연결해야 입력창에만 모달 키맵을 걸 수 있다.
+- Karabiner의 대문자 명령은 추상 `shift` 하나보다 좌우 Shift 규칙을 각각 생성해야 키보드·입력 소스 차이를 견딘다.
+- Vim의 `a`는 단순한 오른쪽 화살표가 아니다. 줄 경계에서는 AX caret와 line index만 비교해 이동을 막아야 다음 줄로 새지 않는다.
+- Electron의 빈 textarea는 `AXBoundsForRange`를 0으로 줄 수 있다. 블록 커서는 평소 range bounds를 쓰고 빈 입력에서는 AXPosition/AXSize와 padding으로 복원해야 한다.
+- 외부 caret overlay는 고정 좌표와 accent color로 끝내면 안 된다. 메뉴 막대에서 색, 투명도, XY offset, 폭과 높이를 live calibration하고 저장해야 테마와 폰트 변화에 견딘다.
+- 최신 Chromium에서는 외부 overlay보다 `caret-shape: block`과 `caret-color: currentColor auto`가 정확하다. 줄바꿈과 스크롤 좌표는 렌더러에 맡기고 원본 앱 대신 복사본의 CSS만 패치한다.
+- Vim caret는 모양 하나가 아니라 모드 피드백이다. Karabiner의 mode file을 renderer attribute로 동기화하면 INSERT bar, NORMAL translucent block, VISUAL block을 좌표 추정 없이 나눌 수 있다.
+- 비공식 데스크톱 패치는 helper를 control plane으로 삼아야 배포할 수 있다. source build와 patch version을 복사 앱에 기록하고, 도구 런타임을 helper에 묶고, 실행 중 교체는 미루면 한 번의 클릭과 공식 업데이트 복구를 함께 만들 수 있다.
+- Pastel Pen review desk는 신문 장식보다 Pretendard 계열의 산세리프, 얇은 규칙, 여백, 한 가지 읽기 흐름이 더 오래 읽힌다.
+- 참고 사이트형 소개 페이지는 장식보다 큰 색면, 중앙 정렬 타이포, 둥근 CTA, 넓은 여백이 먼저이며, Manrope·Noto Sans KR와 preconnect·swap·시스템 폴백을 함께 두면 인상과 첫 렌더를 동시에 지킬 수 있다.
+- 현대적인 실험실 UI에 Newsreader·Noto Serif KR 같은 세리프 display를 제목에만 얹고 색과 장치를 낮추면, 카드의 산세리프 메타와 시대감이 부드럽게 충돌한다. 장식은 긴장을 만들되 화면을 공격적으로 지배하지 않게 제한한다.
+- 여러 실험 페이지를 하나의 아카이브로 묶을 때는 공통 `project-theme.css`의 폰트 토큰, archive 내비게이션, footer만 공유하고 VIM·Worst Login 같은 핵심 실험의 표면은 보존해야 통일감과 프로젝트별 목소리를 함께 지킬 수 있다.

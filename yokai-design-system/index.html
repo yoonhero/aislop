@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>白怪 UI</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%2382afea'/%3E%3Ctext x='32' y='46' fill='white' font-family='Arial,sans-serif' font-size='42' font-weight='800' text-anchor='middle'%3EA%3C/text%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="./style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=Noto+Sans+KR:wght@400;500;700;800;900&family=Noto+Serif+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../project-theme.css" />
+</head>
+<body class="project-page project-paper">
+  <nav class="project-nav" aria-label="AISLOP archive">
+    <a class="project-brand" href="../">aislop</a><span aria-hidden="true">/</span><span class="project-path">yokai-design-system</span>
+    <a class="project-archive" href="../#works">archive ↗</a>
+  </nav>
+  <main class="sheet">
+    <header class="hero">
+      <nav class="nav" aria-label="sections">
+        <a href="#tokens">色</a><a href="#type">字</a><a href="#parts">部</a><a href="../">戻</a>
+      </nav>
+      <p class="stamp">※ AISLOP / SHIFT_JIS 妖界面 ※</p>
+      <h1>白怪 UI</h1>
+      <p class="lead">흰 종이, 문자 경계, 게시판 AA의 찌그러진 기품. 컨테이너는 선으로 닫지 않고 글자로 소환한다.</p>
+      <pre class="aa" aria-label="ascii yokai">
+　　　＿人人人人人人＿
+　　　＞　INTERFACE　＜
+　　　￣Y^Y^Y^Y^Y￣
+　　／\＿／\        ( ´_ゝ`)  既視感を破れ
+　 <  目　目  >       /|＿|\   form follows glyph
+　　\   へ   /         /  \
+　　 ｀-札-´      》》》》》》》》》》》</pre>
+    </header>
+
+    <section class="block" id="tokens" data-mark="色／iro">
+      <ul class="tokens">
+        <li style="--c:#fffdf3">paper</li><li style="--c:#151217;color:#fffdf3">ink</li>
+        <li style="--c:#ff386c">lantern</li><li style="--c:#a6ff3d">mold</li>
+        <li style="--c:#22c7de">aobake</li><li style="--c:#ff9429">kitsune</li>
+      </ul>
+    </section>
+
+    <section class="block" id="type" data-mark="字／moji">
+      <div class="type">
+        <p><b>AA</b><span>（　´_ゝ`）<br>レス番:0001</span></p>
+        <p><b>銘</b><span>異様な見出し</span></p>
+        <p><b>注</b><span>작고 이상한 주석.</span></p>
+      </div>
+    </section>
+
+    <section class="block" id="parts" data-mark="部／parts">
+      <div class="parts">
+        <article class="part summon" data-name="001">
+          <button class="btn">（召）</button><button class="btn sub">（退）</button>
+        </article>
+        <article class="part field" data-name="002">
+          <input class="prompt" value="＞ kuchisake-ui">
+        </article>
+        <article class="part mode" data-name="003">
+          <div class="seg" aria-label="mode"><button>＿静＿</button><button aria-pressed="true">＞怪＜</button><button>￣荒￣</button></div>
+        </article>
+        <article class="part kit" data-name="004">
+          <div class="tools" aria-label="tools"><button>［札］</button><button>［墨］</button><button>［切］</button><button>［縫］</button></div>
+        </article>
+        <article class="part omen" data-name="005">
+          <button class="alert">※未読の怪異※</button>
+        </article>
+        <article class="part gate" data-name="006">
+          <select><option>《逢魔ヶ時》</option><option>《縁日》</option><option>《夜道》</option></select>
+        </article>
+      </div>
+    </section>
+
+    <section class="block law" data-mark="法／laws">
+      <p>一. 흰 바탕을 두려워하지 않는다.　二. 경계는 선이 아니라 문자다.　三. 익숙한 UI를 닮는 순간 실패다.</p>
+    </section>
+  </main>
+  <footer class="project-footer"><span>aislop / archive</span><a href="../#works">all experiments ↗</a></footer>
+</body>
+</html>

@@ -1,0 +1,189 @@
+:root {
+  --archive-blue: #82afea;
+  --archive-blue-dark: #638cca;
+  --archive-pale: #f1f6fd;
+  --archive-rose: #d99da9;
+  --archive-ink: #28283d;
+  --archive-muted: #74788b;
+  --archive-white: #fff;
+  --archive-display: "Newsreader", "Noto Serif KR", Iowan Old Style, Baskerville, Georgia, serif;
+  --archive-sans: "Manrope", "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+}
+
+html:has(.project-page),
+.project-page {
+  overflow-x: hidden;
+}
+
+.project-nav {
+  display: flex;
+  width: min(1100px, calc(100% - 48px));
+  min-height: 66px;
+  margin: 0 auto 28px;
+  padding: 15px 0 13px;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid rgba(40, 40, 61, .14);
+  color: var(--archive-ink);
+  font-family: var(--archive-sans);
+}
+
+.project-brand,
+.project-archive {
+  color: inherit;
+  text-decoration: none;
+}
+
+.project-brand {
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -.08em;
+}
+
+.project-path {
+  color: var(--archive-muted);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .03em;
+}
+
+.project-archive {
+  display: inline-flex;
+  min-height: 34px;
+  margin-left: auto;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: var(--archive-blue);
+  color: var(--archive-white);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: -.03em;
+  align-items: center;
+  transition: background .2s ease, transform .2s ease;
+}
+
+.project-archive:hover {
+  background: var(--archive-blue-dark);
+  transform: translateY(-2px);
+}
+
+.project-footer {
+  display: flex;
+  width: min(1100px, calc(100% - 48px));
+  margin: 48px auto 0;
+  padding: 22px 0 30px;
+  border-top: 1px solid rgba(40, 40, 61, .14);
+  color: var(--archive-muted);
+  font-family: var(--archive-sans);
+  font-size: 12px;
+  font-weight: 700;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.project-footer a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.project-light {
+  color: var(--archive-ink);
+  background: var(--archive-white);
+  font-family: var(--archive-sans);
+}
+
+.project-light h1,
+.project-light h2,
+.project-light h3,
+.project-light h4 {
+  font-family: var(--archive-display);
+  font-weight: 500;
+  letter-spacing: -.07em;
+}
+
+.project-light a { color: var(--archive-blue-dark); }
+
+.project-light .project-nav,
+.project-light .project-footer {
+  color: var(--archive-ink);
+}
+
+.project-light main {
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.project-light .project-path,
+.project-light .project-footer { color: var(--archive-muted); }
+
+.project-light .eyebrow {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--archive-blue-dark);
+  font-family: var(--archive-sans);
+  font-size: 12px;
+  letter-spacing: .04em;
+}
+
+.project-light .hero,
+.project-light main > header,
+.project-light .hero-card,
+.project-light .card,
+.project-light .panel,
+.project-light article {
+  border-color: transparent;
+  border-radius: 22px;
+  background: var(--archive-white);
+  box-shadow: 0 14px 42px rgba(40, 40, 61, .07);
+}
+
+.project-light .hero {
+  border-bottom: 0;
+}
+
+.project-light .grid {
+  gap: 16px;
+}
+
+.project-light .button {
+  border: 0;
+  border-radius: 999px;
+  background: var(--archive-white);
+  color: var(--archive-blue-dark);
+  box-shadow: 0 8px 20px rgba(40, 40, 61, .08);
+  font-family: var(--archive-sans);
+}
+
+.project-light .button.primary {
+  border-color: var(--archive-blue);
+  background: var(--archive-blue);
+  color: var(--archive-white);
+}
+
+.project-dark .project-nav {
+  border-color: rgba(246, 243, 213, .18);
+  color: #f6f3d5;
+}
+
+.project-dark .project-path,
+.project-dark .project-footer { color: #8b91a7; }
+
+.project-dark .project-footer { border-color: rgba(246, 243, 213, .18); }
+
+.project-chaos .project-nav,
+.project-chaos .project-footer {
+  font-family: var(--archive-sans);
+}
+
+@media (max-width: 620px) {
+  .project-nav,
+  .project-footer {
+    width: min(100% - 32px, 1100px);
+  }
+
+  .project-nav { margin-bottom: 18px; }
+  .project-path { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .project-footer { align-items: flex-start; flex-direction: column; }
+}

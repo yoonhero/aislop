@@ -1,0 +1,369 @@
+@import url("https://fonts.googleapis.com/css2?family=DotGothic16&family=Shippori+Mincho:wght@700&family=Zen+Kurenaido&display=swap");
+
+:root {
+  color-scheme: light;
+  --paper: #fffdf3;
+  --ink: #151217;
+  --ash: #6a6258;
+  --hot: #ff386c;
+  --mold: #a6ff3d;
+  --ao: #22c7de;
+  --fox: #ff9429;
+  --violet: #7b57ff;
+  --mono: "DotGothic16", "MS Gothic", "Osaka-Mono", monospace;
+  --serif: "Shippori Mincho", "Yu Mincho", serif;
+  --hand: "Zen Kurenaido", "Yu Gothic", sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  color: var(--ink);
+  background:
+    repeating-linear-gradient(0deg, #0000 0 23px, #15121712 24px 25px),
+    radial-gradient(circle at 18% 10%, #ff386c18 0 10%, #0000 11%),
+    radial-gradient(circle at 82% 4%, #22c7de1f 0 8%, #0000 9%),
+    var(--paper);
+  font-family: var(--mono);
+  letter-spacing: 0;
+}
+
+a { color: inherit; text-decoration: none; }
+
+.sheet {
+  width: min(1060px, calc(100% - 24px));
+  margin: auto;
+  padding: 18px 0 48px;
+}
+
+.hero,
+.block,
+.part,
+.type p {
+  position: relative;
+  background: color-mix(in srgb, var(--paper), white 62%);
+}
+
+.hero {
+  min-height: 560px;
+  padding: 18px 20px 28px;
+}
+
+.hero::before,
+.hero::after,
+.block::before,
+.block::after,
+.part::before,
+.part::after,
+.type p::before {
+  display: block;
+  color: var(--ash);
+  white-space: pre;
+  pointer-events: none;
+}
+
+.hero::before { content: "┌─《白怪》──────────────────────────────┐"; }
+.hero::after { content: "└──────────────────────────────《/白怪》┘"; }
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: flex-end;
+  margin: 10px 0 38px;
+}
+
+.nav a {
+  padding: 4px 8px;
+  background: var(--ink);
+  color: var(--paper);
+  box-shadow: 4px 4px 0 var(--hot);
+  font-weight: 700;
+}
+
+.nav a::before { content: "《"; color: var(--mold); }
+.nav a::after { content: "》"; color: var(--mold); }
+.nav a:hover { background: var(--mold); color: var(--ink); }
+
+.stamp {
+  width: fit-content;
+  margin: 0 0 16px;
+  padding: 4px 8px;
+  background: var(--hot);
+  color: var(--paper);
+  font-weight: 700;
+  box-shadow: 7px 7px 0 #15121724;
+}
+
+h1,
+p { margin: 0; }
+
+h1 {
+  width: min-content;
+  color: var(--ink);
+  font: 700 clamp(5rem, 15vw, 10rem)/.82 var(--serif);
+  text-shadow: 5px 0 var(--hot), 9px 0 var(--ao), 14px 10px #15121718;
+}
+
+.lead {
+  max-width: 34rem;
+  margin-top: 18px;
+  font: 1.08rem/1.75 var(--hand);
+}
+
+.aa {
+  margin: 32px 0 0;
+  color: var(--ao);
+  font: 1.02rem/1.08 var(--mono);
+  text-shadow: 2px 0 var(--hot);
+}
+
+.hero .aa::after {
+  content: "";
+  position: absolute;
+  right: 46px;
+  bottom: 70px;
+  width: 200px;
+  height: 220px;
+  background:
+    linear-gradient(var(--hot) 0 0) 82px 0/34px 34px,
+    linear-gradient(var(--ink) 0 0) 46px 34px/108px 38px,
+    linear-gradient(var(--paper) 0 0) 54px 42px/92px 22px,
+    linear-gradient(var(--violet) 0 0) 20px 72px/160px 56px,
+    linear-gradient(var(--ao) 0 0) 0 128px/200px 42px,
+    linear-gradient(var(--fox) 0 0) 40px 170px/36px 50px,
+    linear-gradient(var(--fox) 0 0) 124px 170px/36px 50px,
+    linear-gradient(#000 0 0) 64px 90px/12px 12px,
+    linear-gradient(#000 0 0) 124px 90px/12px 12px;
+  background-repeat: no-repeat;
+  filter: drop-shadow(10px 8px 0 #15121718);
+  image-rendering: pixelated;
+}
+
+.block {
+  margin-top: 30px;
+  padding: 36px 0 12px;
+}
+
+.block::before {
+  content: "▽▽ " attr(data-mark) " ▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽";
+  position: absolute;
+  inset: 0 auto auto 0;
+  color: var(--hot);
+  font-weight: 700;
+}
+
+.block::after {
+  content: "△△ /" attr(data-mark) " △△△△△△△△△△△△△△△△△△";
+  margin-top: 12px;
+  color: var(--ash);
+}
+
+.tokens,
+.type,
+.parts {
+  display: grid;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+}
+
+.tokens {
+  grid-template-columns: repeat(6, 1fr);
+  list-style: none;
+}
+
+.tokens li {
+  min-height: 88px;
+  padding: 9px;
+  background:
+    linear-gradient(135deg, #fff8 0 20%, #0000 21%),
+    var(--c);
+  color: color-mix(in srgb, var(--c), #000 82%);
+  box-shadow: 6px 6px 0 #15121717;
+  font-weight: 700;
+}
+
+.tokens li::before { content: "※ "; }
+
+.type { grid-template-columns: repeat(3, 1fr); }
+
+.parts {
+  grid-template-columns: 1.1fr .9fr 1fr;
+  align-items: stretch;
+}
+
+.type p {
+  min-height: 132px;
+  padding: 22px 14px 14px;
+  box-shadow: 8px 8px 0 #15121712;
+}
+
+.part {
+  min-height: 116px;
+  display: grid;
+  align-content: center;
+  padding: 28px 12px 12px;
+}
+
+.type p::before,
+.part::before {
+  content: "《" attr(data-name) "》";
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: var(--hot);
+  font-weight: 700;
+}
+
+.type p:nth-child(1)::before { content: "《aa》"; }
+.type p:nth-child(2)::before { content: "《mei》"; }
+.type p:nth-child(3)::before { content: "《note》"; }
+
+.part::after,
+.type p::after {
+  content: "．．．．．．．．．．";
+  position: absolute;
+  right: 4px;
+  bottom: 0;
+  color: var(--ash);
+}
+
+.part::after {
+  content: "";
+  right: 10px;
+}
+
+b {
+  display: block;
+  margin-bottom: 12px;
+  color: var(--ao);
+}
+
+.type span {
+  display: block;
+  font: 1.42rem/1.22 var(--mono);
+}
+
+.type p:nth-child(2) span { font-family: var(--serif); }
+.type p:nth-child(3) span { font-family: var(--hand); }
+
+.btn,
+.seg button,
+.tools button,
+input,
+select,
+.alert {
+  min-height: 38px;
+  border: 0;
+  appearance: none;
+  color: var(--ink);
+  font: 700 .95rem/1 var(--mono);
+}
+
+.btn {
+  min-width: 74px;
+  margin: 0 8px 8px 0;
+  padding: 9px 13px;
+  background:
+    linear-gradient(90deg, var(--ink) 0 6px, #0000 6px calc(100% - 6px), var(--ink) calc(100% - 6px)),
+    var(--fox);
+  box-shadow: 5px 5px 0 #1512171f;
+  cursor: pointer;
+}
+
+.btn.sub {
+  background:
+    linear-gradient(90deg, var(--paper) 0 6px, #0000 6px calc(100% - 6px), var(--paper) calc(100% - 6px)),
+    var(--ink);
+  color: var(--paper);
+}
+
+.btn:hover,
+.seg button[aria-pressed="true"],
+.tools button:hover { background-color: var(--mold); color: var(--ink); }
+
+input,
+select {
+  width: 100%;
+  padding: 10px 12px;
+}
+
+.prompt {
+  background:
+    linear-gradient(90deg, var(--hot) 0 3ch, #0000 3ch),
+    linear-gradient(0deg, var(--ink) 0 2px, #0000 2px);
+  color: var(--ink);
+  box-shadow: inset 0 -12px #22c7de18;
+}
+
+select {
+  background:
+    linear-gradient(90deg, #0000 0 calc(100% - 3ch), var(--ink) calc(100% - 3ch)),
+    linear-gradient(0deg, var(--violet) 0 2px, #0000 2px);
+  color: var(--ink);
+}
+
+.gate { position: relative; }
+.gate::after {
+  content: "∨";
+  position: absolute;
+  right: 24px;
+  top: 50%;
+  color: var(--paper);
+  transform: translateY(-10%);
+}
+
+.seg,
+.tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.seg button { padding: 8px 12px; }
+.seg button,
+.tools button {
+  background: var(--paper);
+  box-shadow: inset 0 -2px var(--ink), 4px 4px 0 #15121717;
+}
+
+.tools button { min-width: 54px; padding: 0 8px; font-size: 1rem; }
+
+.seg button[aria-pressed="true"] {
+  box-shadow: inset 0 0 0 2px var(--hot), 4px 4px 0 #15121717;
+}
+
+.alert {
+  width: 100%;
+  min-height: 54px;
+  padding: 10px;
+  background:
+    repeating-linear-gradient(90deg, #0000 0 10px, #15121716 10px 12px),
+    var(--hot);
+  color: var(--paper);
+  box-shadow: 7px 7px 0 #15121718;
+}
+
+.law p {
+  padding-right: 12px;
+  font: 1.08rem/1.75 var(--hand);
+}
+
+@media (max-width: 760px) {
+  .sheet { width: min(100% - 16px, 460px); padding-top: 8px; }
+  .hero { min-height: 650px; padding-inline: 10px; }
+  .hero::before { content: "┌─《白怪》────────────┐"; }
+  .hero::after { content: "└────────────《/白怪》┘"; }
+  .hero .aa::after { right: 10px; bottom: 58px; transform: scale(.72); transform-origin: right bottom; }
+  .nav { justify-content: flex-start; }
+  h1 { font-size: 5rem; }
+  .aa { font-size: .78rem; }
+  .tokens,
+  .type,
+  .parts { grid-template-columns: 1fr; }
+  .summon { grid-row: auto; }
+  .block::before { content: "▽▽ " attr(data-mark) " ▽▽▽▽▽▽▽"; }
+  .block::after { content: "△△ /" attr(data-mark) " △△△△△△"; }
+}
