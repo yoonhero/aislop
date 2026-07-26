@@ -15,7 +15,7 @@ Requirements:
 - [Karabiner-Elements](https://karabiner-elements.pqrs.org/).
 
 Download the
-[2.0.0 RC1 DMG](https://github.com/yoonhero/aislop/releases/download/codex-vim-v2.0.0-rc.1/Codex-Vim-Focus-2.0.0.dmg),
+[2.0.0 RC2 DMG](https://github.com/yoonhero/aislop/releases/download/codex-vim-v2.0.0-rc.2/Codex-Vim-Focus-2.0.0.dmg),
 open it, then drag
 **Codex Vim Focus.app** onto the **Applications** shortcut. Open the installed
 app and, from the `VIM` menu-bar item, click:

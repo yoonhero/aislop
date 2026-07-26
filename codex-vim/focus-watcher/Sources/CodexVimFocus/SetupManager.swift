@@ -276,8 +276,11 @@ final class SetupManager {
 
   private func plist(_ app: URL, _ key: String) -> String? {
     guard
-      let bundle = Bundle(url: app),
-      let value = bundle.object(forInfoDictionaryKey: key)
+      let data = try? Data(contentsOf: app.appendingPathComponent("Contents/Info.plist")),
+      let info = try? PropertyListSerialization.propertyList(
+        from: data, options: [], format: nil
+      ) as? [String: Any],
+      let value = info[key]
     else { return nil }
     return String(describing: value)
   }

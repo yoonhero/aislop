@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.0.0 RC2
+
+- Reread app metadata from `Info.plist` so update detection cannot reuse stale
+  `Bundle` values after replacing Codex Vim.
+
 ## 2.0.0
 
 - Rebuilt Codex Vim Focus as the menu-bar setup and update manager.
