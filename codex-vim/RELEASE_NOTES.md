@@ -1,4 +1,8 @@
-# Codex Vim Focus 2.0.0 RC1
+# Codex Vim Focus 2.0.0 RC2
+
+RC2 fixes a stale macOS bundle metadata cache that could leave the menu showing
+`Codex Vim · Update required` and trigger repeated rebuilds after a successful
+installation.
 
 This is the first packaged release of Codex Vim Focus, an unofficial macOS
 menu-bar manager for Vim editing in the Codex desktop prompt.

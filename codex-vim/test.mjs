@@ -1,6 +1,13 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 
+const manager = readFileSync(
+  new URL(
+    "./focus-watcher/Sources/CodexVimFocus/SetupManager.swift",
+    import.meta.url,
+  ),
+  "utf8",
+);
 const [{ manipulators }] = JSON.parse(
   readFileSync(new URL("./karabiner-codex-vim.json", import.meta.url)),
 ).rules;
@@ -42,6 +49,11 @@ assert.ok(
   manipulators.every(
     (rule) => !rule.from.modifiers?.mandatory?.includes("shift"),
   ),
+);
+assert.match(
+  manager,
+  /PropertyListSerialization\.propertyList/,
+  "update detection must reread Info.plist instead of using Bundle's stale cache",
 );
 assert.ok(manipulators.every((rule) => rule.conditions[0].type === "frontmost_application_if"));
 assert.ok(
