@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+- Wait for the official Codex bundle to settle before rebuilding it, reject a
+  source bundle that changes during the copy, and limit automatic rebuilding to
+  one attempt per source build.
+- Stop polling every ten seconds and ignore unrelated application-termination
+  notifications.
+- Keep Accessibility monitoring silent at launch; prompt only from explicit
+  setup/menu actions.
+
 ## 2.0.0 RC2
 
 - Reread app metadata from `Info.plist` so update detection cannot reuse stale

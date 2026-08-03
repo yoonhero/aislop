@@ -25,6 +25,8 @@
 - 최신 Chromium에서는 외부 overlay보다 `caret-shape: block`과 `caret-color: currentColor auto`가 정확하다. 줄바꿈과 스크롤 좌표는 렌더러에 맡기고 원본 앱 대신 복사본의 CSS만 패치한다.
 - Vim caret는 모양 하나가 아니라 모드 피드백이다. Karabiner의 mode file을 renderer attribute로 동기화하면 INSERT bar, NORMAL translucent block, VISUAL block을 좌표 추정 없이 나눌 수 있다.
 - 비공식 데스크톱 패치는 helper를 control plane으로 삼아야 배포할 수 있다. source build와 patch version을 복사 앱에 기록하고, 도구 런타임을 helper에 묶고, 실행 중 교체는 미루면 한 번의 클릭과 공식 업데이트 복구를 함께 만들 수 있다.
+- 공식 앱을 복사하는 자동 업데이트는 버전이 보였다는 이유만으로 즉시 시작하면 안 된다. 짧은 settle window, source fingerprint 재검사, source build별 1회 시도 제한을 두면 업데이트 중간 번들과 반복 빌드를 함께 막을 수 있다.
+- macOS Accessibility 권한 요청은 감시 루프의 시작 동작이 아니다. 일반 launch에서는 상태만 읽고, 명시적인 setup/menu action에서만 prompt해야 fresh launch 경고가 반복되지 않는다.
 - Pastel Pen review desk는 신문 장식보다 Pretendard 계열의 산세리프, 얇은 규칙, 여백, 한 가지 읽기 흐름이 더 오래 읽힌다.
 - 참고 사이트형 소개 페이지는 장식보다 큰 색면, 중앙 정렬 타이포, 둥근 CTA, 넓은 여백이 먼저이며, Manrope·Noto Sans KR와 preconnect·swap·시스템 폴백을 함께 두면 인상과 첫 렌더를 동시에 지킬 수 있다.
 - 현대적인 실험실 UI에 Newsreader·Noto Serif KR 같은 세리프 display를 제목에만 얹고 색과 장치를 낮추면, 카드의 산세리프 메타와 시대감이 부드럽게 충돌한다. 장식은 긴장을 만들되 화면을 공격적으로 지배하지 않게 제한한다.

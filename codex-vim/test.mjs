@@ -8,6 +8,20 @@ const manager = readFileSync(
   ),
   "utf8",
 );
+const watcher = readFileSync(
+  new URL(
+    "./focus-watcher/Sources/CodexVimFocus/FocusWatcher.swift",
+    import.meta.url,
+  ),
+  "utf8",
+);
+const installer = readFileSync(
+  new URL(
+    "./focus-watcher/Resources/install-codex-vim.sh",
+    import.meta.url,
+  ),
+  "utf8",
+);
 const [{ manipulators }] = JSON.parse(
   readFileSync(new URL("./karabiner-codex-vim.json", import.meta.url)),
 ).rules;
@@ -54,6 +68,30 @@ assert.match(
   manager,
   /PropertyListSerialization\.propertyList/,
   "update detection must reread Info.plist instead of using Bundle's stale cache",
+);
+assert.match(manager, /sourceSettleDelay: TimeInterval = 3/);
+assert.match(manager, /sourceCheckInterval: TimeInterval = 30/);
+assert.match(manager, /automaticAttempt/);
+assert.match(manager, /bundleIdentifier == "com\.openai\.codex"/);
+assert.match(
+  readFileSync(
+    new URL(
+      "./focus-watcher/Sources/CodexVimFocus/AppDelegate.swift",
+      import.meta.url,
+    ),
+    "utf8",
+  ),
+  /watcher\.start\(\)\s+manager\.reconcile\(\)/,
+);
+assert.doesNotMatch(
+  watcher,
+  /AXTrustedCheckOptionPrompt/,
+  "focus monitoring must not prompt for Accessibility on every launch",
+);
+assert.match(
+  installer,
+  /Official Codex changed during the build/,
+  "a copied app must not be installed if the source changes mid-build",
 );
 assert.ok(manipulators.every((rule) => rule.conditions[0].type === "frontmost_application_if"));
 assert.ok(

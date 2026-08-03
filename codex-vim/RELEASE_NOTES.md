@@ -7,6 +7,11 @@ installation.
 This is the first packaged release of Codex Vim Focus, an unofficial macOS
 menu-bar manager for Vim editing in the Codex desktop prompt.
 
+Maintenance after RC2: the manager now waits for an official Codex update to
+settle, prevents duplicate automatic rebuilds, and keeps Accessibility prompts
+out of normal launch. The explicit setup/menu action remains available when
+permission is needed.
+
 ## Install
 
 1. Install [Karabiner-Elements](https://karabiner-elements.pqrs.org/).
@@ -14,7 +19,7 @@ menu-bar manager for Vim editing in the Codex desktop prompt.
 3. Drag **Codex Vim Focus** onto **Applications**.
 4. Open the app, click `VIM` in the menu bar, then choose
    **Setup Everything**.
-5. Grant Accessibility permission when macOS asks.
+5. Grant Accessibility permission from the explicit setup action when asked.
 
 ## Included
 

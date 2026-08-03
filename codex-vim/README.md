@@ -27,7 +27,11 @@ That single action:
 1. installs the Karabiner grammar into the selected profile;
 2. builds the separate Codex Vim app using Codex's bundled Node runtime;
 3. enables launch at login;
-4. requests Accessibility permission.
+4. requests Accessibility permission once, during this explicit setup action.
+
+Codex Vim Focus does not show an Accessibility prompt merely because it starts.
+Use **Request Accessibility Access…** or **Accessibility Settings…** from the
+`VIM` menu if permission is still required.
 
 No global `node`, `npm`, `npx`, or `jq` installation is used at setup time.
 
@@ -38,8 +42,10 @@ No global `node`, `npm`, `npx`, or `jq` installation is used at setup time.
 - reports Accessibility, Karabiner, Codex build, and patch status;
 - installs or refreshes Karabiner rules with timestamped backups;
 - builds, rebuilds, launches, and removes Codex Vim;
-- detects official Codex build changes every ten seconds;
-- automatically rebuilds a stale copy after Codex Vim has quit;
+- detects official Codex build changes with a 30-second safety check and app
+  lifecycle notifications;
+- waits for the official bundle to settle, then makes at most one automatic
+  rebuild attempt per source build;
 - opens logs and Accessibility settings;
 - supports launch-at-login without forcing the app to stay alive;
 - includes a real **Quit Codex Vim Focus** command.
@@ -47,6 +53,10 @@ No global `node`, `npm`, `npx`, or `jq` installation is used at setup time.
 The generated Codex Vim copy records both the source `CFBundleVersion` and
 cursor patch version in its `Info.plist`. Its own Sparkle updates are disabled:
 the manager always rebuilds from the current signed official app instead.
+
+If the official app is being updated while a rebuild starts, the installer
+aborts before replacing the old copy. Once the official app is stable, use
+**Rebuild Codex Vim** for an explicit retry.
 
 ## Cursor modes
 

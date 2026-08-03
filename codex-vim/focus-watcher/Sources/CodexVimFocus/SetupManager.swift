@@ -2,12 +2,13 @@ import AppKit
 import ApplicationServices
 
 enum SetupState: Equatable {
-  case ready, needsSetup, stale, waitingForQuit, busy(String), failed(String)
+  case ready, needsSetup, settling, stale, waitingForQuit, busy(String), failed(String)
 
   var title: String {
     switch self {
     case .ready: "Ready"
     case .needsSetup: "Setup required"
+    case .settling: "Waiting for Codex update"
     case .stale: "Codex update detected"
     case .waitingForQuit: "Update ready · quit Codex Vim"
     case .busy(let task): task
@@ -20,6 +21,8 @@ enum SetupState: Equatable {
 final class SetupManager {
   static let patchVersion = "5"
   static let ruleDescription = "[aislop] Codex composer Vim mode"
+  static let sourceSettleDelay: TimeInterval = 3
+  static let sourceCheckInterval: TimeInterval = 30
 
   let source = URL(fileURLWithPath: "/Applications/ChatGPT.app")
   let target = FileManager.default.homeDirectoryForCurrentUser
@@ -32,6 +35,10 @@ final class SetupManager {
   var onChange: (() -> Void)?
   private(set) var operation: SetupState?
   private var timer: Timer?
+  private var settleTimer: Timer?
+  private var observedSourceVersion: String?
+  private var sourceStableSince = Date.distantPast
+  private var automaticAttempt: String?
   var isBusy: Bool {
     if case .busy = operation { true } else { false }
   }
@@ -55,6 +62,10 @@ final class SetupManager {
   var autoUpdate: Bool {
     get { UserDefaults.standard.object(forKey: "autoUpdate") as? Bool ?? true }
     set { UserDefaults.standard.set(newValue, forKey: "autoUpdate") }
+  }
+  var accessibilityPrompted: Bool {
+    get { UserDefaults.standard.bool(forKey: "accessibilityPrompted") }
+    set { UserDefaults.standard.set(newValue, forKey: "accessibilityPrompted") }
   }
   var launchAtLogin: Bool {
     FileManager.default.fileExists(atPath: agentURL.path)
@@ -83,13 +94,17 @@ final class SetupManager {
     if let operation { return operation }
     guard sourceVersion != nil, karabinerCLI != nil else { return .needsSetup }
     guard rulesInstalled, targetInstalled, accessibilityGranted else { return .needsSetup }
-    guard targetCurrent else { return codexVimRunning ? .waitingForQuit : .stale }
+    guard targetCurrent else {
+      if codexVimRunning { return .waitingForQuit }
+      return sourceSettled ? .stale : .settling
+    }
     return .ready
   }
   var diagnostics: [String: Any] {
     func value(_ string: String?) -> Any { string ?? NSNull() }
     return [
       "accessibilityGranted": accessibilityGranted,
+      "accessibilityPrompted": accessibilityPrompted,
       "autoUpdate": autoUpdate,
       "codexVimRunning": codexVimRunning,
       "karabinerCLI": value(karabinerCLI?.path),
@@ -97,6 +112,7 @@ final class SetupManager {
       "patchVersion": Self.patchVersion,
       "rulesInstalled": rulesInstalled,
       "sourceVersion": value(sourceVersion),
+      "sourceSettled": sourceSettled,
       "state": state.title,
       "targetCurrent": targetCurrent,
       "targetInstalled": targetInstalled,
@@ -106,7 +122,10 @@ final class SetupManager {
   }
 
   init() {
-    let timer = Timer(timeInterval: 10, repeats: true) { [weak self] _ in
+    observedSourceVersion = sourceVersion
+    sourceStableSince = Date()
+
+    let timer = Timer(timeInterval: Self.sourceCheckInterval, repeats: true) { [weak self] _ in
       Task { @MainActor in self?.reconcile() }
     }
     RunLoop.main.add(timer, forMode: .common)
@@ -115,27 +134,45 @@ final class SetupManager {
       forName: NSWorkspace.didTerminateApplicationNotification,
       object: nil,
       queue: .main
-    ) { [weak self] _ in Task { @MainActor in self?.reconcile() } }
+    ) { [weak self] notification in
+      guard
+        let app = notification.object as? NSRunningApplication,
+        app.bundleIdentifier == "com.openai.codex"
+      else { return }
+      Task { @MainActor in self?.reconcile() }
+    }
   }
 
   func reconcile() {
+    let version = observeSourceVersion()
     onChange?()
     guard
       operation == nil,
       autoUpdate,
       targetInstalled,
-      !targetCurrent,
-      !codexVimRunning
+      let version,
+      version != targetSourceVersion || targetPatchVersion != Self.patchVersion
     else { return }
+    guard sourceSettled else {
+      scheduleSettleCheck()
+      return
+    }
+    guard !codexVimRunning else { return }
+
+    let key = "\(version):\(Self.patchVersion)"
+    guard automaticAttempt != key else { return }
+    automaticAttempt = key
     installCodex()
   }
 
   func setupEverything() {
     operation = nil
-    promptAccessibility()
     do {
       try installRules()
       try setLaunchAtLogin(true)
+      if !accessibilityGranted && !accessibilityPrompted {
+        requestAccessibility()
+      }
       installCodex()
     } catch {
       fail(error)
@@ -144,6 +181,10 @@ final class SetupManager {
 
   func installCodex() {
     guard !isBusy else { return }
+    guard sourceVersion != nil else {
+      fail(Failure("Official Codex app is not available in /Applications."))
+      return
+    }
     operation = .busy("Building Codex Vim…")
     onChange?()
     let script = resources.appendingPathComponent("install-codex-vim.sh")
@@ -251,9 +292,12 @@ final class SetupManager {
     onChange?()
   }
 
-  func promptAccessibility() {
+  func requestAccessibility() {
+    guard !accessibilityGranted else { return }
     let options = ["AXTrustedCheckOptionPrompt": true] as CFDictionary
     _ = AXIsProcessTrustedWithOptions(options)
+    accessibilityPrompted = true
+    onChange?()
   }
 
   func openAccessibility() {
@@ -272,6 +316,37 @@ final class SetupManager {
   private var agentURL: URL {
     FileManager.default.homeDirectoryForCurrentUser
       .appendingPathComponent("Library/LaunchAgents/com.aislop.codex-vim-focus.plist")
+  }
+
+  private var sourceSettled: Bool {
+    guard
+      let version = sourceVersion,
+      version == observedSourceVersion
+    else { return false }
+    return Date().timeIntervalSince(sourceStableSince) >= Self.sourceSettleDelay
+  }
+
+  @discardableResult
+  private func observeSourceVersion() -> String? {
+    let next = sourceVersion
+    guard next != observedSourceVersion else { return next }
+    observedSourceVersion = next
+    sourceStableSince = Date()
+    settleTimer?.invalidate()
+    settleTimer = nil
+    return next
+  }
+
+  private func scheduleSettleCheck() {
+    guard settleTimer == nil else { return }
+    let timer = Timer(timeInterval: Self.sourceSettleDelay, repeats: false) { [weak self] _ in
+      Task { @MainActor in
+        self?.settleTimer = nil
+        self?.reconcile()
+      }
+    }
+    RunLoop.main.add(timer, forMode: .common)
+    settleTimer = timer
   }
 
   private func plist(_ app: URL, _ key: String) -> String? {

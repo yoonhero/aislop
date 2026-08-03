@@ -14,6 +14,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     status.menu = menu
     manager.onChange = { [weak self] in self?.render() }
     watcher.start()
+    manager.reconcile()
     render()
 
     let timer = Timer(timeInterval: 1, repeats: true) { [weak self] _ in
@@ -35,6 +36,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     let state = manager.state
     status.button?.title = switch state {
     case .ready: "VIM"
+    case .settling: "VIM …"
     case .busy: "VIM …"
     case .failed, .needsSetup, .stale, .waitingForQuit: "VIM !"
     }
@@ -73,6 +75,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
     let access = item("Accessibility Settings…", #selector(openAccessibility))
     menu.addItem(access)
+    let request = item("Request Accessibility Access…", #selector(requestAccessibility))
+    request.isEnabled = !manager.accessibilityGranted
+    menu.addItem(request)
     let open = item("Open Codex Vim", #selector(openCodex))
     open.isEnabled = manager.targetInstalled
     menu.addItem(open)
@@ -116,6 +121,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     catch { show(error) }
   }
   @objc private func openAccessibility() { manager.openAccessibility() }
+  @objc private func requestAccessibility() { manager.requestAccessibility() }
   @objc private func openCodex() { manager.openCodex() }
   @objc private func toggleAutoUpdate() {
     manager.autoUpdate.toggle()

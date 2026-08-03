@@ -34,8 +34,6 @@ final class FocusWatcher {
   }
 
   func start() {
-    let options = ["AXTrustedCheckOptionPrompt": true] as CFDictionary
-    _ = AXIsProcessTrustedWithOptions(options)
     let timer = Timer(timeInterval: 0.05, repeats: true) { [weak self] _ in
       self?.refresh()
     }
