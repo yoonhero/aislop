@@ -11,6 +11,7 @@
     ]}};
     window.browser = {storage:{local:{async get(key){return {[key]:window.__ppStore[key]};},async set(value){Object.assign(window.__ppStore,value);}}},tabs:{async query(){return [];},async create(){}}};
   </script>
+  <script src="./extension/scope.js"></script>
   <script src="./extension/review.js"></script>
 </body>
 </html>

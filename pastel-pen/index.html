@@ -92,7 +92,7 @@
     <header>
       <div>
         <h1>Pastel<br>Pen</h1>
-        <p class="lead"><span class="stroke">STAEDTLER-ish soft highlighting</span> for Firefox: local-only, page-aware, and built around the lines you want to remember.</p>
+        <p class="lead"><span class="stroke">STAEDTLER-ish soft highlighting</span> for Firefox: local-only, scope-aware, and built around the lines you want to remember.</p>
       </div>
       <div class="pen" aria-hidden="true"></div>
     </header>
@@ -104,8 +104,8 @@
         <li>Click <code>Load Temporary Add-on</code>.</li>
         <li>Select <code>pastel-pen/extension/manifest.json</code>.</li>
       </ol>
-      <p>Temporary add-ons disappear after Firefox restarts. A no-reinstall install needs a signed XPI, or Firefox Developer/Nightly/ESR configured for unsigned local add-ons. Use <code>pastel-pen/dist/pastel_pen-0.2.0.xpi</code> and keep the fixed id <code>pastel-pen@aislop.local</code>; Firefox then treats new builds as the same add-on instead of a fresh one.</p>
-      <p>Highlights live in Firefox <code>storage.local</code> with <code>unlimitedStorage</code>; they do not age out by themselves. The toolbar popup can turn highlighting on or off for the current page, and every saved mark can change colour later. The review desk imports/exports JSON or JSONL and prints the newspaper as a PDF. Firefox’s built-in PDF viewer is a protected browser page, so direct in-document marking there is not available to a normal extension; the review desk is the PDF path.</p>
+      <p>Temporary add-ons disappear after Firefox restarts. A no-reinstall install needs a signed XPI, or Firefox Developer/Nightly/ESR configured for unsigned local add-ons. Use <code>pastel-pen/dist/pastel_pen-0.2.4.zip</code> and keep the fixed id <code>pastel-pen@aislop.local</code>; Firefox then treats new builds as the same add-on instead of a fresh one.</p>
+      <p>Pastel Pen starts <strong>off</strong> on every new page, so reading stays uninterrupted. From the popup, apply it to this page, this path and everything below it, or the entire domain. The compact pen then sits beside your selection, opens its colour row only on demand, and flips around the text when the viewport is tight. Highlights live in Firefox <code>storage.local</code> with <code>unlimitedStorage</code>; they do not age out by themselves. Every saved mark can change colour later. The review desk imports/exports JSON or JSONL and prints the newspaper as a PDF. Firefox’s built-in PDF viewer is a protected browser page, so direct in-document marking there is not available to a normal extension; the review desk is the PDF path.</p>
     </section>
 
     <section>
@@ -135,7 +135,7 @@
         <article><h3>Dynamic pages</h3><p>A debounced observer replays restoration when ChatGPT, Naver Blog, Tistory, and infinite articles mutate after load.</p></article>
         <article><h3>Rich selections</h3><p>The marker wraps text nodes instead of surrounding whole DOM ranges, avoiding broken links, code spans, tables, and inline math.</p></article>
         <article><h3>Duplicate quotes</h3><p>Context and distance from the original text position rank candidates when the same sentence appears repeatedly.</p></article>
-        <article><h3>Page switch</h3><p>Each URL remembers its own on/off state. Turning a page quiet hides its marks without deleting them.</p></article>
+        <article><h3>Scope switch</h3><p>Rules resolve from page to path to domain to default. A quiet scope hides its marks without deleting them, and a more specific rule can make an exception.</p></article>
         <article><h3>Newspaper desk</h3><p>Saved lines are grouped by source, recolourable in place, searchable, copyable, and printable to PDF.</p></article>
         <article><h3>Portable archive</h3><p>JSON and JSONL are the portable source of truth. Import merges by highlight id, so backups do not create duplicates.</p></article>
       </div>

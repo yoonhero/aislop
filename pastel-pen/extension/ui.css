@@ -62,8 +62,13 @@ button:focus-visible, .file:focus-within, input:focus-visible { outline: 2px sol
 .popup .page-label { border-bottom: 1px solid var(--line); font-size: 12px; margin: 17px 0 11px; overflow: hidden; padding-bottom: 11px; text-overflow: ellipsis; white-space: nowrap; }
 .popup .fine { font-size: 11px; margin-bottom: 0; }
 .popup .section-label { margin: 19px 0 8px; }
+.scope-select { background: var(--paper); border: 1px solid var(--line); border-radius: 0; color: var(--ink); font: 12px/1.2 var(--sans); min-height: 34px; padding: 0 9px; width: 100%; }
+.scope-select:hover, .scope-select:focus { border-color: var(--ink); }
+.scope-select:disabled { color: var(--muted); cursor: default; opacity: .7; }
+.scope-hint { font-size: 11px; margin: 7px 0 0 !important; }
 .page-toggle { align-items: center; background: transparent; border: 1px solid var(--line); color: var(--ink); display: grid; gap: 10px; grid-template-columns: 8px 1fr auto; justify-content: stretch; padding: 10px; text-align: left; width: 100%; }
 .page-toggle:hover { background: var(--paper-deep); color: var(--ink); }
+.page-toggle:disabled { cursor: default; opacity: .6; }
 .page-toggle strong, .page-toggle small { display: block; }
 .page-toggle strong { font-size: 12px; }
 .page-toggle small { color: var(--muted); font-size: 11px; font-weight: 500; margin-top: 1px; }

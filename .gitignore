@@ -1,0 +1,10 @@
+.DS_Store
+node_modules/
+*.log
+
+# Local browser QA captures
+.playwright-cli/
+output/playwright/
+
+# Build output is local; release archives are explicitly force-added when shipped.
+dist/
