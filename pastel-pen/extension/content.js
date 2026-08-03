@@ -9,10 +9,16 @@
     ["sky", "#bfe4ff", "191,228,255"],
     ["lilac", "#d9c7ff", "217,199,255"]
   ];
+  const SCOPE = globalThis.PastelPenScope;
+  const DEFAULT_ENABLED = SCOPE.DEFAULT_ENABLED;
   const BAD = new Set(["SCRIPT", "STYLE", "TEXTAREA", "INPUT", "SELECT", "OPTION", "NOSCRIPT", "IFRAME"]);
   const css = String.raw;
-  const state = { items: [], lastRange: null, activeMarkId: null, tip: null, tipBody: null, deleteButton: null, color: COLORS[0][1], enabled: true };
-  const page = () => cleanPage(location.href);
+  const state = {
+    items: [], lastRange: null, activeMarkId: null, tip: null, tipBody: null,
+    deleteButton: null, colorButton: null, color: COLORS[0][1], enabled: DEFAULT_ENABLED,
+    expanded: false, anchor: null, observer: null, eventsBound: false, finishTimer: null
+  };
+  const page = () => SCOPE.cleanPage(location.href);
   const clean = (s) => (s || "").replace(/\s+/g, " ").trim();
   const storage = {
     async get() { return normalize((await api.storage.local.get(KEY))[KEY]); },
@@ -22,28 +28,61 @@
   init().catch(console.warn);
 
   async function init() {
-    injectTip();
     const data = await storage.get();
     state.items = data.items || [];
     state.color = data.prefs?.color || COLORS[0][1];
-    state.enabled = data.prefs?.disabledPages?.[page()] !== true;
-    if (state.enabled) restoreSoon();
+    state.enabled = SCOPE.pageEnabled(data.prefs, page());
+    api.runtime.onMessage.addListener((m) => {
+      if (m?.type === "PASTEL_PEN_HIGHLIGHT_CONTEXT") return commit(state.color);
+      if (m?.type === "PASTEL_PEN_GET_PAGE_STATE") return Promise.resolve({ enabled: state.enabled, url: page() });
+      if (m?.type === "PASTEL_PEN_SET_PAGE_STATE") return setScopeEnabled("page", m.enabled !== false);
+      if (m?.type === "PASTEL_PEN_SET_SCOPE_STATE") return setScopeEnabled(m.scope, m.enabled !== false);
+      if (m?.type === "PASTEL_PEN_TOGGLE_PAGE") return setScopeEnabled("page", !state.enabled);
+      if (m?.type === "PASTEL_PEN_RECOLOR") return recolorHighlight(m.id, m.color);
+      if (m?.type === "PASTEL_PEN_REMOVE") return removeHighlight(m.id);
+    });
+    if (state.enabled) activate();
+  }
+
+  function activate() {
+    if (!state.tip) injectTip();
+    if (state.eventsBound) return restoreSoon();
     addEventListener("pointerdown", prepareSelection, true);
     addEventListener("pointerup", finishSelection, true);
     addEventListener("mouseup", finishSelection, true);
     addEventListener("selectionchange", captureSelection, true);
-    addEventListener("keyup", (e) => /^(Shift|Arrow|Home|End)/.test(e.key) && captureSelection(), true);
+    addEventListener("keyup", updateSelection, true);
     addEventListener("click", markMenu, true);
-    addEventListener("scroll", hideTip, true);
-    api.runtime.onMessage.addListener((m) => {
-      if (m?.type === "PASTEL_PEN_HIGHLIGHT_CONTEXT") commit(state.color);
-      if (m?.type === "PASTEL_PEN_GET_PAGE_STATE") return Promise.resolve({ enabled: state.enabled, url: page() });
-      if (m?.type === "PASTEL_PEN_SET_PAGE_STATE") return setPageEnabled(m.enabled !== false);
-      if (m?.type === "PASTEL_PEN_TOGGLE_PAGE") return setPageEnabled(!state.enabled);
-      if (m?.type === "PASTEL_PEN_RECOLOR") return recolorHighlight(m.id, m.color);
-      if (m?.type === "PASTEL_PEN_REMOVE") return removeHighlight(m.id);
-    });
-    new MutationObserver(debounce(() => state.enabled && restoreSoon(), 600)).observe(document.body || document.documentElement, { childList: true, subtree: true });
+    addEventListener("scroll", repositionTip, true);
+    addEventListener("resize", repositionTip, true);
+    state.observer = new MutationObserver(debounce(() => state.enabled && restoreSoon(), 600));
+    state.observer.observe(document.body || document.documentElement, { childList: true, subtree: true });
+    state.eventsBound = true;
+    restoreSoon();
+  }
+
+  function deactivate() {
+    if (state.eventsBound) {
+      removeEventListener("pointerdown", prepareSelection, true);
+      removeEventListener("pointerup", finishSelection, true);
+      removeEventListener("mouseup", finishSelection, true);
+      removeEventListener("selectionchange", captureSelection, true);
+      removeEventListener("keyup", updateSelection, true);
+      removeEventListener("click", markMenu, true);
+      removeEventListener("scroll", repositionTip, true);
+      removeEventListener("resize", repositionTip, true);
+    }
+    state.observer?.disconnect();
+    state.observer = null;
+    state.eventsBound = false;
+    clearTimeout(state.selectionTimer);
+    clearTimeout(state.finishTimer);
+    document.documentElement.classList.remove("pastel-pen-selection-active");
+    clearMarks();
+    hideTip();
+    state.lastRange = null;
+    state.tip?.remove();
+    state.tip = state.tipBody = state.deleteButton = state.colorButton = null;
   }
 
   function injectTip() {
@@ -53,46 +92,75 @@
     const root = host.attachShadow({ mode: "closed" });
     const style = document.createElement("style");
     style.textContent = css`
-        :host{all:initial}
-        .tip{align-items:center;background:#fffdf2;border:1px solid #e6dcc5;border-radius:999px;box-shadow:0 10px 30px #33280024,0 2px 8px #33280018;color:#3e392c;display:flex;font:13px/1.2 ui-sans-serif,system-ui,sans-serif;gap:6px;padding:6px;user-select:none}
-        button{appearance:none;border:0;cursor:pointer;font:inherit}
-        .dot{border-radius:999px;box-shadow:inset 0 0 0 1px #7a6c4533;height:24px;width:24px}
-        .dot:hover{transform:translateY(-1px)}
-        .act{background:#3f3828;border-radius:999px;color:#fff8df;padding:6px 10px}
-        .ghost{background:transparent;border-radius:999px;color:#625946;padding:6px 8px}
-        .danger{background:#ffe4e8;border-radius:999px;color:#8b3142;min-width:96px;padding:8px 16px}
-        .tip[data-mode="mark"]{min-width:184px}
-        .tip[data-mode="mark"] .act,.tip[data-mode="mark"] .ghost{display:none}
-        .tip:not([data-mode="mark"]) .danger{display:none}
-      `;
+      :host{all:initial}
+      .tip{align-items:center;background:#fffdf2;border:1px solid #e6dcc5;border-radius:10px;box-shadow:0 8px 22px #33280020,0 2px 7px #33280014;color:#3e392c;display:flex;font:12px/1.2 ui-sans-serif,system-ui,sans-serif;gap:4px;max-width:calc(100vw - 16px);padding:4px;position:relative;user-select:none}
+      .tip:before{background:#fffdf2;border:1px solid #e6dcc5;content:"";height:7px;position:absolute;transform:rotate(45deg);width:7px;z-index:0}
+      .tip>*{position:relative;z-index:1}
+      .tip[data-side="right"]:before{left:-4px;top:13px;border-right:0;border-top:0}
+      .tip[data-side="left"]:before{right:-4px;top:13px;border-left:0;border-bottom:0}
+      .tip[data-side="bottom"]:before{left:16px;top:-4px;border-right:0;border-bottom:0}
+      .tip[data-side="top"]:before{bottom:-4px;left:16px;border-left:0;border-top:0}
+      button{appearance:none;border:0;cursor:pointer;font:inherit}
+      .swatch{background:#fff176;border-radius:7px;box-shadow:inset 0 0 0 1px #7a6c4533;height:25px;padding:0;width:25px}
+      .swatch:hover{transform:translateY(-1px)}
+      .palette{display:none;flex-wrap:wrap;gap:3px;max-width:calc(100vw - 88px)}
+      .tip[data-expanded="true"] .palette{display:flex}
+      .dot{border-radius:5px;box-shadow:inset 0 0 0 1px #7a6c4533;height:21px;padding:0;width:21px}
+      .dot:hover{transform:translateY(-1px)}
+      .dot[aria-pressed="true"]{box-shadow:inset 0 0 0 2px #fffdf2,0 0 0 1px #3e392c}
+      .act,.danger{border-radius:7px;min-height:25px;padding:0 8px}
+      .act{background:#3f3828;color:#fff8df}
+      .danger{background:#ffe4e8;color:#8b3142}
+      .tip[data-mode="select"] .danger{display:none}
+      .tip[data-mode="mark"] .act{display:none}
+    `;
     const tip = document.createElement("div");
     tip.className = "tip";
     tip.part = "tip";
+    tip.dataset.mode = "select";
+    tip.dataset.expanded = "false";
+    tip.role = "toolbar";
+    tip.ariaLabel = "Pastel Pen actions";
+    const colorButton = document.createElement("button");
+    colorButton.className = "swatch";
+    colorButton.type = "button";
+    colorButton.addEventListener("click", (event) => {
+      event.stopPropagation();
+      state.expanded = !state.expanded;
+      renderTip();
+      repositionTip();
+    });
+    const palette = document.createElement("div");
+    palette.className = "palette";
+    palette.role = "group";
+    palette.ariaLabel = "Highlight colour";
     for (const [name, color] of COLORS) {
       const b = document.createElement("button");
       b.className = "dot";
+      b.type = "button";
       b.title = name;
       b.ariaLabel = `Change highlight to ${name}`;
       b.dataset.color = color;
       b.style.background = color;
-      b.addEventListener("click", () => state.tipBody?.dataset.mode === "mark" ? recolorHighlight(state.activeMarkId, color) : commit(color));
-      tip.append(b);
+      b.addEventListener("click", (event) => { event.stopPropagation(); pickColor(color); });
+      palette.append(b);
     }
-    const save = Object.assign(document.createElement("button"), { className: "act", textContent: "save" });
+    const save = Object.assign(document.createElement("button"), { className: "act", textContent: "mark" });
+    save.type = "button";
     save.dataset.act = "save";
     save.addEventListener("click", () => commit(state.color));
-    const review = Object.assign(document.createElement("button"), { className: "ghost", textContent: "review" });
-    review.dataset.act = "review";
-    review.addEventListener("click", () => api.runtime.sendMessage({ type: "PASTEL_PEN_OPEN_REVIEW", q: clean(state.lastRange?.toString()).slice(0, 80) }));
-    const del = Object.assign(document.createElement("button"), { className: "danger", textContent: "delete" });
+    const del = Object.assign(document.createElement("button"), { className: "danger", textContent: "remove" });
+    del.type = "button";
     del.dataset.act = "delete";
     del.addEventListener("click", () => removeHighlight(del.dataset.targetId || state.activeMarkId));
-    tip.append(save, review, del);
+    tip.append(colorButton, palette, save, del);
     root.append(style, tip);
     state.tipBody = tip;
     state.deleteButton = del;
+    state.colorButton = colorButton;
     document.documentElement.append(host);
     state.tip = host;
+    renderTip();
     hideTip();
   }
 
@@ -103,22 +171,33 @@
     const range = sel.getRangeAt(0);
     if (!document.body.contains(range.commonAncestorContainer) || clean(range.toString()).length < 1) return false;
     state.lastRange = range.cloneRange();
-    const rect = range.getClientRects()[0] || range.getBoundingClientRect();
+    state.anchor = { kind: "selection", range: state.lastRange.cloneRange() };
+    const rect = selectionRect(range);
     if (!rect || !Number.isFinite(rect.left)) return false;
     showTip(rect, "select");
     return true;
   }
 
+  function updateSelection(event) {
+    if (/^(Shift|Arrow|Home|End)/.test(event.key)) captureSelection();
+  }
+
   function finishSelection() {
-    setTimeout(() => {
+    clearTimeout(state.finishTimer);
+    state.finishTimer = setTimeout(() => {
       if (!captureSelection() && !state.lastRange) hideTip();
     }, 0);
   }
 
   function prepareSelection(event) {
     const target = event.target instanceof Element ? event.target : null;
-    if (target?.closest?.("#pastel-pen,.pastel-pen-mark")) return;
+    if (target?.closest?.("#pastel-pen,.pastel-pen-mark")) {
+      clearTimeout(state.finishTimer);
+      return;
+    }
     state.lastRange = null;
+    state.anchor = null;
+    state.expanded = false;
     hideTip();
     document.documentElement.classList.add("pastel-pen-selection-active");
     clearTimeout(state.selectionTimer);
@@ -128,12 +207,37 @@
   function markMenu(event) {
     const mark = event.target.closest?.(".pastel-pen-mark");
     if (!mark) return;
+    clearTimeout(state.finishTimer);
     event.stopPropagation();
     state.activeMarkId = mark.dataset.pastelPenId;
     state.deleteButton.dataset.targetId = state.activeMarkId;
     state.lastRange = null;
-    state.tipBody.querySelectorAll(".dot").forEach((b) => { b.ariaPressed = String(b.dataset.color === mark.style.getPropertyValue("--pastel-pen-color")); });
+    state.color = mark.style.getPropertyValue("--pastel-pen-color") || state.color;
+    state.anchor = { kind: "mark", mark };
+    state.expanded = false;
+    renderTip();
     showTip(mark.getBoundingClientRect(), "mark");
+  }
+
+  function pickColor(color) {
+    if (!validColor(color)) return;
+    if (state.tipBody?.dataset.mode === "mark") {
+      state.expanded = false;
+      renderTip();
+      return recolorHighlight(state.activeMarkId, color);
+    }
+    state.color = color;
+    state.expanded = false;
+    renderTip();
+    repositionTip();
+  }
+
+  function renderTip() {
+    if (!state.tipBody) return;
+    state.tipBody.dataset.expanded = String(state.expanded);
+    state.colorButton?.style.setProperty("background", state.color);
+    if (state.colorButton) state.colorButton.ariaLabel = `Current colour: ${COLORS.find((x) => x[1] === state.color)?.[0] || "lemon"}. Change colour`;
+    state.tipBody.querySelectorAll(".dot").forEach((b) => { b.ariaPressed = String(b.dataset.color === state.color); });
   }
 
   async function commit(color) {
@@ -177,20 +281,18 @@
     await storage.set({ ...data, items, prefs });
     state.items = items;
     state.color = color;
+    renderTip();
     return { recolored: true, id, color };
   }
 
-  async function setPageEnabled(enabled) {
+  async function setScopeEnabled(scope, enabled) {
     const data = await storage.get();
-    const disabledPages = { ...(data.prefs.disabledPages || {}) };
-    if (enabled) delete disabledPages[page()];
-    else disabledPages[page()] = true;
-    state.enabled = enabled;
-    await storage.set({ ...data, prefs: { ...data.prefs, disabledPages } });
-    if (enabled) restoreSoon();
-    else clearMarks();
-    if (!enabled) hideTip();
-    return { enabled, url: page() };
+    const prefs = SCOPE.setScope(data.prefs, scope, page(), enabled);
+    state.enabled = SCOPE.pageEnabled(prefs, page());
+    await storage.set({ ...data, prefs });
+    if (state.enabled) activate();
+    else deactivate();
+    return { enabled: state.enabled, scope, url: page(), key: SCOPE.scopeKey(scope, page()) };
   }
 
   function serialize(range, color) {
@@ -234,7 +336,7 @@
   }
 
   function samePage(url) {
-    return cleanPage(url) === page();
+    return SCOPE.cleanPage(url) === page();
   }
 
   function locate(item) {
@@ -301,14 +403,45 @@
   }
 
   function showTip(rect, mode) {
-    const w = mode === "mark" ? 180 : 292;
-    const h = 48;
-    const gap = 10;
-    const below = rect.bottom + gap + h < innerHeight;
-    const x = Math.max(8, Math.min(innerWidth - w - 8, rect.right + gap < innerWidth - w ? rect.right + gap : rect.left));
-    const y = below ? rect.bottom + gap : Math.max(8, rect.top - h - gap);
+    if (!state.tip) injectTip();
     state.tipBody.dataset.mode = mode === "mark" ? "mark" : "select";
-    Object.assign(state.tip.style, { display: "block", left: `${x}px`, top: `${y}px` });
+    state.tip.style.display = "block";
+    renderTip();
+    placeTip(rect);
+  }
+
+  function repositionTip() {
+    if (!state.tip || state.tip.style.display === "none" || !state.anchor) return;
+    const rect = state.anchor.kind === "mark"
+      ? state.anchor.mark?.getBoundingClientRect()
+      : selectionRect(state.anchor.range);
+    if (!rect || (!rect.width && !rect.height)) return hideTip();
+    placeTip(rect);
+  }
+
+  function placeTip(anchor) {
+    const tip = state.tipBody;
+    if (!tip) return;
+    const pad = 8;
+    const gap = 8;
+    const { width, height } = tip.getBoundingClientRect();
+    const candidates = [
+      [anchor.right + gap, anchor.top, "right"],
+      [anchor.left - width - gap, anchor.top, "left"],
+      [anchor.left, anchor.bottom + gap, "bottom"],
+      [anchor.left, anchor.top - height - gap, "top"]
+    ];
+    const fit = candidates.find(([x, y]) => x >= pad && y >= pad && x + width <= innerWidth - pad && y + height <= innerHeight - pad) || candidates[2];
+    const x = Math.max(pad, Math.min(innerWidth - width - pad, fit[0]));
+    const y = Math.max(pad, Math.min(innerHeight - height - pad, fit[1]));
+    tip.dataset.side = fit[2];
+    Object.assign(state.tip.style, { left: `${x}px`, top: `${y}px` });
+  }
+
+  function selectionRect(range) {
+    if (!range) return null;
+    const rects = [...range.getClientRects()].filter((rect) => rect.width || rect.height);
+    return rects[rects.length - 1] || range.getBoundingClientRect();
   }
 
   function unwrap(mark) {
@@ -420,19 +553,19 @@
         quote: item.quote || clean(item.exact),
         exact: item.exact || item.quote || ""
       })).filter((item) => item.id && item.url && item.exact) : [],
-      prefs: { ...prefs, disabledPages: { ...(prefs.disabledPages || {}) } }
+      prefs: {
+        ...prefs,
+        ...SCOPE.normalizePrefs(prefs)
+      }
     };
   }
   function validColor(color) { return COLORS.some((x) => x[1] === color); }
   function rgbFor(color) { return COLORS.find((x) => x[1] === color)?.[2] || COLORS[0][2]; }
-  function cleanPage(url = "") {
-    try { const u = new URL(url, location.href); u.hash = ""; return u.href; }
-    catch { return String(url).split("#")[0]; }
-  }
   function hideTip() {
-    if (!state.tip) return;
-    state.tip.style.display = "none";
+    if (state.tip) state.tip.style.display = "none";
     state.activeMarkId = null;
+    state.anchor = null;
+    state.expanded = false;
   }
   function debounce(fn, wait) { let t; return (...xs) => (clearTimeout(t), t = setTimeout(() => fn(...xs), wait)); }
 })();

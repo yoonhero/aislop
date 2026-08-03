@@ -11,20 +11,28 @@
     <header>
       <div>
         <span class="eyebrow">PASTEL PEN</span>
-        <b>On this page</b>
+        <b>Apply highlighting</b>
       </div>
       <button id="review" class="quiet">review desk</button>
     </header>
     <p id="pageLabel" class="page-label">Checking the current page…</p>
+    <div class="section-label">Apply to</div>
+    <select id="scopeSelect" class="scope-select" aria-label="Highlighting scope">
+      <option value="page">This page</option>
+      <option value="path">This path and below</option>
+      <option value="domain">This entire domain</option>
+    </select>
+    <p id="scopeHint" class="scope-hint">Only this exact URL.</p>
     <button id="pageToggle" class="page-toggle" type="button">
       <span class="toggle-light" aria-hidden="true"></span>
-      <span><strong id="toggleTitle">Highlighting on</strong><small id="toggleHint">New and saved marks are visible.</small></span>
+      <span><strong id="toggleTitle">Highlighting off</strong><small id="toggleHint">This page is quiet until you turn it on.</small></span>
       <span class="toggle-switch" aria-hidden="true"><i></i></span>
     </button>
     <div class="section-label">Pen colour</div>
     <div id="colors" class="colors" aria-label="Default highlight colour"></div>
     <p class="fine"><span id="count">0</span> highlights saved locally · they stay until you remove them.</p>
   </main>
+  <script src="scope.js"></script>
   <script src="popup.js"></script>
 </body>
 </html>

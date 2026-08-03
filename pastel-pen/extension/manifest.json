@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
   "name": "Pastel Pen",
-  "version": "0.2.3",
-  "description": "A local-only pastel highlighter for Firefox, with page controls, durable local storage, and a minimal reading archive.",
+  "version": "0.2.4",
+  "description": "A local-only pastel highlighter for Firefox that starts quiet, applies by page, path, or domain, and keeps a durable reading archive.",
   "author": "ysh",
   "homepage_url": "https://pastel-pen.local/",
   "permissions": ["<all_urls>", "activeTab", "menus", "storage", "tabs", "unlimitedStorage"],
@@ -25,7 +25,7 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["content.js"],
+      "js": ["scope.js", "content.js"],
       "css": ["content.css"],
       "run_at": "document_idle"
     }

@@ -11,6 +11,8 @@
 - 다크 페이지 형광펜은 OS 테마보다 실제 배경/글자 luminance를 보고 잉크를 바꿔야 한다.
 - Firefox 형광펜을 재설치처럼 보이지 않게 하려면 XPI를 다시 만들 때도 `pastel-pen@aislop.local` 같은 고정 Gecko id를 끝까지 유지해야 한다.
 - 페이지별 상태는 저장된 마크와 분리해야 한다: `disabledPages`로 화면만 조용히 만들고, 리뷰 데스크에서는 색상 변경과 JSON/JSONL 백업을 같은 데이터 계약으로 처리한다.
+- 형광펜은 새 페이지에서 꺼져 있어야 읽기 흐름을 침범하지 않는다: `defaultEnabled: false`를 기본으로 두고, 켠 페이지에만 명시적 override를 저장한다. 선택 도구는 큰 고정 캡슐 대신 선택 영역의 여백을 측정해 옆·아래·위로 붙는 compact contextual rail이어야 한다.
+- 적용 범위는 `page` → `path` → `domain` → default 순으로 해석하고 더 구체적인 규칙이 우선해야 한다. 기존 `disabledPages`는 page 규칙으로 계속 읽어야 저장 데이터가 끊기지 않는다.
 - Firefox의 `storage.local`은 데이터 만료를 막지만 임시 애드온의 수명까지 늘리지는 않는다. 영구 사용에는 고정 ID를 가진 서명 XPI가 필요하다.
 - 개인 디자인 시스템은 색상표보다 상태 문법이 먼저다: 요괴풍이어도 버튼, 입력, 모드, 경고가 같은 물리 규칙을 공유해야 오래 간다.
 - Shift_JIS풍 UI는 많은 설명보다 AA, 픽셀 실루엣, 짧은 컴포넌트 상태명이 더 강하게 분위기를 만든다.
@@ -31,3 +33,4 @@
 - 참고 사이트형 소개 페이지는 장식보다 큰 색면, 중앙 정렬 타이포, 둥근 CTA, 넓은 여백이 먼저이며, Manrope·Noto Sans KR와 preconnect·swap·시스템 폴백을 함께 두면 인상과 첫 렌더를 동시에 지킬 수 있다.
 - 현대적인 실험실 UI에 Newsreader·Noto Serif KR 같은 세리프 display를 제목에만 얹고 색과 장치를 낮추면, 카드의 산세리프 메타와 시대감이 부드럽게 충돌한다. 장식은 긴장을 만들되 화면을 공격적으로 지배하지 않게 제한한다.
 - 여러 실험 페이지를 하나의 아카이브로 묶을 때는 공통 `project-theme.css`의 폰트 토큰, archive 내비게이션, footer만 공유하고 VIM·Worst Login 같은 핵심 실험의 표면은 보존해야 통일감과 프로젝트별 목소리를 함께 지킬 수 있다.
+- 긴 연구 protocol은 `SKILL.md`를 실행 loop와 routing table만 남긴 얇은 control plane으로 만들고, category reference와 입력 템플릿을 한 단계 아래에 두어야 규칙의 완전성과 호출당 token 효율을 함께 지킬 수 있다.

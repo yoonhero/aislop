@@ -343,7 +343,7 @@ function normalize(raw) {
   const value = raw && typeof raw === "object" ? raw : {};
   const prefs = value.prefs && typeof value.prefs === "object" ? value.prefs : {};
   return {
-    prefs: { ...prefs, disabledPages: { ...(prefs.disabledPages || {}) } },
+    prefs: PastelPenScope.normalizePrefs(prefs),
     items: Array.isArray(value.items) ? value.items.map(normalizeItem).filter(Boolean) : []
   };
 }
