@@ -2,6 +2,8 @@ name: Release HiBulb for Firefox
 
 on:
   push:
+    branches:
+      - 'hibulb-release/*'
     tags:
       - 'pastel-pen-v*'
 
@@ -27,7 +29,10 @@ jobs:
         run: |
           version=$(jq -er .version pastel-pen/extension/manifest.json)
           [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]
-          test "$GITHUB_REF_NAME" = "pastel-pen-v$version"
+          case "$GITHUB_REF" in
+            "refs/tags/pastel-pen-v$version"|"refs/heads/hibulb-release/$version") ;;
+            *) echo "Release ref must match the manifest version." >&2; exit 1 ;;
+          esac
           echo "VERSION=$version" >> "$GITHUB_ENV"
       - name: Inspect published version
         env:
