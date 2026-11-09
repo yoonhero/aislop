@@ -48,21 +48,28 @@
   });
   const track = scrollUI.rail;
   const dock = el("div", "dock");
+  dock.hidden = true;
+  dock.role = "group";
+  dock.ariaLabel = "HiBulb";
   const penMenu = el("div", "pen-menu");
   penMenu.id = "pen-settings";
   penMenu.hidden = true;
-  const toggle = button("Pen off", () => setMenu(penMenu.hidden), "toggle");
-  toggle.ariaExpanded = "false";
-  toggle.setAttribute("aria-controls", penMenu.id);
-  const notebook = button("Notebook", async () => {
+  const bulb = iconButton("Highlight this page", "M9 15.5v-1a5 5 0 1 1 6 0v1zM9 18h6m-5 2.5h4",
+    () => setPower("page"), "bulb");
+  bulb.ariaPressed = "false";
+  const bulbRays = bulb.querySelector("path").cloneNode();
+  bulbRays.classList.add("bulb-rays");
+  bulbRays.setAttribute("d", "M12 1.5v2M4.4 4.6l1.4 1.4m12.4 0 1.4-1.4M2 10.5h2m16 0h2");
+  bulb.querySelector("svg").append(bulbRays);
+  const scopeButton = iconButton("Highlight scope", "m7 10 5 5 5-5",
+    () => setMenu(penMenu.hidden), "scope-toggle");
+  scopeButton.ariaExpanded = "false";
+  scopeButton.setAttribute("aria-controls", penMenu.id);
+  const notebook = iconButton("Notebook", "M6 3.5h12v17H6a2 2 0 0 1-2-2v-13a2 2 0 0 1 2-2zm1.5 0v17M11 8h4m-4 3.5h4", async () => {
     if (data.items.some((item) => item.url === url)) await saveArticle(A.index());
     return browser.runtime.sendMessage({ type: "PASTEL_PEN_OPEN_REVIEW", source: url });
   });
-  const penPower = button("Turn pen on", async () => {
-    const target = scope;
-    await write("scope", { scope: target, url: page(), enabled: !scopeEnabled(), inheritPage: target === "domain" });
-    setMenu(false, true);
-  }, "pen-power");
+  const penPower = button("Turn pen on", () => setPower(scope, true), "pen-power");
   const scopes = el("fieldset", "pen-scopes");
   scopes.append(el("legend", "", "Highlight scope"));
   let scope = "page";
@@ -85,7 +92,7 @@
   const scopeHint = el("p", "scope-hint");
   scopeHint.hidden = true;
   penMenu.append(penPower, scopes, scopeHint);
-  dock.append(toggle, notebook, penMenu);
+  dock.append(bulb, scopeButton, notebook, penMenu);
   const tray = el("div", "tray");
   tray.hidden = true;
   tray.setAttribute("role", "group");
@@ -151,6 +158,10 @@
   let startPointer;
   let touchSelection = false;
   let selectionTimer;
+  const dockDelay = 8000;
+  let dockTimer = null;
+  let dockReady = false;
+  let powerPending = false;
 
   const observer = new MutationObserver(() => {
     if (!refreshTimer) refreshTimer = setTimeout(() => { refreshTimer = null; refresh(); }, 180);
@@ -164,6 +175,8 @@
   addEventListener("resize", schedule);
   addEventListener("scroll", schedule, true);
   addEventListener("popstate", refresh);
+  document.addEventListener("visibilitychange", syncDock);
+  document.addEventListener("fullscreenchange", syncDock);
   browser.storage.onChanged.addListener((changes, area) => {
     if (area === "local" && changes[key]) {
       data = read(changes[key].newValue);
@@ -181,22 +194,59 @@
 
   function setMenu(open, restoreFocus = false) {
     penMenu.hidden = !open;
-    toggle.ariaExpanded = String(open);
+    scopeButton.ariaExpanded = String(open);
     if (open) {
       dismissSelection();
       penPower.focus({ preventScroll: true });
-    } else if (restoreFocus) toggle.focus({ preventScroll: true });
+    } else if (restoreFocus) scopeButton.focus({ preventScroll: true });
     schedule();
   }
 
-  function scopeEnabled() {
-    return scope === "domain" ? data.prefs.scopeRules.domain[S.domainKey(url)] === true : enabled;
+  function syncDock() {
+    if (page() !== url) return refresh();
+    const canReveal = !document.hidden && !document.fullscreenElement;
+    if (!canReveal || dockReady) {
+      clearTimeout(dockTimer);
+      dockTimer = null;
+    } else if (dockTimer === null) {
+      dockTimer = setTimeout(() => {
+        dockTimer = null;
+        if (page() !== url) return refresh();
+        dockReady = !document.hidden && !document.fullscreenElement;
+        syncDock();
+      }, dockDelay);
+    }
+    const hidden = !dockReady || Boolean(document.fullscreenElement);
+    if (dock.hidden !== hidden) {
+      dock.hidden = hidden;
+      if (hidden && !penMenu.hidden) setMenu(false);
+      schedule();
+    }
+  }
+
+  function scopeEnabled(target) {
+    return target === "domain" ? data.prefs.scopeRules.domain[S.domainKey(url)] === true : enabled;
+  }
+
+  async function setPower(target, fromMenu = false) {
+    if (powerPending) return;
+    if (page() !== url) return refresh();
+    const source = url;
+    powerPending = true;
+    try {
+      await write("scope", { scope: target, url: source, enabled: !scopeEnabled(target), inheritPage: target === "domain" });
+      if (url === source && !penMenu.hidden) setMenu(false, fromMenu);
+    } catch (error) {
+      console.warn("HiBulb could not change the pen state", error);
+    } finally {
+      powerPending = false;
+    }
   }
 
   function syncScope() {
-    const on = scopeEnabled();
-    toggle.textContent = enabled ? "Pen on" : "Pen off";
-    toggle.classList.toggle("is-on", enabled);
+    const on = scopeEnabled(scope);
+    bulb.ariaPressed = String(enabled);
+    bulb.title = enabled ? "Turn pen off for this page" : "Turn pen on for this page";
     penPower.textContent = on ? "Turn pen off" : "Turn pen on";
     penPower.ariaLabel = penPower.textContent + (scope === "domain" ? " for this domain" : " for this page");
     scopeHint.hidden = scope !== "domain" || on === enabled;
@@ -238,8 +288,12 @@
       dismissSelection();
       setMenu(false);
       scopeInitialized = false;
+      dockReady = false;
+      clearTimeout(dockTimer);
+      dockTimer = null;
       url = current;
     }
+    syncDock();
     const nextArticle = findArticle();
     if (nextArticle !== article) {
       if (article) resize.unobserve(article);
@@ -392,7 +446,8 @@
       const rect = card.getBoundingClientRect();
       return rect.bottom > 0 && rect.top < height;
     });
-    const controls = [dock.getBoundingClientRect(), ...openNotes.map(({ card }) => card.querySelector(".sticky-head").getBoundingClientRect())];
+    const dockBounds = dock.hidden ? [] : [dock.getBoundingClientRect()];
+    const controls = [...dockBounds, ...openNotes.map(({ card }) => card.querySelector(".sticky-head").getBoundingClientRect())];
     if (!track.hidden) controls.push(track.getBoundingClientRect());
     if (range || editing) {
       const rects = range ? [...range.getClientRects()] : geometry.find(({ item }) => item.id === editing.id)?.rects || [];
@@ -416,7 +471,7 @@
       }
     }
 
-    const obstacles = [controls[0], ...openNotes.map(({ card }) => card.getBoundingClientRect())];
+    const obstacles = [...dockBounds, ...openNotes.map(({ card }) => card.getBoundingClientRect())];
     if (!tray.hidden) obstacles.push(tray.getBoundingClientRect());
     if (!track.hidden) obstacles.push(track.getBoundingClientRect());
     if (!penMenu.hidden) obstacles.push(penMenu.getBoundingClientRect());

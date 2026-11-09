@@ -22,11 +22,14 @@
 }
 .dock, .tray { width: max-content; padding: 2px; border-radius: 7px; }
 .dock {
-  right: max(30px, env(safe-area-inset-right));
-  bottom: max(12px, env(safe-area-inset-bottom));
-  white-space: nowrap;
+  right: calc(max(4px, env(safe-area-inset-right)) + 29px);
+  bottom: max(12px, calc(env(safe-area-inset-bottom) + 8px));
+  gap: 0;
+  border-radius: 10px;
+  animation: dock-reveal 240ms ease-out both;
 }
-.dock { gap: 0; }
+
+@keyframes dock-reveal { from { opacity: 0; } to { opacity: 1; } }
 
 button {
   appearance: none;
@@ -40,7 +43,7 @@ button {
 }
 button:hover { background: light-dark(#00000009, #ffffff14); }
 button:focus-visible, textarea:focus-visible { outline: 2px solid #ad5450; outline-offset: 2px; }
-.dock button, .tray > button {
+.dock > button, .tray > button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -49,15 +52,37 @@ button:focus-visible, textarea:focus-visible { outline: 2px solid #ad5450; outli
   padding: 5px 9px;
   white-space: nowrap;
 }
-.toggle::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
-.toggle::before { opacity: .45; }
-.toggle.is-on::before { background: light-dark(#26835a, #96e7b8); opacity: 1; }
+.dock > button { width: 32px; min-height: 32px; padding: 0; }
+.dock > .scope-toggle { width: 24px; }
+.dock .scope-toggle svg { width: 14px; height: 14px; }
+.scope-toggle[aria-expanded="true"] { background: light-dark(#00000009, #ffffff14); }
+.scope-toggle[aria-expanded="true"] svg { transform: rotate(180deg); }
+.dock .bulb svg { width: 22px; height: 22px; }
+.bulb {
+  --bulb-fill: light-dark(#ffc75a, #ffda87);
+  transition: background-color 180ms ease, color 180ms ease, box-shadow 180ms ease;
+}
+.bulb path:first-child { fill: transparent; transition: fill 180ms ease; }
+.bulb-rays {
+  opacity: 0;
+  transform: scale(.72);
+  transform-origin: center;
+  transition: opacity 180ms ease, transform 240ms ease-out;
+}
+.bulb[aria-pressed="true"] {
+  background: light-dark(#fff2cf, #51391f);
+  color: light-dark(#7b4d14, #ffda87);
+  box-shadow: 0 0 6px light-dark(#eeb95655, #ffbc5740);
+}
+.bulb[aria-pressed="true"]:hover { background: light-dark(#ffe9ae, #624627); }
+.bulb[aria-pressed="true"] path:first-child { fill: var(--bulb-fill); }
+.bulb[aria-pressed="true"] .bulb-rays { opacity: 1; transform: scale(1); }
 .tray {
   max-width: calc(100vw - 16px);
   flex-wrap: wrap;
 }
 .tray > button { width: 32px; padding-inline: 4px; }
-.tray button svg {
+.dock > button svg, .tray button svg {
   width: 18px;
   height: 18px;
   fill: none;
@@ -118,7 +143,7 @@ button:focus-visible, textarea:focus-visible { outline: 2px solid #ad5450; outli
   border-radius: 7px;
   box-shadow: 0 2px 8px #00000018;
 }
-.pen-menu .pen-power { display: flex; width: 100%; justify-content: flex-start; font-weight: 650; }
+.pen-menu .pen-power { width: 100%; min-height: 30px; text-align: start; font-weight: 650; }
 .pen-scopes { min-width: 0; margin: 4px 0 0; padding: 4px; border: 0; border-top: 1px solid var(--line); }
 .pen-scopes legend { padding: 0 4px; font-size: 11px; }
 .scope-choice { display: flex; align-items: center; gap: 7px; min-height: 29px; padding-inline: 4px; cursor: pointer; }
@@ -216,6 +241,13 @@ button:focus-visible, textarea:focus-visible { outline: 2px solid #ad5450; outli
 }
 
 @media (pointer: coarse) {
+  .dock > button { width: 44px; min-height: 44px; }
+  .dock > .scope-toggle { width: 36px; }
   .tray > button { width: 40px; min-height: 40px; }
   .swatch { height: 36px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dock { animation: none; }
+  .bulb, .bulb path:first-child, .bulb-rays { transition: none; }
 }
