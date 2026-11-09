@@ -37,7 +37,7 @@ def main():
             gecko["id"]: {
                 "updates": [{
                     "version": version,
-                    "update_link": f"{download_base}/{args.xpi.name}",
+                    "update_link": f"{download_base}/{args.xpi.name}?download=1",
                     "update_hash": f"sha256:{digest}",
                     "applications": {
                         "gecko": {"strict_min_version": gecko["strict_min_version"]}
