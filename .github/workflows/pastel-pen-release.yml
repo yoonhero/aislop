@@ -1,0 +1,97 @@
+name: Release HiBulb for Firefox
+
+on:
+  push:
+    tags:
+      - 'pastel-pen-v*'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pastel-pen-release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      UPDATE_TAG: pastel-pen-updates
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Validate release tag
+        run: |
+          version=$(jq -er .version pastel-pen/extension/manifest.json)
+          [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]
+          test "$GITHUB_REF_NAME" = "pastel-pen-v$version"
+          echo "VERSION=$version" >> "$GITHUB_ENV"
+      - name: Inspect published version
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p release
+          asset="pastel-pen-$VERSION.xpi"
+          echo "ASSET=$asset" >> "$GITHUB_ENV"
+          releases=$(gh api --paginate "repos/$GITHUB_REPOSITORY/releases" --jq '.[].tag_name')
+          if grep -Fxq -- "$UPDATE_TAG" <<< "$releases"; then
+            echo "UPDATE_RELEASE_EXISTS=true" >> "$GITHUB_ENV"
+            assets=$(gh release view "$UPDATE_TAG" --json assets)
+            if jq -e 'any(.assets[]; .name == "updates.json")' <<< "$assets" > /dev/null; then
+              gh release download "$UPDATE_TAG" --pattern updates.json --dir release
+              current=$(jq -er '.addons["pastel-pen@aislop.local"].updates[0].version' release/updates.json)
+              newest=$(printf '%s\n' "$current" "$VERSION" | sort -V | tail -n 1)
+              test "$newest" = "$VERSION"
+            fi
+            if jq -e --arg asset "$asset" 'any(.assets[]; .name == $asset)' <<< "$assets" > /dev/null; then
+              gh release download "$UPDATE_TAG" --pattern "$asset" --dir release
+              echo "XPI_EXISTS=true" >> "$GITHUB_ENV"
+            fi
+          fi
+      - name: Build source archive for Mozilla review
+        if: env.XPI_EXISTS != 'true'
+        run: bash pastel-pen/build-review-source.sh release
+      - name: Sign with Mozilla
+        if: env.XPI_EXISTS != 'true'
+        env:
+          WEB_EXT_API_KEY: ${{ secrets.AMO_JWT_ISSUER }}
+          WEB_EXT_API_SECRET: ${{ secrets.AMO_JWT_SECRET }}
+        run: |
+          : "${WEB_EXT_API_KEY:?Configure the AMO_JWT_ISSUER repository secret}"
+          : "${WEB_EXT_API_SECRET:?Configure the AMO_JWT_SECRET repository secret}"
+          npx --yes web-ext@9.2.0 lint --self-hosted --source-dir pastel-pen/extension
+          npx --yes web-ext@9.2.0 sign --channel unlisted \
+            --source-dir pastel-pen/extension --artifacts-dir release/signed \
+            --upload-source-code "release/pastel-pen-$VERSION-review-source.zip" \
+            --timeout 900000 --approval-timeout 900000
+          signed=(release/signed/*.xpi)
+          test "${#signed[@]}" -eq 1
+          mv "${signed[0]}" "release/$ASSET"
+      - name: Publish the XPI and update feed
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 pastel-pen/prepare-update.py "release/$ASSET" release/updates.json
+          if [[ "$UPDATE_RELEASE_EXISTS" != true ]]; then
+            gh release create "$UPDATE_TAG" --target "$GITHUB_SHA" \
+              --title 'HiBulb Firefox updates' --notes 'Firefox automatic update channel.' \
+              --latest=false "release/$ASSET" release/updates.json
+          else
+            if [[ "$XPI_EXISTS" != true ]]; then
+              gh release upload "$UPDATE_TAG" "release/$ASSET"
+            fi
+            gh release upload "$UPDATE_TAG" release/updates.json --clobber
+          fi
+      - name: Verify public update downloads
+        run: |
+          update_url=$(jq -er .browser_specific_settings.gecko.update_url pastel-pen/extension/manifest.json)
+          xpi_url=$(jq -er '.addons[].updates[0].update_link' release/updates.json)
+          curl --fail --silent --show-error --location --retry 5 --retry-all-errors \
+            --max-time 30 "${update_url}?version=$VERSION" --output release/public-updates.json
+          cmp release/updates.json release/public-updates.json
+          curl --fail --silent --show-error --location --retry 5 --retry-all-errors \
+            --max-time 30 "$xpi_url" --output release/public.xpi
+          cmp "release/$ASSET" release/public.xpi

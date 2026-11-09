@@ -17,7 +17,6 @@
     return {
       ...prefs,
       defaultEnabled: typeof prefs.defaultEnabled === "boolean" ? prefs.defaultEnabled : DEFAULT_ENABLED,
-      disabledPages: { ...object(prefs.disabledPages) },
       scopeRules: normalizeRules(prefs.scopeRules)
     };
   }
@@ -28,7 +27,7 @@
       value.hash = "";
       return /^(https?:|file:)$/.test(value.protocol) ? value.href : "";
     } catch {
-      return String(url).split("#")[0];
+      return "";
     }
   }
 
@@ -79,7 +78,6 @@
     const { page, path, domain } = prefs.scopeRules;
     const pageKeyValue = scopeKey("page", url);
     if (pageKeyValue && own(page, pageKeyValue)) return { enabled: page[pageKeyValue] === true, scope: "page", key: pageKeyValue };
-    if (pageKeyValue && own(prefs.disabledPages, pageKeyValue)) return { enabled: prefs.disabledPages[pageKeyValue] !== true, scope: "page", key: pageKeyValue };
     const paths = Object.entries(path)
       .filter(([key]) => pathMatches(url, key))
       .sort((a, b) => pathDepth(b[0]) - pathDepth(a[0]));
@@ -95,9 +93,7 @@
     if (!key || !prefs.scopeRules[scope]) return prefs;
     const scopeRules = normalizeRules(prefs.scopeRules);
     scopeRules[scope][key] = enabled === true;
-    const next = { ...prefs, scopeRules };
-    if (scope === "page") next.disabledPages = { ...prefs.disabledPages, [key]: enabled !== true };
-    return next;
+    return { ...prefs, scopeRules };
   }
 
   globalThis.PastelPenScope = Object.freeze({

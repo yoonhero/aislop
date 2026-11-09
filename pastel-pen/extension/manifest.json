@@ -1,42 +1,74 @@
 {
   "manifest_version": 2,
-  "name": "Pastel Pen",
-  "version": "0.2.4",
-  "description": "A local-only pastel highlighter for Firefox that starts quiet, applies by page, path, or domain, and keeps a durable reading archive.",
+  "name": "HiBulb",
+  "version": "0.8.12",
+  "description": "A local reading pen with equation highlights, margin notes, and a contextual notebook.",
   "author": "ysh",
-  "homepage_url": "https://pastel-pen.local/",
-  "permissions": ["<all_urls>", "activeTab", "menus", "storage", "tabs", "unlimitedStorage"],
+  "homepage_url": "https://github.com/yoonhero/aislop/tree/main/pastel-pen",
+  "permissions": [
+    "<all_urls>",
+    "activeTab",
+    "menus",
+    "storage",
+    "tabs",
+    "unlimitedStorage"
+  ],
   "browser_action": {
-    "default_title": "Pastel Pen",
+    "default_title": "HiBulb",
     "default_popup": "popup.html",
-    "default_icon": "icons/pen.svg"
+    "default_icon": "icons/hibulb.png"
   },
   "background": {
-    "scripts": ["background.js"]
+    "scripts": [
+      "scope.js",
+      "model.js",
+      "background.js"
+    ]
   },
   "options_ui": {
     "page": "review.html",
     "open_in_tab": true
   },
   "icons": {
-    "48": "icons/pen.svg",
-    "96": "icons/pen.svg"
+    "48": "icons/hibulb.png",
+    "96": "icons/hibulb.png"
   },
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
-      "js": ["scope.js", "content.js"],
-      "css": ["content.css"],
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "scope.js",
+        "model.js",
+        "anchors.js",
+        "note-preview.js",
+        "sticky.js",
+        "scrollbar.js",
+        "content.js"
+      ],
+      "css": [
+        "content.css"
+      ],
       "run_at": "document_idle"
     }
   ],
   "browser_specific_settings": {
     "gecko": {
       "id": "pastel-pen@aislop.local",
+      "update_url": "https://github.com/yoonhero/aislop/releases/download/pastel-pen-updates/updates.json",
       "data_collection_permissions": {
-        "required": ["none"]
+        "required": [
+          "none"
+        ]
       },
       "strict_min_version": "142.0"
     }
-  }
+  },
+  "web_accessible_resources": [
+    "overlay.css",
+    "sticky.css",
+    "vendor/markdown.mjs",
+    "vendor/math.mjs"
+  ]
 }

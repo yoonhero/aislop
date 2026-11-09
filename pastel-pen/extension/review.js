@@ -1,426 +1,428 @@
-const api = globalThis.browser || globalThis.chrome;
-const KEY = "pastelPen.highlights.v1";
-const COLORS = [
-  ["lemon", "#fff176", "255,241,118"], ["mint", "#b8f7d4", "184,247,212"],
-  ["peach", "#ffc6a8", "255,198,168"], ["rose", "#ffb7cf", "255,183,207"],
-  ["sky", "#bfe4ff", "191,228,255"], ["lilac", "#d9c7ff", "217,199,255"]
-];
-let data = { items: [], prefs: {} };
-let query = new URLSearchParams(location.search).get("q") || "";
-let activeView = new URLSearchParams(location.search).get("view") === "explore" ? "explore" : "archive";
-let focusId = "";
-let exploreHistory = [];
+const { key, articleKey, read, colors, colorIndex, element: el } = PastelPen;
+const $ = (id) => document.getElementById(id);
+const reader = $("reader");
+const entries = $("entries");
+const search = $("search");
+const url = new URL(location.href);
+let active = url.searchParams.get("id") || "";
+let source = url.searchParams.get("source") || "";
+let mobileOpen = Boolean(active || source);
+let data = read();
+let current;
+let snapshot;
+let snapshotSource;
+let snapshotRevision = 0;
+let requested = active;
+const sections = new Map();
+let listState;
+const write = (action, value, id) => browser.runtime.sendMessage({ type: "pastel-write", action, value, id });
 
-boot();
+function button(label, action, className) {
+  const b = el("button", className, label);
+  b.type = "button";
+  b.onclick = action;
+  return b;
+}
 
-async function boot() {
-  data = normalize((await api.storage.local.get(KEY))[KEY]);
-  today.textContent = new Intl.DateTimeFormat(undefined, { dateStyle: "long" }).format(new Date());
-  q.value = query;
-  q.oninput = () => (query = q.value.trim().toLowerCase(), render());
-  archiveView.onclick = () => setView("archive");
-  exploreView.onclick = () => setView("explore");
-  backBtn.onclick = () => goBack();
-  nextBtn.onclick = () => nextLine();
-  explorePane.onclick = exploreClick;
-  exportBtn.onclick = exportJson;
-  printBtn.onclick = () => window.print();
-  clearBtn.onclick = async () => confirm("Remove every saved clipping from this Firefox profile?") && save({ ...data, items: [] });
-  importFile.onchange = importFileContents;
+function notebooks() {
+  const query = search.value.trim().toLocaleLowerCase();
+  const groups = new Map();
+  for (const item of data.items) {
+    const id = PastelPenScope.cleanPage(item.url);
+    if (!groups.has(id)) groups.set(id, { id, title: item.title || new URL(item.url).hostname, items: [] });
+    groups.get(id).items.push(item);
+  }
+  return [...groups.values()].filter((book) => !query || book.items.some((item) =>
+    [item.note, item.quote, item.exact, item.title, item.url].join(" ").toLocaleLowerCase().includes(query)))
+    .map((book) => ({
+      ...book,
+      items: book.items.sort((a, b) => (a.start ?? Infinity) - (b.start ?? Infinity) ||
+        String(a.createdAt).localeCompare(String(b.createdAt)))
+    }));
+}
+
+function label(item) {
+  return String(item.quote || item.exact).replace(/\s+/g, " ").trim();
+}
+
+function renderList(books) {
+  const state = JSON.stringify([source, active, search.value, books.map((book) => [book.id, book.title, book.items.map(({ id }) => id)])]);
+  if (state === listState) return;
+  listState = state;
+  entries.replaceChildren(...books.map((book) => {
+    const group = el("details", "book");
+    group.open = book.id === source;
+    const heading = el("summary", "entry", book.title || "Untitled article");
+    group.append(heading);
+    const list = el("ol", "contents");
+    for (const item of book.items) {
+      const link = button(label(item), () => select(book, item.id), "contents-link");
+      link.title = label(item);
+      if (item.id === active) link.setAttribute("aria-current", "location");
+      const row = el("li");
+      row.append(link);
+      list.append(row);
+    }
+    group.append(list);
+    return group;
+  }));
+  if (!books.length) entries.append(el("p", "empty-list", search.value ? "No matching articles." : "Saved articles will appear here."));
+}
+
+function select(book, id) {
+  source = book.id;
+  active = id;
+  requested = id;
+  mobileOpen = true;
   render();
-  setView(activeView);
+  requestAnimationFrame(() => reveal(id, true));
+}
+
+function reveal(id, focus = false) {
+  const section = sections.get(id);
+  if (!section) return;
+  if (focus) section.heading.focus({ preventScroll: true });
+  section.heading.scrollIntoView({ block: "center" });
 }
 
 function render() {
-  const items = visibleItems();
-  const pages = groupBy(items, (x) => x.url);
-  stats.textContent = `${items.length} ${items.length === 1 ? "clipping" : "clippings"} · ${pages.size} ${pages.size === 1 ? "source" : "sources"}`;
-  list.replaceChildren(...(items.length ? [...pages].map(([url, xs]) => pageCard(url, xs)) : [empty()]));
-  if (activeView === "explore") renderExplore(items);
-}
-
-function setView(view) {
-  activeView = view;
-  archivePane.hidden = view !== "archive";
-  explorePane.hidden = view !== "explore";
-  archiveView.ariaPressed = String(view === "archive");
-  exploreView.ariaPressed = String(view === "explore");
-  archiveView.classList.toggle("is-active", view === "archive");
-  exploreView.classList.toggle("is-active", view === "explore");
-  if (view === "explore") renderExplore(visibleItems());
-}
-
-function visibleItems() {
-  return data.items.filter(match).sort((a, b) => dateValue(b) - dateValue(a));
-}
-
-function renderExplore(items) {
-  sourceList.replaceChildren();
-  if (!items.length) {
-    focusId = "";
-    focusCard.replaceChildren(exploreEmpty());
-    backBtn.disabled = true;
-    nextBtn.disabled = true;
-    return;
+  const books = notebooks();
+  const book = books.find((entry) => entry.id === source) ||
+    books.find((entry) => entry.items.some((item) => item.id === active)) || books[0];
+  source = book?.id;
+  if (!book?.items.some((item) => item.id === active)) active = book?.items[0]?.id;
+  renderList(books);
+  document.body.classList.toggle("reading", mobileOpen);
+  if (source !== snapshotSource) {
+    snapshotSource = source;
+    snapshot = undefined;
+    if (source) {
+      const request = source;
+      const storageKey = articleKey(request);
+      browser.storage.local.get(storageKey).then((result) => {
+        if (source !== request) return;
+        snapshot = result[storageKey] || null;
+        snapshotRevision++;
+        render();
+      });
+    }
   }
-  const current = items.find((item) => item.id === focusId) || items[0];
-  focusId = current.id;
-  const sources = [...groupBy(items, (item) => item.url)].sort((a, b) => titleFor(a[1][0]).localeCompare(titleFor(b[1][0])));
-  sourceList.append(...sources.map(([url, xs]) => sourceLink(url, xs, current)));
-  focusCard.replaceChildren(focusArticle(current, items));
-  backBtn.disabled = exploreHistory.length === 0;
-  nextBtn.disabled = items.length < 2;
-}
-
-function sourceLink(url, items, current) {
-  const link = document.createElement("button");
-  const title = document.createElement("strong");
-  const meta = document.createElement("small");
-  link.className = "source-link";
-  link.type = "button";
-  link.dataset.sourceUrl = url;
-  link.ariaPressed = String(url === current.url);
-  title.textContent = titleFor(items[0]);
-  meta.textContent = `${host(url)} · ${items.length} ${items.length === 1 ? "line" : "lines"}`;
-  link.append(title, meta);
-  return link;
-}
-
-function focusArticle(item, items) {
-  const card = document.createDocumentFragment();
-  const meta = document.createElement("div");
-  const title = document.createElement("h2");
-  const source = document.createElement("a");
-  const quote = document.createElement("blockquote");
-  const highlight = document.createElement("span");
-  const footer = document.createElement("footer");
-  const stamp = document.createElement("time");
-  const actions = document.createElement("span");
-  const related = document.createElement("section");
-  const relatedTitle = document.createElement("h3");
-  const relatedList = document.createElement("div");
-
-  meta.className = "focus-meta";
-  meta.textContent = `${String(items.indexOf(item) + 1).padStart(2, "0")} / ${items.length} · ${host(item.url)}`;
-  title.textContent = titleFor(item);
-  source.href = item.url;
-  source.target = "_blank";
-  source.rel = "noreferrer";
-  source.textContent = short(item.url);
-  quote.className = "focus-quote";
-  quote.style.setProperty("--c", item.color);
-  highlight.textContent = item.quote || item.exact;
-  quote.append(highlight);
-  stamp.textContent = formatDate(item.createdAt);
-  actions.className = "focus-actions";
-  actions.append(exploreButton("copy", "copy", item.id), exploreButton("open", "open", item.id));
-  footer.append(stamp, actions);
-  related.className = "related-reading";
-  relatedTitle.textContent = "Follow a thread";
-  relatedList.className = "related-list";
-  for (const match of relatedItems(item, items)) relatedList.append(relatedLink(match, item));
-  if (!relatedList.children.length) relatedList.append(exploreEmpty("Save another line to start a thread."));
-  related.append(relatedTitle, relatedList);
-  card.append(meta, title, source, quote, footer, related);
-  return card;
-}
-
-function relatedLink(match, current) {
-  const link = document.createElement("button");
-  const label = document.createElement("span");
-  const title = document.createElement("strong");
-  const quote = document.createElement("span");
-  const relation = document.createElement("small");
-  const shared = [...terms(current)].filter((term) => terms(match.item).has(term));
-  link.className = "related-link";
-  link.type = "button";
-  link.dataset.focusId = match.item.id;
-  label.className = "related-label";
-  label.textContent = relationLabel(match.item, current, shared);
-  title.textContent = titleFor(match.item);
-  quote.textContent = match.item.quote || match.item.exact;
-  relation.textContent = formatDate(match.item.createdAt);
-  link.append(label, title, quote, relation);
-  return link;
-}
-
-function relatedItems(item, items) {
-  const currentTerms = terms(item);
-  const currentHost = host(item.url);
-  return items.filter((other) => other.id !== item.id).map((other) => {
-    const shared = [...currentTerms].filter((term) => terms(other).has(term));
-    let score = shared.length * 2;
-    if (other.url === item.url) score += 10;
-    if (host(other.url) === currentHost) score += 3;
-    if (titleFor(other) === titleFor(item)) score += 4;
-    return { item: other, score, shared };
-  }).sort((a, b) => b.score - a.score || dateValue(b.item) - dateValue(a.item)).slice(0, 5);
-}
-
-function terms(item) {
-  return new Set(`${titleFor(item)} ${item.quote || item.exact}`.toLowerCase().normalize("NFKC").split(/[^\p{L}\p{N}]+/u).filter((word) => {
-    const length = /[가-힣]/u.test(word) ? word.length > 1 : word.length > 3;
-    return length && !STOPWORDS.has(word);
-  }));
-}
-
-const STOPWORDS = new Set("about after again against all also and are been being between both but can could for from have into its just like more most not only our over same saved should some than that their them then there these they this those through too very was were what when where which with your you 그리고 그러나 대한 하는 하는데 있는 있는지 을를 은는 이가 에서 으로 와과 도 를 한".split(/\s+/));
-
-function relationLabel(item, current, shared) {
-  if (item.url === current.url) return "same source";
-  if (host(item.url) === host(current.url)) return "same site";
-  return shared.length ? `shares ${shared.slice(0, 2).join(" · ")}` : "another saved line";
-}
-
-function exploreButton(label, action, id) {
-  const b = button(label, "exploreAction", action);
-  b.dataset.itemId = id;
-  return b;
-}
-
-function exploreClick(event) {
-  const target = event.target.closest("button");
-  if (!target) return;
-  if (target.dataset.sourceUrl) {
-    const item = visibleItems().find((candidate) => candidate.url === target.dataset.sourceUrl);
-    if (item) focusItem(item.id);
-    return;
+  const view = book ? JSON.stringify([book.id, book.items.map(({ id }) => id), snapshotRevision]) : "";
+  if (current !== view || !reader.firstChild) {
+    current = view;
+    flush();
+    for (const section of sections.values()) {
+      section.observer?.disconnect();
+      section.note?.dispose();
+    }
+    sections.clear();
+    reader.replaceChildren(book ? detail(book) : empty());
+    reader.scrollTop = 0;
+    if (requested === active) requestAnimationFrame(() => reveal(active));
   }
-  if (target.dataset.focusId) return focusItem(target.dataset.focusId);
-  if (!target.dataset.exploreAction) return;
-  const item = data.items.find((candidate) => candidate.id === target.dataset.itemId);
-  if (!item) return;
-  if (target.dataset.exploreAction === "open") return api.tabs.create({ url: item.url });
-  if (target.dataset.exploreAction === "copy") return copyItem(item);
-}
-
-function focusItem(id, remember = true) {
-  const item = visibleItems().find((candidate) => candidate.id === id);
-  if (!item) return;
-  if (remember && focusId && focusId !== id) exploreHistory.push(focusId);
-  focusId = id;
-  renderExplore(visibleItems());
-}
-
-function goBack() {
-  const previous = exploreHistory.pop();
-  if (previous) focusItem(previous, false);
-}
-
-function nextLine() {
-  const items = visibleItems();
-  if (items.length < 2) return;
-  const index = Math.max(0, items.findIndex((item) => item.id === focusId));
-  focusItem(items[(index + 1) % items.length].id);
-}
-
-function pageCard(url, xs) {
-  const article = document.createElement("article");
-  const header = document.createElement("header");
-  const label = document.createElement("div");
-  const section = document.createElement("span");
-  const h2 = document.createElement("h2");
-  const source = document.createElement("a");
-  const count = document.createElement("span");
-  const title = titleFor(xs[0]);
-
-  article.className = "story";
-  label.className = "story-label";
-  section.textContent = "FROM THE WEB";
-  h2.textContent = title;
-  source.href = url;
-  source.target = "_blank";
-  source.rel = "noreferrer";
-  source.textContent = short(url);
-  count.className = "story-count";
-  count.textContent = `${xs.length} ${xs.length === 1 ? "line" : "lines"}`;
-  label.append(section, h2, source);
-  header.append(label, count);
-  article.append(header, ...xs.map(itemCard));
-  return article;
-}
-
-function itemCard(item, index) {
-  const figure = document.createElement("figure");
-  const quote = document.createElement("blockquote");
-  const figcaption = document.createElement("figcaption");
-  const stamp = document.createElement("time");
-  const number = document.createElement("span");
-  const actions = document.createElement("span");
-
-  figure.className = "clipping";
-  figure.style.setProperty("--c", item.color);
-  number.className = "clipping-number";
-  number.textContent = String(index + 1).padStart(2, "0");
-  quote.textContent = item.quote || item.exact;
-  stamp.textContent = formatDate(item.createdAt);
-  actions.className = "clipping-actions";
-  actions.append(colorPicker(item), button("copy", "copy", item.id), button("open", "open", item.url), button("remove", "del", item.id));
-  figcaption.append(number, stamp, actions);
-  figure.append(quote, figcaption);
-  return figure;
-}
-
-function colorPicker(item) {
-  const picker = document.createElement("span");
-  picker.className = "mini-colors";
-  picker.title = "Change colour";
-  for (const [name, color] of COLORS) {
-    const b = document.createElement("button");
-    b.className = "mini-color";
-    b.type = "button";
-    b.title = `Change to ${name}`;
-    b.ariaLabel = `Change to ${name}`;
-    b.dataset.recolor = item.id;
-    b.dataset.color = color;
-    b.style.background = color;
-    b.ariaPressed = String(item.color === color);
-    picker.append(b);
-  }
-  return picker;
-}
-
-list.onclick = async (event) => {
-  const button = event.target.closest("button");
-  if (!button) return;
-  if (button.dataset.open) return api.tabs.create({ url: button.dataset.open });
-  const item = data.items.find((x) => x.id === (button.dataset.copy || button.dataset.del || button.dataset.recolor));
-  if (!item) return;
-  if (button.dataset.copy) {
-    return copyItem(item);
-  }
-  if (button.dataset.recolor) return recolor(item.id, button.dataset.color);
-  if (button.dataset.del) return save({ ...data, items: data.items.filter((x) => x.id !== item.id) }).then(() => broadcast({ type: "PASTEL_PEN_REMOVE", id: item.id }));
-};
-
-async function recolor(id, color) {
-  const meta = COLORS.find((x) => x[1] === color) || COLORS[0];
-  data = { ...data, items: data.items.map((item) => item.id === id ? { ...item, color: meta[1], rgb: meta[2] } : item), prefs: { ...data.prefs, color: meta[1] } };
-  await save(data);
-  await broadcast({ type: "PASTEL_PEN_RECOLOR", id, color: meta[1] });
-}
-
-async function importFileContents() {
-  const file = importFile.files[0];
-  if (!file) return;
-  try {
-    const text = await file.text();
-    const incoming = parseImport(text, file.name);
-    const merged = new Map([...data.items, ...incoming.items].map((item) => [item.id, item]));
-    await save({ prefs: { ...data.prefs, ...incoming.prefs }, items: [...merged.values()] });
-    toast(`${incoming.items.length} ${incoming.items.length === 1 ? "clipping" : "clippings"} imported.`);
-  } catch (error) {
-    toast(`Could not import that file: ${error.message}`);
-  } finally {
-    importFile.value = "";
-  }
-}
-
-function parseImport(text, name = "") {
-  const raw = name.toLowerCase().endsWith(".jsonl") ? text.split(/\r?\n/).filter(Boolean).map((line) => JSON.parse(line)) : JSON.parse(text);
-  const value = Array.isArray(raw) ? { items: raw } : raw;
-  return normalize(value);
-}
-
-function exportJson() {
-  download(JSON.stringify({ app: "Pastel Pen", format: 2, exportedAt: new Date().toISOString(), ...data }, null, 2), `pastel-pen-clippings-${new Date().toISOString().slice(0, 10)}.json`);
-}
-
-async function save(next) {
-  data = normalize(next);
-  await api.storage.local.set({ [KEY]: data });
-  render();
-}
-
-async function broadcast(message) {
-  try {
-    const tabs = await api.tabs.query({});
-    await Promise.all(tabs.filter((tab) => tab.id).map((tab) => api.tabs.sendMessage(tab.id, message).catch(() => null)));
-  } catch { /* review still works on protected pages */ }
-}
-
-function normalize(raw) {
-  const value = raw && typeof raw === "object" ? raw : {};
-  const prefs = value.prefs && typeof value.prefs === "object" ? value.prefs : {};
-  return {
-    prefs: PastelPenScope.normalizePrefs(prefs),
-    items: Array.isArray(value.items) ? value.items.map(normalizeItem).filter(Boolean) : []
-  };
-}
-
-function normalizeItem(item) {
-  if (!item || typeof item !== "object" || !item.id || !item.url) return null;
-  const color = COLORS.some((x) => x[1] === item.color) ? item.color : COLORS[0][1];
-  const meta = COLORS.find((x) => x[1] === color) || COLORS[0];
-  const exact = String(item.exact || item.quote || "").trim();
-  if (!exact) return null;
-  return { ...item, exact, quote: String(item.quote || exact), color, rgb: item.rgb || meta[2], createdAt: item.createdAt || new Date(0).toISOString() };
-}
-
-function match(item) {
-  const hay = `${item.quote} ${item.exact} ${item.title} ${item.url}`.toLowerCase();
-  return !query || hay.includes(query);
-}
-
-function groupBy(items, key) {
-  const map = new Map();
-  for (const item of items) map.set(key(item), [...(map.get(key(item)) || []), item]);
-  return map;
-}
-
-function button(label, key, value) {
-  const b = document.createElement("button");
-  b.type = "button";
-  b.textContent = label;
-  b.dataset[key] = value;
-  return b;
-}
-
-async function copyItem(item) {
-  await navigator.clipboard.writeText(`${item.quote || item.exact}\n\n${titleFor(item)}\n${item.url}`);
-  toast("Copied to clipboard.");
-}
-
-function titleFor(item) {
-  return String(item.title || host(item.url) || "Saved page").trim();
-}
-
-function exploreEmpty(message = "Save a line to begin exploring.") {
-  const div = document.createElement("div");
-  div.className = "explore-empty";
-  div.textContent = message;
-  return div;
+  for (const item of book?.items || []) syncPassage(sections.get(item.id), item);
 }
 
 function empty() {
-  const div = document.createElement("div");
-  div.className = "empty-paper";
-  div.innerHTML = `<span class="kicker">NOTHING ON THE WIRE</span><h2>Your desk is clear.</h2><p>Select a sentence on any page, then save it with Pastel Pen. Your next good line will land here.</p>`;
-  return div;
+  const box = el("section", "empty-reader");
+  box.append(el("p", "eyebrow", "Your reading notebook"),
+    el("h1", "", search.value ? "No matching passages" : "Keep what stands out."),
+    el("p", "", "Turn on the pen on a page, select a passage, and save a highlight or attach a note."));
+  return box;
 }
 
-function toast(message) {
-  const old = document.querySelector(".toast");
-  old?.remove();
-  const note = document.createElement("div");
-  note.className = "toast";
-  note.textContent = message;
-  document.body.append(note);
-  setTimeout(() => note.remove(), 2600);
+function detail(book) {
+  const article = el("article", "detail");
+  const bar = el("div", "detail-bar");
+  bar.append(button("‹ Notebooks", () => {
+    mobileOpen = false;
+    render();
+    entries.querySelector(".book[open] summary")?.focus();
+  }, "back"));
+  const link = el("a", "source", "Open original ↗");
+  link.href = book.id;
+  link.target = "_blank";
+  link.rel = "noopener noreferrer";
+  bar.append(link);
+  article.append(bar, el("h1", "", book.title || "Untitled article"));
+  const flow = el("div", "reader-flow");
+  if (snapshot === undefined) {
+    flow.append(el("p", "reader-hint", "Loading saved article…"));
+  } else if (Array.isArray(snapshot?.blocks) && snapshot.blocks.length && typeof snapshot.text === "string") {
+    renderArticle(flow, book);
+  } else {
+    flow.append(el("p", "reader-hint", "Saved excerpts. Open the original and use its Notebook button to capture the full text."));
+    for (const item of book.items) {
+      const row = el("section", "reader-row");
+      const excerpt = preview(item);
+      excerpt.classList.add("reader-copy");
+      excerpt.tabIndex = -1;
+      row.append(excerpt);
+      attachAnnotations(row, [{ item, heading: excerpt, marks: [...excerpt.querySelectorAll("mark")] }]);
+      flow.append(row);
+    }
+  }
+  article.append(flow);
+  return article;
 }
 
-function dateValue(item) { return Date.parse(item.createdAt) || 0; }
-function formatDate(value) { return new Intl.DateTimeFormat(undefined, { dateStyle: "medium", timeStyle: "short" }).format(new Date(value)); }
-function download(text, name) {
-  const a = Object.assign(document.createElement("a"), { href: URL.createObjectURL(new Blob([text], { type: "application/json" })), download: name });
+const blockTags = new Set("h1 h2 h3 h4 h5 h6 p li blockquote pre figcaption td d-math".split(" "));
+const inlineTags = new Set("sup sub em strong b i code".split(" "));
+
+function renderArticle(flow, book) {
+  const offset = Number.isFinite(snapshot.offset) ? snapshot.offset : 0;
+  const anchors = book.items.flatMap((item) => {
+    const range = PastelAnchors.locate({ ...item, start: item.start - offset, end: item.end - offset }, snapshot);
+    return range ? [{ item, start: range.start + offset, end: range.end + offset }] : [];
+  });
+  for (const block of snapshot.blocks) {
+    if (!Array.isArray(block?.chunks) || !block.chunks.length) continue;
+    const tag = blockTags.has(block.tag) && !["li", "td", "d-math"].includes(block.tag) ? block.tag : "p";
+    if (tag === "h1" && block.chunks.map((chunk) => chunk?.text || "").join("").trim() === book.title.trim()) continue;
+    const row = el("section", "reader-row");
+    const copy = el(tag, "reader-copy");
+    if (block.tag === "li") copy.classList.add("reader-list-item");
+    if (block.tag === "d-math") copy.classList.add("reader-equation");
+    row.append(copy);
+    const annotations = [];
+    for (const chunk of block.chunks) {
+      if (typeof chunk?.text !== "string" || !Number.isFinite(chunk.start) || !Number.isFinite(chunk.end)) continue;
+      const hits = anchors.filter((anchor) => anchor.start < chunk.end && anchor.end > chunk.start);
+      const renderChunk = (text, covering) => {
+        const inline = inlineTags.has(chunk.inline) ? el(chunk.inline) : null;
+        const content = chunk.math && mathNode(chunk.math) || document.createTextNode(text);
+        inline?.append(content);
+        if (!covering.length) {
+          copy.append(inline || content);
+          return;
+        }
+        const mark = el("mark", chunk.math ? "formula" : "");
+        mark.append(inline || content);
+        copy.append(mark);
+        for (const { item } of covering) {
+          const existing = sections.get(item.id) || annotations.find((annotation) => annotation.item.id === item.id);
+          if (existing) existing.marks.push(mark);
+          else {
+            mark.tabIndex = -1;
+            annotations.push({ item, heading: mark, marks: [mark] });
+          }
+        }
+      };
+      if (!hits.length || chunk.atomic) {
+        renderChunk(chunk.text, hits);
+        continue;
+      }
+      const cuts = [...new Set([chunk.start, chunk.end, ...hits.flatMap(({ start, end }) =>
+        [Math.max(start, chunk.start), Math.min(end, chunk.end)])])].sort((a, b) => a - b);
+      for (let i = 1; i < cuts.length; i++) {
+        const start = cuts[i - 1];
+        const end = cuts[i];
+        renderChunk(chunk.text.slice(start - chunk.start, end - chunk.start),
+          hits.filter((hit) => hit.start < end && hit.end > start));
+      }
+    }
+    attachAnnotations(row, annotations);
+    flow.append(row);
+  }
+  const missing = book.items.filter((item) => !sections.has(item.id));
+  if (missing.length) flow.append(el("p", "reader-hint", "Highlights outside the captured article"));
+  for (const item of missing) {
+    const row = el("section", "reader-row");
+    const excerpt = preview(item);
+    excerpt.classList.add("reader-copy");
+    excerpt.tabIndex = -1;
+    row.append(excerpt);
+    attachAnnotations(row, [{ item, heading: excerpt, marks: [...excerpt.querySelectorAll("mark")] }]);
+    flow.append(row);
+  }
+}
+
+function attachAnnotations(row, annotations) {
+  if (!annotations.length) return;
+  const aside = el("aside", "reader-notes");
+  aside.ariaLabel = "Notes for this passage";
+  for (const { item, heading, marks } of annotations) {
+    const canvas = el("div", "reading-canvas");
+    const section = { heading, canvas, marks };
+    const options = el("details", "passage-options");
+    const more = el("summary", "", "···");
+    more.title = more.ariaLabel = "Passage options";
+    options.append(more, button("Delete highlight and note", async () => {
+      if (!confirm("Delete this highlight and its note?")) return;
+      await section.note?.flush();
+      await write("remove", undefined, item.id);
+    }, "delete"));
+    canvas.append(options);
+    aside.append(canvas);
+    sections.set(item.id, section);
+  }
+  row.append(aside);
+}
+
+function syncPassage(section, item) {
+  if (!section) return;
+  const { canvas } = section;
+  for (const mark of section.marks) mark.style.setProperty("--tint", colors[colorIndex(item.color)][1]);
+  const folded = Boolean(item.notebookFolded || item.notebookFolded !== false && !item.note && item.folded !== false && !item.notebookPlacement);
+  if (section.folded !== folded) {
+    section.folded = folded;
+    section.observer?.disconnect();
+    section.note?.flush();
+    section.note?.dispose();
+    section.note = null;
+    canvas.className = "reading-canvas";
+    canvas.querySelector(".sticky")?.remove();
+    canvas.querySelector(".open-sticky")?.remove();
+    if (folded) {
+      canvas.append(button(item.note ? "▤ Open sticky note" : "+ Add sticky note", async () => {
+        data = read(await write("notebookFolded", false, item.id));
+        render();
+        section.note?.edit();
+      }, "open-sticky"));
+    } else mountSticky(section, item);
+  } else if (section.note) {
+    section.note.item = item;
+    section.note.update(item);
+  }
+}
+
+function mountSticky(section, item) {
+  const { canvas } = section;
+  canvas.classList.add("with-sticky");
+  const note = PastelSticky.create({
+    item,
+    save: (action, value) => write(action, value, item.id),
+    collapse: async () => {
+      await note.flush();
+      data = read(await write("notebookFolded", true, item.id));
+      render();
+      canvas.querySelector(".open-sticky")?.focus({ preventScroll: true });
+    },
+    layout(rect, dx, dy, persist) {
+      if (!rect) return position();
+      const bounds = canvas.getBoundingClientRect();
+      const placement = position({ x: rect.x - bounds.x + dx, y: rect.y - bounds.y + dy, w: rect.width, h: rect.height });
+      if (persist) {
+        note.item = { ...note.item, notebookPlacement: placement };
+        write("notebookPlacement", placement, item.id);
+      }
+    }
+  });
+  note.item = item;
+  section.note = note;
+  canvas.append(note.card);
+  function position(placement) {
+    const width = canvas.clientWidth;
+    const roomy = width >= 740;
+    canvas.classList.toggle("roomy", roomy);
+    const height = canvas.clientHeight;
+    if (!width || !height) return;
+    const base = placement || note.item.notebookPlacement || {
+      x: roomy ? width - 372 : 12,
+      y: 12,
+      w: Math.min(360, width - 24),
+      h: 244
+    };
+    const next = PastelSticky.constrain(base, width, height);
+    PastelSticky.place(note.card, next);
+    return next;
+  }
+  section.observer = new ResizeObserver(() => { if (!note.busy) position(); });
+  section.observer.observe(canvas);
+}
+
+function preview(item) {
+  const frame = el("section", "preview");
+  frame.ariaLabel = "Source passage";
+  const body = el("div", "passage");
+  const blocks = Array.isArray(item.context) && item.context.length ? item.context :
+    [[{ text: item.prefix, marked: false }, { text: item.quote || item.exact, marked: true }, { text: item.suffix, marked: false }]];
+  for (const block of blocks) {
+    if (!Array.isArray(block)) continue;
+    const paragraph = el("p");
+    for (const chunk of block) {
+      if (typeof chunk?.text !== "string") continue;
+      const node = el(chunk.marked ? "mark" : "span", chunk.math ? "formula" : "");
+      node.append(chunk.math && mathNode(chunk.math) || document.createTextNode(chunk.text));
+      paragraph.append(node);
+    }
+    body.append(paragraph);
+  }
+  frame.append(body);
+  return frame;
+}
+
+const mathTags = new Set("math mrow mi mn mo mtext mspace ms mfrac msqrt mroot mstyle mphantom mpadded msub msup msubsup munder mover munderover mmultiscripts mprescripts none mtable mtr mtd".split(" "));
+function mathNode(tree, depth = 0) {
+  if (typeof tree === "string") return document.createTextNode(tree);
+  if (!Array.isArray(tree) || !mathTags.has(tree[0]) || depth > 30) return null;
+  const node = document.createElementNS("http://www.w3.org/1998/Math/MathML", tree[0]);
+  for (const child of tree.slice(1)) {
+    const element = mathNode(child, depth + 1);
+    if (element) node.append(element);
+  }
+  return node;
+}
+
+function flush() {
+  return Promise.all([...sections.values()].map((section) => section.note?.flush()));
+}
+
+search.value = url.searchParams.get("q") || "";
+search.oninput = () => {
+  flush();
+  mobileOpen = false;
+  render();
+};
+addEventListener("pagehide", flush);
+$("exportBtn").onclick = async () => {
+  await flush();
+  const stored = await browser.storage.local.get(null);
+  const payload = read(stored[key]);
+  payload.articles = Object.fromEntries([...new Set(payload.items.map((item) => PastelPenScope.cleanPage(item.url)))]
+    .filter((page) => stored[articleKey(page)]).map((page) => [page, stored[articleKey(page)]]));
+  const objectURL = URL.createObjectURL(new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" }));
+  const a = el("a");
+  a.href = objectURL;
+  a.download = "pastel-pen-notebook.json";
   a.click();
-  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
-}
-function short(url) {
-  try { const u = new URL(url); return `${u.hostname}${u.pathname}`.replace(/\/$/, "").slice(0, 96); }
-  catch { return url; }
-}
-function host(url) {
-  try { return new URL(url).hostname; }
-  catch { return "Saved page"; }
-}
+  setTimeout(() => URL.revokeObjectURL(objectURL), 1000);
+};
+$("importFile").onchange = async (event) => {
+  const input = event.currentTarget;
+  const file = input.files[0];
+  if (!file) return;
+  try {
+    const text = await file.text();
+    const value = file.name.endsWith(".jsonl") ? text.split(/\r?\n/).filter(Boolean).map((line) => JSON.parse(line)) : JSON.parse(text);
+    const incoming = read(Array.isArray(value) ? { items: value } : value);
+    if (!incoming.items.length) throw new Error("No valid highlights");
+    await flush();
+    await write("import", incoming);
+    const snapshots = Object.fromEntries(Object.entries(value?.articles || {})
+      .filter(([page, article]) => incoming.items.some((item) => PastelPenScope.cleanPage(item.url) === page) &&
+        typeof article?.text === "string" && Array.isArray(article.blocks))
+      .map(([page, article]) => [articleKey(page), article]));
+    if (Object.keys(snapshots).length) await browser.storage.local.set(snapshots);
+    $("notice").textContent = "Imported " + incoming.items.length + " highlights.";
+  } catch (error) {
+    $("notice").textContent = error.message;
+  } finally {
+    input.value = "";
+  }
+};
+
+browser.storage.onChanged.addListener((changes, area) => {
+  if (area !== "local") return;
+  const articleChange = source && changes[articleKey(source)];
+  if (articleChange) {
+    snapshot = articleChange.newValue || null;
+    snapshotRevision++;
+  }
+  if (changes[key]) data = read(changes[key].newValue);
+  if (articleChange || changes[key]) render();
+});
+browser.storage.local.get(key).then((result) => {
+  data = read(result[key]);
+  render();
+});

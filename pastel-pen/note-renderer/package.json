@@ -1,0 +1,16 @@
+{
+  "name": "pastel-pen-note-renderer",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "esbuild markdown.js math.js --bundle --minify --legal-comments=linked --format=esm --target=firefox142 --out-extension:.js=.mjs --outdir=../extension/vendor"
+  },
+  "dependencies": {
+    "@mdit/plugin-tex": "1.2.0",
+    "katex": "0.19.1",
+    "markdown-it": "15.0.3"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2"
+  }
+}
