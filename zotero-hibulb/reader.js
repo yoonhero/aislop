@@ -101,6 +101,10 @@ var HiBulbReader = class {
     actions.hidden = true;
     actions.setAttribute('role', 'toolbar');
     actions.ariaLabel = 'Highlight actions';
+    // Keep focus in the document until the action fires. Otherwise the native
+    // reader dismisses its selection and removes these buttons before click.
+    actions.addEventListener('pointerdown', event => event.preventDefault());
+    actions.addEventListener('mousedown', event => event.preventDefault());
     layer.append(rail, actions);
     this.doc.body.append(layer);
     const style = win.document.createElement('style');
@@ -222,9 +226,19 @@ var HiBulbReader = class {
     }
     const width = session.layer.clientWidth;
     const height = session.layer.clientHeight;
-    const x = Math.max(6, Math.min(rect[0], width - box.offsetWidth - 20));
-    const y = rect[3] + box.offsetHeight + 10 < height ? rect[3] + 6 : rect[1] - box.offsetHeight - 6;
-    box.style.left = x + 'px'; box.style.top = Math.max(4, y) + 'px';
+    const w = box.offsetWidth;
+    const h = box.offsetHeight;
+    const x = Math.max(6, Math.min(rect[0], width - w - 22));
+    const cards = [...this.cards.values()].filter(entry => entry.session === session && !entry.card.hidden)
+      .map(entry => new DOMRect(entry.card.offsetLeft, entry.card.offsetTop, entry.card.offsetWidth, entry.card.offsetHeight));
+    const candidates = [rect[3] + 6, rect[1] - h - 6].flatMap(top =>
+      [x, rect[2] + 6, rect[0] - w - 6].map(left => new DOMRect(left, top, w, h)));
+    const spot = candidates.find(candidate => candidate.left >= 6 && candidate.right <= width - 18
+      && candidate.top >= 4 && candidate.bottom <= height - 4
+      && cards.every(card => candidate.right + 4 <= card.left || candidate.left >= card.right + 4
+        || candidate.bottom + 4 <= card.top || candidate.top >= card.bottom + 4));
+    box.style.left = (spot?.x ?? x) + 'px';
+    box.style.top = (spot?.y ?? Math.max(4, Math.min(rect[1] - h - 6, height - h - 4))) + 'px';
   }
 
   makeCard(session, annotation) {
@@ -253,14 +267,7 @@ var HiBulbReader = class {
       catch (error) { status.textContent = 'Could not save note'; this.host.error(error); }
     };
     editor.onblur = () => { entry.editing = false; this.preview(entry); };
-    const resize = new this.win.ResizeObserver(() => {
-      if (!entry.moving && this.doc.activeElement === editor) {
-        const h = card.offsetHeight;
-        if (h > 100) this.host.setLayout(annotation.id, { height: h });
-      }
-    });
-    resize.observe(card);
-    entry.dispose = () => { resize.disconnect(); entry.revision++; card.remove(); };
+    entry.dispose = () => { entry.revision++; card.remove(); };
     let drag;
     grip.onpointerdown = event => {
       if (event.button !== 0) return;
@@ -375,18 +382,26 @@ var HiBulbReader = class {
       if (!entry.editing && entry.editor.value !== a.comment) { entry.editor.value = a.comment || ''; this.preview(entry); }
       const width = Math.min(300, frameRect.width - 28);
       const height = Math.max(140, Math.min(placement.height || 210, frameRect.height - 16));
-      Object.assign(entry.card.style, { width: width + 'px', height: height + 'px', '--annotation-color': a.color });
+      Object.assign(entry.card.style, { width: width + 'px', height: height + 'px' });
+      entry.card.style.setProperty('--annotation-color', a.color);
       if (!entry.moving) {
         let left = placement.x === undefined ? frameRect.width - width - 22 : placement.x * (frameRect.width - width - 18);
         let top = rect[1] + (placement.dy || 0) * this.scale(view, a);
         if (placement.dy === undefined) {
           for (const other of occupied) {
-            if (top < other.bottom + 8 && top + height > other.top - 8) top = other.bottom + 8;
+            if (left < other.right + 8 && left + width > other.left - 8
+              && top < other.bottom + 8 && top + height > other.top - 8) top = other.bottom + 8;
           }
         }
         entry.card.style.left = Math.max(4, Math.min(frameRect.width - width - 18, left)) + 'px';
         entry.card.style.top = top + 'px';
-        occupied.push({ top, bottom: top + height });
+        occupied.push({ left, right: left + width, top, bottom: top + height });
+        if (placement.dy === undefined) {
+          this.host.setLayout(a.id, {
+            x: entry.card.offsetLeft / Math.max(1, frameRect.width - entry.card.offsetWidth - 18),
+            dy: (top - rect[1]) / this.scale(view, a)
+          });
+        }
       }
       if (this.focusNote === a.id && session.primary) entry.edit();
     }
