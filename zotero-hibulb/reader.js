@@ -112,8 +112,11 @@ var HiBulbReader = class {
     style.textContent = '#pastel-pen { display:none!important }';
     win.document.head.append(style);
     const session = { view, primary, layer, rail, actions, style, cleanups: [] };
-    const update = () => this.schedule();
-    const dismiss = () => rail.querySelector('.hibulb-marker-list')?.remove();
+    const update = () => { dismiss(); this.schedule(); };
+    const dismiss = () => {
+      rail.querySelector('.hibulb-marker-list')?.remove();
+      rail.querySelectorAll('[aria-expanded=true]').forEach(marker => marker.ariaExpanded = 'false');
+    };
     win.addEventListener('pointerdown', dismiss);
     session.cleanups.push(() => win.removeEventListener('pointerdown', dismiss));
     win.addEventListener('scroll', update, true);
@@ -128,7 +131,10 @@ var HiBulbReader = class {
       event.stopPropagation();
       if (event.key === 'Escape') {
         const list = session.rail.querySelector('.hibulb-marker-list');
-        if (list) { list.remove(); return; }
+        if (list) {
+          session.rail.querySelector('[aria-expanded=true]')?.focus({ preventScroll: true });
+          dismiss(); return;
+        }
         const card = event.target.closest('.hibulb-card');
         if (card) this.closeNote(card.dataset.id);
         else { this.palette = false; this.core.setSelectedAnnotations([]); this.schedule(); }
@@ -229,8 +235,12 @@ var HiBulbReader = class {
     const w = box.offsetWidth;
     const h = box.offsetHeight;
     const x = Math.max(6, Math.min(rect[0], width - w - 22));
+    const layerRect = session.layer.getBoundingClientRect();
     const cards = [...this.cards.values()].filter(entry => entry.session === session && !entry.card.hidden)
-      .map(entry => new DOMRect(entry.card.offsetLeft, entry.card.offsetTop, entry.card.offsetWidth, entry.card.offsetHeight));
+      .map(entry => {
+        const card = entry.card.getBoundingClientRect();
+        return new DOMRect(card.left - layerRect.left, card.top - layerRect.top, card.width, card.height);
+      });
     const candidates = [rect[3] + 6, rect[1] - h - 6].flatMap(top =>
       [x, rect[2] + 6, rect[0] - w - 6].map(left => new DOMRect(left, top, w, h)));
     const spot = candidates.find(candidate => candidate.left >= 6 && candidate.right <= width - 18
@@ -277,17 +287,22 @@ var HiBulbReader = class {
     };
     grip.onpointermove = event => {
       if (!drag) return;
-      card.style.left = Math.max(4, Math.min(session.layer.clientWidth - card.offsetWidth - 18, drag.left + event.clientX - drag.x)) + 'px';
+      const paper = this.paper(session.view, entry.annotation);
+      const width = card.getBoundingClientRect().width;
+      card.style.left = Math.max(paper.left, Math.min(paper.left + paper.width - width, drag.left + event.clientX - drag.x)) + 'px';
       card.style.top = (drag.top + event.clientY - drag.y) + 'px';
     };
     const persist = () => {
       if (!drag) return;
       drag = null; entry.moving = false;
       const rect = this.rect(session.view, entry.annotation);
-      if (rect) this.host.setLayout(annotation.id, {
-        x: card.offsetLeft / Math.max(1, session.layer.clientWidth - card.offsetWidth - 18),
-        dy: (card.offsetTop - rect[1]) / this.scale(session.view, annotation)
-      });
+      if (rect) {
+        const paper = this.paper(session.view, entry.annotation);
+        this.host.setLayout(annotation.id, {
+          x: (card.offsetLeft - paper.left) / Math.max(1, paper.width - card.getBoundingClientRect().width),
+          dy: (card.offsetTop - rect[1]) / paper.units
+        });
+      }
       this.schedule();
     };
     grip.onpointerup = persist;
@@ -296,8 +311,9 @@ var HiBulbReader = class {
       const delta = { ArrowLeft: [-12, 0], ArrowRight: [12, 0], ArrowUp: [0, -12], ArrowDown: [0, 12] }[event.key];
       if (!delta) return;
       event.preventDefault(); drag = {};
-      card.style.left = Math.max(4, Math.min(session.layer.clientWidth - card.offsetWidth - 18, card.offsetLeft + delta[0])) + 'px';
-      card.style.top = card.offsetTop + delta[1] + 'px'; persist();
+      const paper = this.paper(session.view, entry.annotation);
+      card.style.left = Math.max(paper.left, Math.min(paper.left + paper.width - card.getBoundingClientRect().width, card.offsetLeft + delta[0] * paper.zoom)) + 'px';
+      card.style.top = card.offsetTop + delta[1] * paper.zoom + 'px'; persist();
     };
     this.preview(entry);
     return entry;
@@ -317,8 +333,16 @@ var HiBulbReader = class {
     } catch (error) { this.host.error(error); entry.editor.hidden = false; entry.preview.hidden = true; }
   }
 
-  scale(view, annotation) {
-    return view._iframeWindow.PDFViewerApplication?.pdfViewer.getPageView(annotation.position.pageIndex)?.viewport.scale || 1;
+  paper(view, annotation) {
+    const position = annotation.position;
+    const page = view._iframeWindow.PDFViewerApplication?.pdfViewer.getPageView(position.pageIndex + (position.nextPageRects ? 1 : 0));
+    if (page) {
+      const rect = page.div.getBoundingClientRect();
+      // PDF points use 72 units/inch, while the reader renders 96 CSS px/inch.
+      return { left: rect.left, width: page.viewport.width, units: page.viewport.scale, zoom: page.viewport.scale * 72 / 96 };
+    }
+    const rect = view._iframeWindow.document.body.getBoundingClientRect();
+    return { left: rect.left, width: rect.width, units: view.scale, zoom: view.scale };
   }
 
   refresh() {
@@ -354,6 +378,8 @@ var HiBulbReader = class {
       }
     }
     const scroller = view._iframeWindow.document.getElementById('viewerContainer') || view._iframeWindow.document.scrollingElement;
+    // Reserve the native scrollbar's hit area, including overlay scrollbars.
+    session.rail.style.right = Math.max(12, scroller.offsetWidth - scroller.clientWidth) + 'px';
     const horizontal = scroller.scrollWidth > scroller.clientWidth + 1 && scroller.scrollHeight <= scroller.clientHeight + 1;
     const total = horizontal ? scroller.scrollWidth : Math.max(scroller.scrollHeight, scroller.clientHeight);
     const annotations = state.annotations.filter(a => !a._hidden);
@@ -365,41 +391,46 @@ var HiBulbReader = class {
       if (!rect) continue;
       const outsideX = rect[2] < 0 || rect[0] > frameRect.width;
       const offset = horizontal ? Math.abs(scroller.scrollLeft) + (scroller.scrollLeft < 0 ? frameRect.width - rect[2] : rect[0]) : rect[1] + scroller.scrollTop;
-      locations.push({ annotation: a, top: Math.max(0, Math.min(1, offset / total)) * Math.max(0, frameRect.height - 12), inView: !outsideX && rect[3] >= 0 && rect[1] <= frameRect.height });
+      locations.push({ annotation: a, top: Math.max(0, Math.min(1, offset / total)) * Math.max(0, frameRect.height - 22), inView: !outsideX && rect[3] >= 0 && rect[1] <= frameRect.height });
       const key = (session.primary ? 'p:' : 's:') + a.id;
       const placement = this.host.getLayout(a.id);
       if (!placement.open) continue;
       cardIDs.add(key);
+      const paper = this.paper(view, a);
+      const width = Math.min(300, paper.width / paper.zoom);
+      const height = placement.height || 210;
+      const visualWidth = width * paper.zoom;
+      const visualHeight = height * paper.zoom;
+      let left = paper.left + (placement.x ?? 1) * (paper.width - visualWidth);
+      let top = rect[1] + (placement.dy || 0) * paper.units;
+      if (placement.dy === undefined) {
+        const gap = 8 * paper.zoom;
+        for (const other of occupied) {
+          if (left < other.right + gap && left + visualWidth > other.left - gap
+            && top < other.bottom + gap && top + visualHeight > other.top - gap) top = other.bottom + gap;
+        }
+      }
+      occupied.push({ left, right: left + visualWidth, top, bottom: top + visualHeight });
       let entry = this.cards.get(key);
       if (!entry) {
-        // Mount nearby cards, keeping focused cards mounted as they scroll offscreen.
-        if (outsideX || rect[1] > frameRect.height + 400 || rect[3] < -400) continue;
+        // Keep mounted editors intact while their paper scrolls out of view.
+        if (left > frameRect.width || left + visualWidth < 0 || top > frameRect.height + 400 || top + visualHeight < -400) continue;
         entry = this.makeCard(session, a); this.cards.set(key, entry);
       }
-      entry.card.hidden = outsideX;
       entry.annotation = a;
       entry.editor.readOnly = !this.writable(a);
       if (!entry.editing && entry.editor.value !== a.comment) { entry.editor.value = a.comment || ''; this.preview(entry); }
-      const width = Math.min(300, frameRect.width - 28);
-      const height = Math.max(140, Math.min(placement.height || 210, frameRect.height - 16));
-      Object.assign(entry.card.style, { width: width + 'px', height: height + 'px' });
+      Object.assign(entry.card.style, {
+        width: width + 'px', height: height + 'px', transform: 'scale(' + paper.zoom + ')'
+      });
       entry.card.style.setProperty('--annotation-color', a.color);
       if (!entry.moving) {
-        let left = placement.x === undefined ? frameRect.width - width - 22 : placement.x * (frameRect.width - width - 18);
-        let top = rect[1] + (placement.dy || 0) * this.scale(view, a);
-        if (placement.dy === undefined) {
-          for (const other of occupied) {
-            if (left < other.right + 8 && left + width > other.left - 8
-              && top < other.bottom + 8 && top + height > other.top - 8) top = other.bottom + 8;
-          }
-        }
-        entry.card.style.left = Math.max(4, Math.min(frameRect.width - width - 18, left)) + 'px';
+        entry.card.style.left = left + 'px';
         entry.card.style.top = top + 'px';
-        occupied.push({ left, right: left + width, top, bottom: top + height });
         if (placement.dy === undefined) {
           this.host.setLayout(a.id, {
-            x: entry.card.offsetLeft / Math.max(1, frameRect.width - entry.card.offsetWidth - 18),
-            dy: (top - rect[1]) / this.scale(view, a)
+            x: (left - paper.left) / Math.max(1, paper.width - visualWidth),
+            dy: (top - rect[1]) / paper.units
           });
         }
       }
@@ -416,35 +447,62 @@ var HiBulbReader = class {
     const groups = [];
     for (const location of locations.sort((a, b) => a.top - b.top)) {
       const last = groups.at(-1);
-      if (last && location.top - last[0].top < 9) last.push(location);
+      if (last && location.top - last[0].top < 20) last.push(location);
       else groups.push([location]);
     }
-    const signature = JSON.stringify(groups.map(group => group.map(({ annotation: a, top, inView }) => [a.id, a.text, a.comment, a.color, Math.round(top), inView])));
+    const selected = this.core._state.selectedAnnotationIDs;
+    const signature = JSON.stringify(groups.map(group => group.map(({ annotation: a, top, inView }) => [a.id, a.text, a.comment, a.color, Math.round(top), inView, selected.includes(a.id)])));
     if (session.markerSignature === signature) return;
     session.markerSignature = signature;
     session.rail.replaceChildren();
-    const label = a => [a.pageLabel && 'Page ' + a.pageLabel, a.text || a.comment || 'Note'].filter(Boolean).join(' · ').slice(0, 180);
+    const label = a => [a.pageLabel && 'Page ' + a.pageLabel, a.text, a.comment].filter(Boolean).join(' · ').slice(0, 240) || 'Note';
     const navigate = id => { this.core.navigate({ annotationID: id }); this.core.setSelectedAnnotations([id]); };
+    const dismiss = () => {
+      session.rail.querySelector('.hibulb-marker-list')?.remove();
+      for (const marker of session.rail.children) marker.ariaExpanded = 'false';
+    };
+    session.rail.onpointerleave = () => {
+      if (!session.rail.contains(this.doc.activeElement)) dismiss();
+    };
+    session.rail.onfocusout = event => {
+      if (!session.rail.contains(event.relatedTarget)) dismiss();
+    };
     for (const group of groups) {
       const marker = this.el('button', 'hibulb-marker');
       marker.type = 'button';
-      marker.title = marker.ariaLabel = group.length === 1 ? label(group[0].annotation) : group.length + ' annotations in this part of the document';
-      marker.style.background = group[0].annotation.color;
+      marker.ariaLabel = group.length === 1 ? label(group[0].annotation) : group.length + ' annotations in this part of the document';
+      marker.ariaExpanded = 'false';
+      marker.style.setProperty('--marker-color', group[0].annotation.color);
       marker.style.top = group[0].top + 'px';
       marker.classList.toggle('in-view', group.some(item => item.inView));
-      marker.onclick = () => {
-        if (group.length === 1) return navigate(group[0].annotation.id);
-        const existing = session.rail.querySelector('.hibulb-marker-list');
-        if (existing) { existing.remove(); marker.ariaExpanded = 'false'; return; }
+      marker.classList.toggle('has-note', group.some(({ annotation: a }) => a.comment?.trim() || a.type === 'note'));
+      marker.classList.toggle('grouped', group.length > 1);
+      marker.setAttribute('aria-current', String(group.some(({ annotation: a }) => selected.includes(a.id))));
+      const show = () => {
+        if (marker.ariaExpanded === 'true' && session.rail.querySelector('.hibulb-marker-list')) return;
+        dismiss();
         const list = this.el('div', 'hibulb-marker-list');
         list.setAttribute('role', 'group'); list.ariaLabel = 'Choose annotation';
-        list.style.top = Math.min(group[0].top, Math.max(0, session.layer.clientHeight - 180)) + 'px';
         for (const item of group) {
-          const b = this.el('button', '', label(item.annotation)); b.type = 'button';
-          b.onclick = () => { list.remove(); marker.ariaExpanded = 'false'; navigate(item.annotation.id); };
+          const a = item.annotation;
+          const b = this.el('button'); b.type = 'button'; b.ariaLabel = label(a);
+          b.style.setProperty('--marker-color', a.color);
+          if (a.pageLabel) b.append(this.el('span', 'hibulb-marker-page', 'Page ' + a.pageLabel));
+          if (a.text) b.append(this.el('span', 'hibulb-marker-quote', a.text.slice(0, 280)));
+          if (a.comment) b.append(this.el('span', 'hibulb-marker-note', a.comment.slice(0, 280)));
+          if (!a.text && !a.comment) b.append(this.el('span', 'hibulb-marker-note', 'Note'));
+          b.onclick = () => { navigate(a.id); dismiss(); };
           list.append(b);
         }
-        session.rail.append(list); marker.ariaExpanded = 'true'; list.firstChild.focus();
+        session.rail.append(list);
+        list.style.top = Math.max(0, Math.min(group[0].top, session.rail.clientHeight - list.offsetHeight)) + 'px';
+        marker.ariaExpanded = 'true';
+      };
+      marker.onpointerenter = show;
+      marker.onfocus = show;
+      marker.onclick = () => {
+        if (group.length === 1) { navigate(group[0].annotation.id); dismiss(); }
+        else { show(); session.rail.querySelector('.hibulb-marker-list button')?.focus(); }
       };
       session.rail.append(marker);
     }

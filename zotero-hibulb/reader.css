@@ -23,7 +23,7 @@
 .hibulb-swatch { width: 24px; }
 .hibulb-swatch::before { content: ''; width: 15px; height: 15px; border-radius: 50%; background: var(--swatch); border: 1px solid #0002; }
 .hibulb-swatch[aria-pressed=true]::before { outline: 1px solid currentColor; outline-offset: 2px; }
-.hibulb-card { min-height: 140px; min-width: 160px; display: flex; flex-direction: column; overflow: hidden; z-index: 2; border-top: 3px solid var(--annotation-color, #ffd400); }
+.hibulb-card { box-sizing: border-box; transform-origin: top left; display: flex; flex-direction: column; overflow: hidden; z-index: 2; border-top: 3px solid var(--annotation-color, #ffd400); }
 .hibulb-card:focus-within { z-index: 3; }
 .hibulb-card-head { display: flex; justify-content: space-between; flex: none; padding: 1px 3px; background: color-mix(in srgb, var(--annotation-color, #ffd400) 8%, transparent); }
 .hibulb-card-head .hibulb-button { height: 24px; width: 26px; }
@@ -40,12 +40,23 @@
 .hibulb-preview math[display=block] { overflow-x: auto; max-width: 100%; }
 .hibulb-status:empty { display: none; }
 .hibulb-status { padding: 3px 10px; font-size: 11px; color: #c33; }
-.hibulb-rail { position: absolute; top: 2px; right: 14px; width: 8px; bottom: 2px; pointer-events: none; z-index: 5; }
-.hibulb-marker { position: absolute; right: 0; width: 7px; height: 5px; min-height: 5px; padding: 0; border: 0; border-radius: 1px; opacity: .65; cursor: pointer; pointer-events: auto; }
-.hibulb-marker.in-view, .hibulb-marker:hover, .hibulb-marker:focus-visible { opacity: 1; width: 10px; outline: 1px solid var(--fill-primary, CanvasText); }
+.hibulb-rail { position: absolute; top: 1px; right: 12px; width: 20px; bottom: 1px; pointer-events: none; z-index: 5; }
+.hibulb-marker { position: absolute; right: 0; width: 20px; height: 20px; padding: 0; border: 0; border-radius: 4px; background: transparent; cursor: pointer; pointer-events: auto; }
+.hibulb-marker::before { content: ''; position: absolute; right: 3px; top: 9px; width: 8px; height: 2px; border-radius: 1px; background: color-mix(in srgb, var(--marker-color) 82%, CanvasText); opacity: .55; }
+.hibulb-marker.has-note::before { width: 13px; height: 3px; }
+.hibulb-marker.grouped::before { box-shadow: 0 4px 0 color-mix(in srgb, var(--marker-color) 65%, transparent); }
+.hibulb-marker.in-view::before, .hibulb-marker:hover::before, .hibulb-marker:focus-visible::before { opacity: 1; }
+.hibulb-marker:hover, .hibulb-marker[aria-current=true] { background: color-mix(in srgb, var(--marker-color) 15%, transparent); }
+.hibulb-marker:focus-visible { outline: 2px solid var(--color-accent, #3875d7); outline-offset: -2px; }
 .hibulb-sidebar-note { width: 22px; height: 22px; }
 @media (prefers-reduced-motion: no-preference) { .hibulb-tools .hibulb-button { transition: color 160ms, background-color 160ms; } }
 
-.hibulb-marker-list { position: absolute; right: 16px; width: min(250px, calc(100vw - 60px)); max-height: 170px; overflow: auto; pointer-events: auto; padding: 4px; border: 1px solid var(--color-panedivider, #8885); border-radius: 6px; background: var(--material-background, Canvas); color: var(--fill-primary, CanvasText); box-shadow: 0 2px 8px #0002; }
-.hibulb-marker-list button { display: block; border: 0; border-radius: 4px; padding: 6px; width: 100%; background: transparent; color: inherit; text-align: start; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font: inherit; cursor: pointer; }
-.hibulb-marker-list button:hover { background: var(--fill-quinary, #8882); }
+.hibulb-marker-list { position: absolute; right: 19px; width: min(270px, calc(100vw - 70px)); max-height: min(300px, 100%); box-sizing: border-box; overflow: auto; pointer-events: auto; padding: 5px; border: 1px solid var(--color-panedivider, #8885); border-radius: 7px; background: var(--material-background, Canvas); color: var(--fill-primary, CanvasText); box-shadow: 0 3px 12px #0002; }
+.hibulb-marker-list button { display: block; border: 0; border-inline-start: 2px solid var(--marker-color); border-radius: 3px; padding: 7px 10px; width: 100%; background: transparent; color: inherit; text-align: start; font: inherit; cursor: pointer; }
+.hibulb-marker-list button + button { margin-top: 5px; }
+.hibulb-marker-list button:hover, .hibulb-marker-list button:focus-visible { background: var(--fill-quinary, #8882); }
+.hibulb-marker-list button:focus-visible { outline: 2px solid var(--color-accent, #3875d7); outline-offset: -2px; }
+.hibulb-marker-list span { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; overflow-wrap: anywhere; }
+.hibulb-marker-page { font-size: 11px; opacity: .6; margin-bottom: 3px; }
+.hibulb-marker-quote { opacity: .75; }
+.hibulb-marker-note { font-weight: 500; margin-top: 4px; }
