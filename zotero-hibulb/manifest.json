@@ -1,0 +1,19 @@
+{
+  "manifest_version": 2,
+  "name": "HiBulb for Zotero",
+  "version": "0.1.1",
+  "description": "Highlights, anchored margin notes and annotation navigation in the Zotero reader.",
+  "author": "ysh",
+  "icons": {
+    "48": "icon.png",
+    "96": "icon.png"
+  },
+  "applications": {
+    "zotero": {
+      "id": "hibulb@aislop.local",
+      "strict_min_version": "10.0",
+      "strict_max_version": "10.0.*",
+      "update_url": "https://github.com/yoonhero/aislop/releases/download/hibulb-zotero-updates/updates.json"
+    }
+  }
+}

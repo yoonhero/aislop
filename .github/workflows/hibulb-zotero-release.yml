@@ -1,0 +1,40 @@
+name: Release HiBulb for Zotero
+on:
+  push:
+    tags:
+      - 'hibulb-zotero-v*'
+permissions:
+  contents: write
+concurrency:
+  group: hibulb-zotero-release
+  cancel-in-progress: false
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Validate and build
+        run: |
+          version=$(jq -er .version zotero-hibulb/manifest.json)
+          test "$GITHUB_REF_NAME" = "hibulb-zotero-v$version"
+          node --check zotero-hibulb/bootstrap.js
+          node --check zotero-hibulb/reader.js
+          python3 zotero-hibulb/build.py release
+          echo "VERSION=$version" >> "$GITHUB_ENV"
+      - name: Publish update channel
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag=hibulb-zotero-updates
+          if gh release view "$tag" >/dev/null 2>&1; then
+            gh release download "$tag" --pattern updates.json --dir previous
+            current=$(jq -er '.addons["hibulb@aislop.local"].updates[0].version' previous/updates.json)
+            test "$(printf '%s\n' "$current" "$VERSION" | sort -V | tail -1)" = "$VERSION"
+            gh release upload "$tag" "release/hibulb-zotero-$VERSION.xpi"
+            gh release upload "$tag" release/updates.json --clobber
+          else
+            gh release create "$tag" --target "$GITHUB_SHA" --title 'HiBulb for Zotero updates' --notes-file zotero-hibulb/README.md --latest=false "release/hibulb-zotero-$VERSION.xpi" release/updates.json
+          fi
