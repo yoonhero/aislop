@@ -30,10 +30,11 @@
 .hibulb-card-head .hibulb-button:first-child { cursor: grab; touch-action: none; }
 .hibulb-card-head .hibulb-button:first-child:active { cursor: grabbing; }
 .hibulb-card-head svg { width: 14px; height: 14px; }
-.hibulb-editor, .hibulb-preview { flex: 1; min-height: 0; margin: 0; padding: 8px 11px; overflow: auto; background: transparent; color: inherit; font: inherit; line-height: 1.55; border: 0; outline: none; white-space: pre-wrap; overflow-wrap: anywhere; }
-.hibulb-editor { resize: none; width: 100%; box-sizing: border-box; }
+.hibulb-editor, .hibulb-preview { box-sizing: border-box; flex: 1; min-height: 0; width: 100%; margin: 0; padding: 8px 11px; overflow: auto; scrollbar-gutter: stable; background: transparent; color: inherit; font: inherit; line-height: 1.55; border: 0; outline: none; white-space: pre-wrap; overflow-wrap: anywhere; }
+.hibulb-editor { resize: none; }
 .hibulb-preview { white-space: normal; }
-.hibulb-preview p { margin: 0 0 8px; }
+/* A Markdown paragraph break occupies one blank source line in the editor. */
+.hibulb-preview p { margin: 0 0 1lh; }
 .hibulb-preview > :last-child { margin-bottom: 0; }
 .hibulb-preview pre { white-space: pre-wrap; }
 .hibulb-preview a { color: var(--color-accent, #3477d5); }

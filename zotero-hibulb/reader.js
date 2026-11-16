@@ -267,7 +267,12 @@ var HiBulbReader = class {
     card.append(header, editor, preview, status);
     session.layer.append(card);
     const entry = { card, editor, preview, annotation, session, status, revision: 0, editing: false, moving: false };
-    entry.edit = () => { entry.editing = true; preview.hidden = true; editor.hidden = false; editor.focus({ preventScroll: true }); };
+    entry.edit = () => {
+      const scrollTop = preview.scrollTop;
+      entry.editing = true; preview.hidden = true; editor.hidden = false;
+      editor.focus({ preventScroll: true });
+      editor.scrollTop = scrollTop;
+    };
     preview.onclick = event => { if (!event.target.closest('a') && this.win.getSelection().isCollapsed) entry.edit(); };
     preview.onkeydown = event => { if (event.target === preview && event.key === 'Enter') entry.edit(); };
     editor.onfocus = () => { entry.editing = true; };
@@ -328,8 +333,10 @@ var HiBulbReader = class {
       const html = await this.host.render(source);
       if (this.destroyed || revision !== entry.revision || entry.editing || !entry.card.isConnected) return;
       const parsed = new this.win.DOMParser().parseFromString(html, 'text/html');
+      const scrollTop = entry.preview.hidden ? entry.editor.scrollTop : entry.preview.scrollTop;
       entry.preview.replaceChildren(...Array.from(parsed.body.childNodes, node => this.doc.importNode(node, true)));
       entry.editor.hidden = true; entry.preview.hidden = false;
+      entry.preview.scrollTop = scrollTop;
     } catch (error) { this.host.error(error); entry.editor.hidden = false; entry.preview.hidden = true; }
   }
 
