@@ -498,7 +498,9 @@ var HiBulbReader = class {
         list.style.top = Math.max(0, Math.min(group[0].top, session.rail.clientHeight - list.offsetHeight)) + 'px';
         marker.ariaExpanded = 'true';
       };
-      marker.onpointerenter = show;
+      // Replacing a marker under a stationary pointer fires pointerenter again.
+      // Require movement so scrolling cannot reopen a dismissed preview.
+      marker.onpointermove = show;
       marker.onfocus = show;
       marker.onclick = () => {
         if (group.length === 1) { navigate(group[0].annotation.id); dismiss(); }
