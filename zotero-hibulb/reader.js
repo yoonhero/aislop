@@ -261,20 +261,34 @@ var HiBulbReader = class {
     const editor = this.el('textarea', 'hibulb-editor');
     editor.ariaLabel = 'Note text'; editor.placeholder = 'Write a note…';
     editor.value = annotation.comment || '';
+    editor.setSelectionRange(0, 0);
     const preview = this.el('div', 'hibulb-preview');
     preview.tabIndex = 0; preview.ariaLabel = 'Note preview. Press Enter to edit.';
     const status = this.el('span', 'hibulb-status'); status.role = 'status';
     card.append(header, editor, preview, status);
     session.layer.append(card);
     const entry = { card, editor, preview, annotation, session, status, revision: 0, editing: false, moving: false };
-    entry.edit = () => {
+    entry.edit = point => {
       const scrollTop = preview.scrollTop;
       entry.editing = true; preview.hidden = true; editor.hidden = false;
       editor.focus({ preventScroll: true });
       editor.scrollTop = scrollTop;
+      if (point) {
+        // Hit-test the actual textarea after layout. Gecko accounts for soft
+        // wrapping, document zoom, internal scrolling, and Unicode text.
+        const caret = this.doc.caretPositionFromPoint(point.x, point.y);
+        if (caret?.offsetNode === editor) editor.setSelectionRange(caret.offset, caret.offset);
+        editor.scrollTop = scrollTop;
+      }
     };
-    preview.onclick = event => { if (!event.target.closest('a') && this.win.getSelection().isCollapsed) entry.edit(); };
-    preview.onkeydown = event => { if (event.target === preview && event.key === 'Enter') entry.edit(); };
+    preview.onclick = event => {
+      if (!event.target.closest('a') && this.win.getSelection().isCollapsed) {
+        entry.edit(event.detail ? { x: event.clientX, y: event.clientY } : null);
+      }
+    };
+    preview.onkeydown = event => {
+      if (event.target === preview && event.key === 'Enter') { event.preventDefault(); entry.edit(); }
+    };
     editor.onfocus = () => { entry.editing = true; };
     editor.oninput = () => {
       // Zotero's annotation manager debounces and serializes writes and owns undo.
@@ -426,7 +440,12 @@ var HiBulbReader = class {
       }
       entry.annotation = a;
       entry.editor.readOnly = !this.writable(a);
-      if (!entry.editing && entry.editor.value !== a.comment) { entry.editor.value = a.comment || ''; this.preview(entry); }
+      if (!entry.editing && entry.editor.value !== a.comment) {
+        const { selectionStart, selectionEnd, selectionDirection } = entry.editor;
+        entry.editor.value = a.comment || '';
+        entry.editor.setSelectionRange(selectionStart, selectionEnd, selectionDirection);
+        this.preview(entry);
+      }
       Object.assign(entry.card.style, {
         width: width + 'px', height: height + 'px', transform: 'scale(' + paper.zoom + ')'
       });
