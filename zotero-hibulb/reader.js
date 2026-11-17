@@ -70,6 +70,7 @@ var HiBulbReader = class {
       back: 'm14 6-6 6 6 6',
       fold: 'M5 12h14',
       move: 'M8 10h8M8 14h8',
+      resize: 'M8 20 20 8M14 20l6-6',
       check: 'm5 12 4 4L20 5'
     };
     const svg = this.doc.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -140,6 +141,13 @@ var HiBulbReader = class {
       if (this.destroyed || !this.views.has(view)) return;
       try { this.layout(session, this.core._state); } catch (error) { this.host.error(error); }
     };
+    const pdf = win.PDFViewerApplication;
+    if (pdf) {
+      // PDF.js has already resized every page when this fires. Update the
+      // anchor in the same zoom operation as the paper's inherited scale.
+      pdf.eventBus._on('scalechanging', geometryUpdate);
+      session.cleanups.push(() => pdf.eventBus._off('scalechanging', geometryUpdate));
+    }
     const observer = new win.ResizeObserver(geometryUpdate);
     observer.observe(win.document.documentElement);
     observer.observe(parent);
@@ -300,9 +308,10 @@ var HiBulbReader = class {
     preview.hidden = true;
     preview.tabIndex = 0; preview.ariaLabel = 'Note preview. Press Enter to edit.';
     const status = this.el('span', 'hibulb-status'); status.role = 'status';
-    card.append(header, editor, preview, status);
+    const footer = this.el('footer', 'hibulb-card-foot');
+    card.append(header, editor, preview, status, footer);
     noteDoc.body.append(card);
-    const entry = { card, shell, frame, noteDoc, editor, preview, annotation, session, status, restoreScroll: saved?.scroll, revision: 0, editing: false, moving: false };
+    const entry = { card, shell, frame, noteDoc, editor, preview, annotation, session, status, restoreScroll: saved?.scroll, revision: 0, editing: false, moving: false, resizing: false };
     noteDoc.addEventListener('focusin', () => shell.style.setProperty('--note-z', '2'));
     noteDoc.addEventListener('focusout', () => shell.style.setProperty('--note-z', '1'));
     noteDoc.addEventListener('keydown', event => {
@@ -398,6 +407,54 @@ var HiBulbReader = class {
       shell.style.setProperty('--note-left', Math.max(paper.left, Math.min(paper.left + paper.width - bounds.width, bounds.left + delta[0] * paper.zoom)) - host.left + 'px');
       shell.style.setProperty('--note-top', bounds.top + delta[1] * paper.zoom - host.top + 'px'); persist();
     };
+    for (const side of ['left', 'right']) {
+      const handle = this.button('Resize note from ' + side + ' corner (arrow keys)', 'resize', () => {});
+      handle.classList.add('hibulb-resize', 'hibulb-resize-' + side);
+      footer.append(handle);
+      let start;
+      const begin = () => {
+        const paper = this.paper(session.view, entry.annotation), bounds = shell.getBoundingClientRect();
+        entry.resizing = true;
+        start = { left: (bounds.left - paper.left) / paper.zoom, width: bounds.width / paper.zoom, height: bounds.height / paper.zoom };
+      };
+      const resize = (dx, dy) => {
+        const paper = this.paper(session.view, entry.annotation);
+        const maxWidth = side === 'left' ? start.left + start.width : paper.width / paper.zoom - start.left;
+        const width = Math.min(maxWidth, Math.max(Math.min(180, maxWidth), start.width + (side === 'left' ? -dx : dx)));
+        const left = start.left + (side === 'left' ? start.width - width : 0);
+        shell.style.setProperty('--note-width', width + 'px');
+        shell.style.setProperty('--note-height', Math.max(120, start.height + dy) + 'px');
+        shell.style.setProperty('--note-left', paper.left + left * paper.zoom - session.paperHost.getBoundingClientRect().left + 'px');
+      };
+      const finish = () => {
+        if (!start) return;
+        start = null; entry.resizing = false;
+        const paper = this.paper(session.view, entry.annotation), bounds = shell.getBoundingClientRect();
+        this.host.setLayout(annotation.id, {
+          width: bounds.width / paper.zoom, height: bounds.height / paper.zoom,
+          x: (bounds.left - paper.left) / Math.max(1, paper.width - bounds.width)
+        });
+        this.schedule();
+      };
+      handle.onpointerdown = event => {
+        if (event.button !== 0) return;
+        event.preventDefault(); handle.focus({ preventScroll: true }); begin();
+        start.x = event.screenX; start.y = event.screenY;
+        handle.setPointerCapture(event.pointerId);
+      };
+      handle.onpointermove = event => {
+        if (!start) return;
+        const zoom = this.paper(session.view, entry.annotation).zoom;
+        resize((event.screenX - start.x) / zoom, (event.screenY - start.y) / zoom);
+      };
+      handle.onpointerup = finish;
+      handle.onlostpointercapture = finish;
+      handle.onkeydown = event => {
+        const delta = { ArrowLeft: [-12, 0], ArrowRight: [12, 0], ArrowUp: [0, -12], ArrowDown: [0, 12] }[event.key];
+        if (!delta) return;
+        event.preventDefault(); begin(); resize(...delta); finish();
+      };
+    }
     this.preview(entry);
     return entry;
   }
@@ -486,7 +543,7 @@ var HiBulbReader = class {
       if (!placement.open) continue;
       cardIDs.add(key);
       const paper = this.paper(view, a);
-      const width = Math.min(300, paper.width / paper.zoom);
+      const width = Math.min(placement.width || 300, paper.width / paper.zoom);
       const height = placement.height || 210;
       const visualWidth = width * paper.zoom;
       const visualHeight = height * paper.zoom;
@@ -502,12 +559,10 @@ var HiBulbReader = class {
       occupied.push({ left, right: left + visualWidth, top, bottom: top + visualHeight });
       let entry = this.cards.get(key);
       const nearby = left <= frameRect.width + 400 && left + visualWidth >= -400 && top <= frameRect.height + 400 && top + visualHeight >= -400;
-      if (!nearby && !entry?.editing && !entry?.moving && !entry?.noteDoc.hasFocus()) {
-        if (entry) { entry.dispose(); this.cards.delete(key); }
-        continue;
-      }
+      if (!entry && !nearby) continue;
       if (!entry) {
-        // Mount nearby papers; a focused editor stays alive offscreen.
+        // Load papers on approach, then retain them until collapsed. Native
+        // scrolling must never wait for an iframe and Markdown to be rebuilt.
         entry = this.makeCard(session, a); this.cards.set(key, entry);
       }
       entry.annotation = a;
@@ -518,12 +573,14 @@ var HiBulbReader = class {
         entry.editor.setSelectionRange(selectionStart, selectionEnd, selectionDirection);
         this.preview(entry);
       }
-      entry.shell.style.setProperty('--note-width', width + 'px');
-      entry.shell.style.setProperty('--note-height', height + 'px');
+      if (!entry.resizing) {
+        entry.shell.style.setProperty('--note-width', width + 'px');
+        entry.shell.style.setProperty('--note-height', height + 'px');
+      }
       entry.shell.style.setProperty('--note-transform', pdf ? 'scale(calc(var(--scale-factor) * .75))' : 'scale(var(--scale, var(--content-scale, 1)))');
       entry.noteDoc.documentElement.style.colorScheme = view._iframeWindow.document.documentElement.getAttribute('data-color-scheme') || this.win.getComputedStyle(this.doc.documentElement).colorScheme;
       entry.card.style.setProperty('--annotation-color', a.color);
-      if (!entry.moving) {
+      if (!entry.moving && !entry.resizing) {
         entry.shell.style.setProperty('--note-left', left - hostRect.left + 'px');
         entry.shell.style.setProperty('--note-top', top - hostRect.top + 'px');
         if (placement.dy === undefined) {

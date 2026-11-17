@@ -12,6 +12,10 @@ body { font: 13px/1.55 -apple-system, system-ui, sans-serif; }
 .hibulb-card-head .hibulb-button:first-child { flex: 1; cursor: grab; touch-action: none; }
 .hibulb-card-head .hibulb-button:first-child:active { cursor: grabbing; }
 .hibulb-card-head .hibulb-button:last-child { width: 28px; }
+.hibulb-card-foot { display: flex; justify-content: space-between; height: 20px; flex: none; }
+.hibulb-resize { width: 24px; padding: 2px 4px; touch-action: none; cursor: nwse-resize; }
+.hibulb-resize-left { cursor: nesw-resize; }
+.hibulb-resize-left svg { transform: scaleX(-1); }
 .hibulb-card:hover .hibulb-button, .hibulb-card:focus-within .hibulb-button { opacity: .75; }
 .hibulb-button:hover { opacity: 1 !important; }
 .hibulb-button:focus-visible, .hibulb-preview:focus-visible { outline: 2px solid currentColor; outline-offset: -3px; }
