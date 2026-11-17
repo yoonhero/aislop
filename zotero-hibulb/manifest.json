@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "HiBulb for Zotero",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "Highlights, anchored margin notes and annotation navigation in the Zotero reader.",
   "author": "ysh",
   "icons": {

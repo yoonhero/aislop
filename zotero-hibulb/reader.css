@@ -12,35 +12,17 @@
 }
 .hibulb-button:hover, .hibulb-sidebar-note:hover { background: var(--fill-quinary, #8882); }
 .hibulb-button:disabled { opacity: .35; cursor: default; }
-.hibulb-button:focus-visible, .hibulb-preview:focus-visible, .hibulb-swatch:focus-visible { outline: 2px solid var(--color-accent, #3875d7); outline-offset: -2px; }
+.hibulb-button:focus-visible, .hibulb-swatch:focus-visible { outline: 2px solid var(--color-accent, #3875d7); outline-offset: -2px; }
 .hibulb-button svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 .hibulb-button[aria-pressed=true] { background: color-mix(in srgb, #ffd400 24%, transparent); color: light-dark(#8a5a10, #ffdc77); }
 .hibulb-button[aria-pressed=true] svg { fill: color-mix(in srgb, #ffd400 35%, transparent); }
 .hibulb-view { position: fixed; overflow: clip; pointer-events: none; z-index: 10; font: 13px/1.45 -apple-system, system-ui, sans-serif; }
 .hibulb-view [hidden] { display: none !important; }
-.hibulb-actions, .hibulb-card { position: absolute; color: var(--fill-primary, CanvasText); background: var(--material-background, Canvas); border: 1px solid var(--color-panedivider, #8885); box-shadow: 0 2px 8px #0002; border-radius: 7px; pointer-events: auto; }
+.hibulb-actions { position: absolute; color: var(--fill-primary, CanvasText); background: var(--material-background, Canvas); border: 1px solid var(--color-panedivider, #8885); box-shadow: 0 2px 8px #0002; border-radius: 7px; pointer-events: auto; }
 .hibulb-actions { display: flex; gap: 2px; padding: 3px; z-index: 4; max-width: calc(100% - 24px); flex-wrap: wrap; }
 .hibulb-swatch { width: 24px; }
 .hibulb-swatch::before { content: ''; width: 15px; height: 15px; border-radius: 50%; background: var(--swatch); border: 1px solid #0002; }
 .hibulb-swatch[aria-pressed=true]::before { outline: 1px solid currentColor; outline-offset: 2px; }
-.hibulb-card { box-sizing: border-box; transform-origin: top left; display: flex; flex-direction: column; overflow: hidden; z-index: 2; border-top: 3px solid var(--annotation-color, #ffd400); }
-.hibulb-card:focus-within { z-index: 3; }
-.hibulb-card-head { display: flex; justify-content: space-between; flex: none; padding: 1px 3px; background: color-mix(in srgb, var(--annotation-color, #ffd400) 8%, transparent); }
-.hibulb-card-head .hibulb-button { height: 24px; width: 26px; }
-.hibulb-card-head .hibulb-button:first-child { cursor: grab; touch-action: none; }
-.hibulb-card-head .hibulb-button:first-child:active { cursor: grabbing; }
-.hibulb-card-head svg { width: 14px; height: 14px; }
-.hibulb-editor, .hibulb-preview { box-sizing: border-box; flex: 1; min-height: 0; width: 100%; margin: 0; padding: 8px 11px; overflow: auto; scrollbar-gutter: stable; background: transparent; color: inherit; font: inherit; line-height: 1.55; border: 0; outline: none; white-space: pre-wrap; overflow-wrap: anywhere; }
-.hibulb-editor { resize: none; }
-.hibulb-preview { white-space: normal; }
-/* A Markdown paragraph break occupies one blank source line in the editor. */
-.hibulb-preview p { margin: 0 0 1lh; }
-.hibulb-preview > :last-child { margin-bottom: 0; }
-.hibulb-preview pre { white-space: pre-wrap; }
-.hibulb-preview a { color: var(--color-accent, #3477d5); }
-.hibulb-preview math[display=block] { overflow-x: auto; max-width: 100%; }
-.hibulb-status:empty { display: none; }
-.hibulb-status { padding: 3px 10px; font-size: 11px; color: #c33; }
 .hibulb-rail { position: absolute; top: 1px; right: 12px; width: 20px; bottom: 1px; pointer-events: none; z-index: 5; }
 .hibulb-marker { position: absolute; right: 0; width: 20px; height: 20px; padding: 0; border: 0; border-radius: 4px; background: transparent; cursor: pointer; pointer-events: auto; }
 .hibulb-marker::before { content: ''; position: absolute; right: 3px; top: 9px; width: 8px; height: 2px; border-radius: 1px; background: color-mix(in srgb, var(--marker-color) 82%, CanvasText); opacity: .55; }

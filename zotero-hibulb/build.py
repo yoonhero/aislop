@@ -14,7 +14,7 @@ version = manifest['version']
 args.output.mkdir(parents=True, exist_ok=True)
 output = args.output / f'hibulb-zotero-{version}.xpi'
 with ZipFile(output, 'w', ZIP_DEFLATED) as archive:
-    for name in ('manifest.json', 'bootstrap.js', 'reader.js', 'reader.css', 'icon.png'):
+    for name in ('manifest.json', 'bootstrap.js', 'reader.js', 'reader.css', 'note.css', 'icon.png'):
         archive.write(root / name, name)
     for file in sorted((root / 'vendor').iterdir()):
         archive.write(file, 'vendor/' + file.name)

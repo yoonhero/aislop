@@ -7,6 +7,7 @@ var HiBulbReader = class {
     this.win = this.doc.defaultView;
     this.views = new Map();
     this.cards = new Map();
+    this.noteUI = new Map();
     this.cleanups = [];
     this.known = new Set(this.core._state.annotations.map(a => a.id));
     this.color = '#ffd400';
@@ -68,7 +69,7 @@ var HiBulbReader = class {
       delete: 'M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 10v7m4-7v7',
       back: 'm14 6-6 6 6 6',
       fold: 'M5 12h14',
-      move: 'M12 3v18M3 12h18m-12-6 3-3 3 3m-6 12 3 3 3-3M6 9l-3 3 3 3m12-6 3 3-3 3',
+      move: 'M8 10h8M8 14h8',
       check: 'm5 12 4 4L20 5'
     };
     const svg = this.doc.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -112,6 +113,17 @@ var HiBulbReader = class {
     style.textContent = '#pastel-pen { display:none!important }';
     win.document.head.append(style);
     const session = { view, primary, layer, rail, actions, style, cleanups: [] };
+    const paperHost = win.document.createElement('div');
+    paperHost.className = 'hibulb-paper';
+    paperHost.style.cssText = 'all:initial!important;position:absolute!important;left:0!important;top:0!important;width:100%!important;height:0!important;overflow:visible!important;pointer-events:none!important;z-index:100!important;zoom:1!important;display:var(--notes-display,block)!important';
+    const viewer = win.document.getElementById('viewer');
+    const parent = viewer || win.document.body;
+    if (viewer && win.getComputedStyle(viewer).position === 'static') {
+      const value = viewer.style.getPropertyValue('position'), priority = viewer.style.getPropertyPriority('position');
+      viewer.style.setProperty('position', 'relative');
+      session.cleanups.push(() => value ? viewer.style.setProperty('position', value, priority) : viewer.style.removeProperty('position'));
+    }
+    parent.append(paperHost); session.paperHost = paperHost;
     const update = () => { dismiss(); this.schedule(); };
     const dismiss = () => {
       rail.querySelector('.hibulb-marker-list')?.remove();
@@ -122,9 +134,19 @@ var HiBulbReader = class {
     win.addEventListener('scroll', update, true);
     win.addEventListener('resize', update);
     session.cleanups.push(() => win.removeEventListener('scroll', update, true), () => win.removeEventListener('resize', update));
-    const observer = new win.ResizeObserver(update);
+    // Layout changes are delivered before paint. Scrolling itself is handled
+    // by the native document, not by moving a fixed overlay in a later frame.
+    const geometryUpdate = () => {
+      if (this.destroyed || !this.views.has(view)) return;
+      try { this.layout(session, this.core._state); } catch (error) { this.host.error(error); }
+    };
+    const observer = new win.ResizeObserver(geometryUpdate);
     observer.observe(win.document.documentElement);
+    observer.observe(parent);
     session.cleanups.push(() => observer.disconnect());
+    const themeObserver = new win.MutationObserver(geometryUpdate);
+    themeObserver.observe(win.document.documentElement, { attributes: true, attributeFilter: ['style', 'data-color-scheme'] });
+    session.cleanups.push(() => themeObserver.disconnect());
     this.views.set(view, session);
     layer.addEventListener('pointerdown', event => event.stopPropagation());
     layer.addEventListener('keydown', event => {
@@ -135,9 +157,7 @@ var HiBulbReader = class {
           session.rail.querySelector('[aria-expanded=true]')?.focus({ preventScroll: true });
           dismiss(); return;
         }
-        const card = event.target.closest('.hibulb-card');
-        if (card) this.closeNote(card.dataset.id);
-        else { this.palette = false; this.core.setSelectedAnnotations([]); this.schedule(); }
+        this.palette = false; this.core.setSelectedAnnotations([]); this.schedule();
       }
     });
   }
@@ -235,11 +255,10 @@ var HiBulbReader = class {
     const w = box.offsetWidth;
     const h = box.offsetHeight;
     const x = Math.max(6, Math.min(rect[0], width - w - 22));
-    const layerRect = session.layer.getBoundingClientRect();
-    const cards = [...this.cards.values()].filter(entry => entry.session === session && !entry.card.hidden)
+    const cards = [...this.cards.values()].filter(entry => entry.session === session)
       .map(entry => {
-        const card = entry.card.getBoundingClientRect();
-        return new DOMRect(card.left - layerRect.left, card.top - layerRect.top, card.width, card.height);
+        const card = entry.shell.getBoundingClientRect();
+        return new DOMRect(card.left, card.top, card.width, card.height);
       });
     const candidates = [rect[3] + 6, rect[1] - h - 6].flatMap(top =>
       [x, rect[2] + 6, rect[0] - w - 6].map(left => new DOMRect(left, top, w, h)));
@@ -252,6 +271,21 @@ var HiBulbReader = class {
   }
 
   makeCard(session, annotation) {
+    const key = (session.primary ? 'p:' : 's:') + annotation.id;
+    const saved = this.noteUI.get(key);
+    const inner = session.view._iframeWindow.document;
+    const shell = inner.createElement('div');
+    shell.className = 'hibulb-paper-note'; shell.dataset.id = annotation.id;
+    shell.style.cssText = 'all:initial!important;position:absolute!important;display:block!important;left:var(--note-left,0px)!important;top:var(--note-top,0px)!important;width:var(--note-width,300px)!important;height:var(--note-height,210px)!important;transform:var(--note-transform)!important;transform-origin:0 0!important;pointer-events:none!important;z-index:var(--note-z,1)!important';
+    const frame = inner.createElement('iframe');
+    frame.title = 'HiBulb margin note';
+    frame.style.cssText = 'all:initial!important;display:block!important;width:100%!important;height:100%!important;border:0!important;border-radius:2px!important;box-shadow:0 2px 5px #0002!important;pointer-events:auto!important;background:transparent!important';
+    shell.append(frame); session.paperHost.append(shell);
+    // A small document keeps the page's CSS and native annotation capture
+    // handlers out of the note. Its frame remains inside the native scroller.
+    const noteDoc = frame.contentDocument;
+    noteDoc.open(); noteDoc.write('<!doctype html><html><head><meta charset="utf-8"></head><body></body></html>'); noteDoc.close();
+    const css = noteDoc.createElement('style'); css.textContent = this.host.noteCSS; noteDoc.head.append(css);
     const card = this.el('section', 'hibulb-card');
     card.dataset.id = annotation.id; card.ariaLabel = 'Margin note';
     const header = this.el('header', 'hibulb-card-head');
@@ -261,28 +295,51 @@ var HiBulbReader = class {
     const editor = this.el('textarea', 'hibulb-editor');
     editor.ariaLabel = 'Note text'; editor.placeholder = 'Write a note…';
     editor.value = annotation.comment || '';
-    editor.setSelectionRange(0, 0);
+    editor.setSelectionRange(saved?.start || 0, saved?.end || 0, saved?.direction);
     const preview = this.el('div', 'hibulb-preview');
+    preview.hidden = true;
     preview.tabIndex = 0; preview.ariaLabel = 'Note preview. Press Enter to edit.';
     const status = this.el('span', 'hibulb-status'); status.role = 'status';
     card.append(header, editor, preview, status);
-    session.layer.append(card);
-    const entry = { card, editor, preview, annotation, session, status, revision: 0, editing: false, moving: false };
+    noteDoc.body.append(card);
+    const entry = { card, shell, frame, noteDoc, editor, preview, annotation, session, status, restoreScroll: saved?.scroll, revision: 0, editing: false, moving: false };
+    noteDoc.addEventListener('focusin', () => shell.style.setProperty('--note-z', '2'));
+    noteDoc.addEventListener('focusout', () => shell.style.setProperty('--note-z', '1'));
+    noteDoc.addEventListener('keydown', event => {
+      if (event.key === 'Escape') { event.preventDefault(); this.closeNote(annotation.id); }
+    });
+    noteDoc.addEventListener('wheel', event => {
+      if (!event.ctrlKey && !event.metaKey) return;
+      // Trackpad pinch over the paper belongs to the document's zoom handler.
+      event.preventDefault();
+      const win = session.view._iframeWindow, bounds = frame.getBoundingClientRect();
+      const zoom = bounds.width / frame.clientWidth;
+      const target = win.document.getElementById('viewerContainer') || win.document.body;
+      target.dispatchEvent(new win.WheelEvent('wheel', {
+        bubbles: true, cancelable: true, ctrlKey: event.ctrlKey,
+        clientX: bounds.left + event.clientX * zoom, clientY: bounds.top + event.clientY * zoom,
+        deltaX: event.deltaX, deltaY: event.deltaY, deltaZ: event.deltaZ, deltaMode: event.deltaMode,
+        shiftKey: event.shiftKey, altKey: event.altKey, metaKey: event.metaKey
+      }));
+    }, { passive: false });
     entry.edit = point => {
-      const scrollTop = preview.scrollTop;
+      const scrollTop = entry.restoreScroll ?? preview.scrollTop;
+      entry.restoreScroll = undefined;
       entry.editing = true; preview.hidden = true; editor.hidden = false;
       editor.focus({ preventScroll: true });
       editor.scrollTop = scrollTop;
       if (point) {
         // Hit-test the actual textarea after layout. Gecko accounts for soft
         // wrapping, document zoom, internal scrolling, and Unicode text.
-        const caret = this.doc.caretPositionFromPoint(point.x, point.y);
+        const caret = noteDoc.caretPositionFromPoint(point.x, point.y);
         if (caret?.offsetNode === editor) editor.setSelectionRange(caret.offset, caret.offset);
         editor.scrollTop = scrollTop;
       }
     };
     preview.onclick = event => {
-      if (!event.target.closest('a') && this.win.getSelection().isCollapsed) {
+      const link = event.target.closest('a');
+      if (link) { event.preventDefault(); this.host.openLink(link.href); return; }
+      if (noteDoc.defaultView.getSelection().isCollapsed) {
         entry.edit(event.detail ? { x: event.clientX, y: event.clientY } : null);
       }
     };
@@ -296,20 +353,25 @@ var HiBulbReader = class {
       catch (error) { status.textContent = 'Could not save note'; this.host.error(error); }
     };
     editor.onblur = () => { entry.editing = false; this.preview(entry); };
-    entry.dispose = () => { entry.revision++; card.remove(); };
+    entry.dispose = () => {
+      this.noteUI.set(key, { start: editor.selectionStart, end: editor.selectionEnd, direction: editor.selectionDirection, scroll: preview.hidden ? editor.scrollTop : preview.scrollTop });
+      entry.revision++; shell.remove();
+    };
     let drag;
     grip.onpointerdown = event => {
       if (event.button !== 0) return;
       event.preventDefault(); grip.focus({ preventScroll: true });
-      drag = { x: event.clientX, y: event.clientY, left: card.offsetLeft, top: card.offsetTop };
+      const bounds = shell.getBoundingClientRect();
+      drag = { x: event.screenX, y: event.screenY, left: bounds.left, top: bounds.top };
       entry.moving = true; grip.setPointerCapture(event.pointerId);
     };
     grip.onpointermove = event => {
       if (!drag) return;
       const paper = this.paper(session.view, entry.annotation);
-      const width = card.getBoundingClientRect().width;
-      card.style.left = Math.max(paper.left, Math.min(paper.left + paper.width - width, drag.left + event.clientX - drag.x)) + 'px';
-      card.style.top = (drag.top + event.clientY - drag.y) + 'px';
+      const width = shell.getBoundingClientRect().width;
+      const host = session.paperHost.getBoundingClientRect();
+      shell.style.setProperty('--note-left', Math.max(paper.left, Math.min(paper.left + paper.width - width, drag.left + event.screenX - drag.x)) - host.left + 'px');
+      shell.style.setProperty('--note-top', drag.top + event.screenY - drag.y - host.top + 'px');
     };
     const persist = () => {
       if (!drag) return;
@@ -317,9 +379,10 @@ var HiBulbReader = class {
       const rect = this.rect(session.view, entry.annotation);
       if (rect) {
         const paper = this.paper(session.view, entry.annotation);
+        const bounds = shell.getBoundingClientRect();
         this.host.setLayout(annotation.id, {
-          x: (card.offsetLeft - paper.left) / Math.max(1, paper.width - card.getBoundingClientRect().width),
-          dy: (card.offsetTop - rect[1]) / paper.units
+          x: (bounds.left - paper.left) / Math.max(1, paper.width - bounds.width),
+          dy: (bounds.top - rect[1]) / paper.units
         });
       }
       this.schedule();
@@ -331,8 +394,9 @@ var HiBulbReader = class {
       if (!delta) return;
       event.preventDefault(); drag = {};
       const paper = this.paper(session.view, entry.annotation);
-      card.style.left = Math.max(paper.left, Math.min(paper.left + paper.width - card.getBoundingClientRect().width, card.offsetLeft + delta[0] * paper.zoom)) + 'px';
-      card.style.top = card.offsetTop + delta[1] * paper.zoom + 'px'; persist();
+      const bounds = shell.getBoundingClientRect(), host = session.paperHost.getBoundingClientRect();
+      shell.style.setProperty('--note-left', Math.max(paper.left, Math.min(paper.left + paper.width - bounds.width, bounds.left + delta[0] * paper.zoom)) - host.left + 'px');
+      shell.style.setProperty('--note-top', bounds.top + delta[1] * paper.zoom - host.top + 'px'); persist();
     };
     this.preview(entry);
     return entry;
@@ -347,10 +411,11 @@ var HiBulbReader = class {
       const html = await this.host.render(source);
       if (this.destroyed || revision !== entry.revision || entry.editing || !entry.card.isConnected) return;
       const parsed = new this.win.DOMParser().parseFromString(html, 'text/html');
-      const scrollTop = entry.preview.hidden ? entry.editor.scrollTop : entry.preview.scrollTop;
-      entry.preview.replaceChildren(...Array.from(parsed.body.childNodes, node => this.doc.importNode(node, true)));
+      const scrollTop = entry.restoreScroll ?? (entry.preview.hidden ? entry.editor.scrollTop : entry.preview.scrollTop);
+      entry.preview.replaceChildren(...Array.from(parsed.body.childNodes, node => entry.noteDoc.importNode(node, true)));
       entry.editor.hidden = true; entry.preview.hidden = false;
       entry.preview.scrollTop = scrollTop;
+      entry.restoreScroll = undefined;
     } catch (error) { this.host.error(error); entry.editor.hidden = false; entry.preview.hidden = true; }
   }
 
@@ -390,6 +455,7 @@ var HiBulbReader = class {
     const frameRect = view._iframe.getBoundingClientRect();
     Object.assign(layer.style, { left: frameRect.left + 'px', top: frameRect.top + 'px', width: frameRect.width + 'px', height: frameRect.height + 'px' });
     layer.hidden = frameRect.width === 0 || frameRect.height === 0 || state.showAnnotations === false;
+    session.paperHost.style.setProperty('--notes-display', layer.hidden ? 'none' : 'block');
     if (layer.hidden) return;
     if (!session.suppressed?.node.isConnected) {
       const node = view._iframeWindow.document.getElementById('pastel-pen');
@@ -407,6 +473,8 @@ var HiBulbReader = class {
     const occupied = [];
     const locations = [];
     const cardIDs = new Set();
+    const hostRect = session.paperHost.getBoundingClientRect();
+    const pdf = view._iframeWindow.PDFViewerApplication;
     for (const a of annotations) {
       const rect = this.rect(view, a);
       if (!rect) continue;
@@ -433,9 +501,13 @@ var HiBulbReader = class {
       }
       occupied.push({ left, right: left + visualWidth, top, bottom: top + visualHeight });
       let entry = this.cards.get(key);
+      const nearby = left <= frameRect.width + 400 && left + visualWidth >= -400 && top <= frameRect.height + 400 && top + visualHeight >= -400;
+      if (!nearby && !entry?.editing && !entry?.moving && !entry?.noteDoc.hasFocus()) {
+        if (entry) { entry.dispose(); this.cards.delete(key); }
+        continue;
+      }
       if (!entry) {
-        // Keep mounted editors intact while their paper scrolls out of view.
-        if (left > frameRect.width || left + visualWidth < 0 || top > frameRect.height + 400 || top + visualHeight < -400) continue;
+        // Mount nearby papers; a focused editor stays alive offscreen.
         entry = this.makeCard(session, a); this.cards.set(key, entry);
       }
       entry.annotation = a;
@@ -446,13 +518,14 @@ var HiBulbReader = class {
         entry.editor.setSelectionRange(selectionStart, selectionEnd, selectionDirection);
         this.preview(entry);
       }
-      Object.assign(entry.card.style, {
-        width: width + 'px', height: height + 'px', transform: 'scale(' + paper.zoom + ')'
-      });
+      entry.shell.style.setProperty('--note-width', width + 'px');
+      entry.shell.style.setProperty('--note-height', height + 'px');
+      entry.shell.style.setProperty('--note-transform', pdf ? 'scale(calc(var(--scale-factor) * .75))' : 'scale(var(--scale, var(--content-scale, 1)))');
+      entry.noteDoc.documentElement.style.colorScheme = view._iframeWindow.document.documentElement.getAttribute('data-color-scheme') || this.win.getComputedStyle(this.doc.documentElement).colorScheme;
       entry.card.style.setProperty('--annotation-color', a.color);
       if (!entry.moving) {
-        entry.card.style.left = left + 'px';
-        entry.card.style.top = top + 'px';
+        entry.shell.style.setProperty('--note-left', left - hostRect.left + 'px');
+        entry.shell.style.setProperty('--note-top', top - hostRect.top + 'px');
         if (placement.dy === undefined) {
           this.host.setLayout(a.id, {
             x: (left - paper.left) / Math.max(1, paper.width - visualWidth),
@@ -545,7 +618,7 @@ var HiBulbReader = class {
       if (value) node.style.setProperty('display', value, priority);
       else node.style.removeProperty('display');
     }
-    session.cleanups.forEach(cleanup => cleanup()); session.style.remove(); session.layer.remove();
+    session.cleanups.forEach(cleanup => cleanup()); session.style.remove(); session.layer.remove(); session.paperHost.remove();
   }
 
   destroy() {
@@ -557,6 +630,7 @@ var HiBulbReader = class {
     this.cleanups.forEach(cleanup => cleanup());
     for (const session of this.views.values()) this.dropView(session);
     this.views.clear(); this.toolbar.remove(); this.style.remove();
+    this.noteUI.clear();
     this.doc.querySelectorAll('.hibulb-sidebar-note').forEach(node => node.remove());
     this.doc.body.removeAttribute('data-hibulb-primary-popup');
     this.doc.body.removeAttribute('data-hibulb-secondary-popup');

@@ -25,6 +25,7 @@ async function mount({ reader }) {
     const prefix = 'extensions.hibulb.layout.' + item.libraryID + '.' + item.key + '.';
     const host = {
       css: (await Zotero.HTTP.request('GET', 'resource://hibulb/reader.css')).responseText,
+      noteCSS: (await Zotero.HTTP.request('GET', 'resource://hibulb/note.css')).responseText,
       getLayout(id) {
         try { return JSON.parse(Zotero.Prefs.get(prefix + id, true) || '{}'); }
         catch { return {}; }
@@ -52,6 +53,8 @@ async function mount({ reader }) {
     content.eval(source);
     const bridge = Cu.cloneInto({
       css: host.css,
+      noteCSS: host.noteCSS,
+      openLink: url => { if (/^https?:\/\//i.test(url)) Zotero.launchURL(url); },
       getLayout: id => Cu.cloneInto(host.getLayout(id), content),
       setLayout: (id, changes) => host.setLayout(id, changes),
       render: source => new content.Promise((resolve, reject) => {
