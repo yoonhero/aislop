@@ -41,3 +41,25 @@ async function boot() {
   render();
 }
 boot().catch(console.warn);
+
+(async () => {
+  const key = "hibulb.pairing";
+  async function status() {
+    const stored = await browser.storage.local.get(null);
+    const pending = Object.keys(stored).filter(k => k.startsWith("hibulb.pending.")).length;
+    $("syncStatus").textContent = stored[key] ? (pending ? pending + " pending" : "Connected") : "Disconnected";
+    $("connect").textContent = stored[key] ? "Disconnect" : "Connect";
+  }
+  $("connect").onclick = async () => {
+    if ((await browser.storage.local.get(key))[key]) await browser.storage.local.remove(key);
+    else {
+      const code = $("pair").value.trim();
+      if (!/^[a-f0-9-]{36}$/i.test(code)) { $("syncStatus").textContent = "Check the pairing code."; return; }
+      await browser.storage.local.set({[key]:code});
+    }
+    $("pair").value = "";
+    await status();
+  };
+  browser.storage.onChanged.addListener(status);
+  await status();
+})();

@@ -3,12 +3,13 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "esbuild markdown.js math.js --bundle --minify --legal-comments=linked --format=esm --target=firefox142 --out-extension:.js=.mjs --outdir=../extension/vendor"
+    "build": "esbuild markdown.js math.js --bundle --minify --legal-comments=linked --format=esm --target=firefox142 --out-extension:.js=.mjs --outdir=../extension/vendor && esbuild node_modules/single-file-core/single-file.js --bundle --minify --legal-comments=inline --format=iife --global-name=HiBulbSingleFile --target=firefox142 --outfile=../extension/vendor/snapshot.js"
   },
   "dependencies": {
     "@mdit/plugin-tex": "1.2.0",
     "katex": "0.19.1",
-    "markdown-it": "15.0.3"
+    "markdown-it": "15.0.3",
+    "single-file-core": "1.14.3"
   },
   "devDependencies": {
     "esbuild": "0.28.2"

@@ -67,7 +67,10 @@ api.runtime.onMessage.addListener((message, sender) => {
         }
         break;
     }
-    await api.storage.local.set({ [key]: data });
+    const record = action === "add" ? data.items.find(entry => entry.id === value.id && entry.url === PastelPenScope.cleanPage(sender.url)) : item;
+    const pending = await HiBulbSync.stage(action, record);
+    await api.storage.local.set({ [key]: data, ...pending });
+    if (Object.keys(pending).length) HiBulbSync.schedule();
     if (action === "remove" && item && !data.items.some((entry) => entry.url === item.url)) {
       await api.storage.local.remove(articleKey(item.url));
     }

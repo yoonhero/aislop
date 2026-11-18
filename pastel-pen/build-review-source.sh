@@ -27,7 +27,7 @@ BUILD
 
 npm ci --prefix "$stage/note-renderer"
 npm run build --prefix "$stage/note-renderer"
-for bundle in markdown.mjs math.mjs; do
+for bundle in markdown.mjs math.mjs snapshot.js; do
   cmp "$project_dir/extension/vendor/$bundle" "$stage/extension/vendor/$bundle"
 done
 

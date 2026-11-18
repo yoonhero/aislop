@@ -19,6 +19,12 @@
   <button id="toggle" class="page-toggle" type="button"></button>
   <div class="eyebrow">Default colour</div>
   <div id="colors" class="colors" aria-label="Default pen colour"></div>
+  <details><summary>Zotero sync</summary>
+    <label for="pair">Local pairing code</label>
+    <input id="pair" type="password" autocomplete="off" placeholder="From Zotero → Settings → HiBulb">
+    <button id="connect" type="button">Connect</button>
+    <output id="syncStatus" aria-live="polite"></output>
+  </details>
   <script src="scope.js"></script>
   <script src="model.js"></script>
   <script src="popup.js"></script>
