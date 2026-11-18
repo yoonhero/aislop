@@ -9,7 +9,7 @@ var HiBulbReader = class {
     this.cards = new Map();
     this.noteUI = new Map();
     this.cleanups = [];
-    this.known = new Set(this.core._state.annotations.map(a => a.id));
+    this.annotations = this.core._state.annotations;
     this.color = '#ffd400';
     this.destroyed = false;
     this.frame = null;
@@ -25,16 +25,19 @@ var HiBulbReader = class {
     this.pen = this.button('Highlight text', 'bulb', () => {
       this.core.setTool({ type: this.core._state.tool.type === 'highlight' ? 'pointer' : 'highlight', color: this.color });
     });
-    this.note = this.button('Place a note', 'note', () => this.core.setTool({
-      type: this.core._state.tool.type === 'note' ? 'pointer' : 'note', color: this.color
-    }));
+    this.note = this.button('Place one note', 'note', () => {
+      this.placing = this.core._state.tool.type !== 'note';
+      this.core.setTool({ type: this.placing ? 'note' : 'pointer', color: this.color });
+    });
+    if (this.core._state.tool.type === 'note') this.core.setTool({ type: 'pointer' });
     this.toolbar.append(this.pen, this.note);
     original.before(this.toolbar);
     this.originalUpdate = this.core._updateState;
     const self = this;
     this.patchedUpdate = function (...args) {
       const result = self.originalUpdate.apply(this, args);
-      self.schedule();
+      const changes = args[0] || {};
+      if (Object.keys(changes).some(key => /^(tool|annotations|readOnly|showAnnotations|selectedAnnotationIDs|splitType|splitSize|primaryViewSelectionPopup|secondaryViewSelectionPopup|primaryViewAnnotationPopup|secondaryViewAnnotationPopup)$/.test(key))) self.schedule();
       return result;
     };
     this.core._updateState = this.patchedUpdate;
@@ -137,7 +140,9 @@ var HiBulbReader = class {
     session.cleanups.push(() => win.removeEventListener('scroll', update, true), () => win.removeEventListener('resize', update));
     // Layout changes are delivered before paint. Scrolling itself is handled
     // by the native document, not by moving a fixed overlay in a later frame.
+    session.pageRects = new WeakMap();
     const geometryUpdate = () => {
+      session.pageRects = new WeakMap();
       if (this.destroyed || !this.views.has(view)) return;
       try { this.layout(session, this.core._state); } catch (error) { this.host.error(error); }
     };
@@ -145,6 +150,17 @@ var HiBulbReader = class {
     if (pdf) {
       // PDF.js has already resized every page when this fires. Update the
       // anchor in the same zoom operation as the paper's inherited scale.
+      const viewer = pdf.pdfViewer;
+      const updateScale = viewer.updateScale;
+      function zoom(options) {
+        // PDF.js normally updates its location on the next scroll frame. A pinch
+        // or toolbar zoom can arrive first, while _location still names a distant page.
+        this.update();
+        const box = this.container.getBoundingClientRect();
+        return updateScale.call(this, { ...options, origin: options.origin || [box.x + box.width / 2, box.y + box.height / 2] });
+      }
+      viewer.updateScale = zoom;
+      session.cleanups.push(() => { if (viewer.updateScale === zoom) viewer.updateScale = updateScale; });
       pdf.eventBus._on('scalechanging', geometryUpdate);
       session.cleanups.push(() => pdf.eventBus._off('scalechanging', geometryUpdate));
     }
@@ -299,7 +315,13 @@ var HiBulbReader = class {
     const header = this.el('header', 'hibulb-card-head');
     const grip = this.button('Move note', 'move', () => {});
     const fold = this.button('Collapse note', 'fold', () => this.closeNote(annotation.id));
-    header.append(grip, fold);
+    const remove = this.button('Delete note', 'delete', () => {
+      if (!this.writable(annotation)) return;
+      if (annotation.type === 'note') this.core._annotationManager.deleteAnnotations([annotation.id]);
+      else this.change(annotation.id, { comment: '' });
+      this.closeNote(annotation.id);
+    });
+    header.append(grip, remove, fold);
     const editor = this.el('textarea', 'hibulb-editor');
     editor.ariaLabel = 'Note text'; editor.placeholder = 'Write a note…';
     editor.value = annotation.comment || '';
@@ -311,7 +333,7 @@ var HiBulbReader = class {
     const footer = this.el('footer', 'hibulb-card-foot');
     card.append(header, editor, preview, status, footer);
     noteDoc.body.append(card);
-    const entry = { card, shell, frame, noteDoc, editor, preview, annotation, session, status, restoreScroll: saved?.scroll, revision: 0, editing: false, moving: false, resizing: false };
+    const entry = { card, shell, frame, remove, noteDoc, editor, preview, annotation, session, status, restoreScroll: saved?.scroll, revision: 0, editing: false, moving: false, resizing: false };
     noteDoc.addEventListener('focusin', () => shell.style.setProperty('--note-z', '2'));
     noteDoc.addEventListener('focusout', () => shell.style.setProperty('--note-z', '1'));
     noteDoc.addEventListener('keydown', event => {
@@ -507,10 +529,17 @@ var HiBulbReader = class {
       if (!liveViews.includes(view)) { this.dropView(session); this.views.delete(view); }
     }
     liveViews.forEach((view, i) => this.mountView(view, i === 0));
-    for (const a of state.annotations) {
-      if (!this.known.has(a.id) && a.type === 'note' && this.writable(a)) this.openNote(a.id);
+    if (this.placing && this.annotations !== state.annotations) {
+      const ids = new Set(this.annotations.map(a => a.id));
+      const placed = state.annotations.find(a => a.type === 'note' && !ids.has(a.id) && this.writable(a));
+      if (placed) {
+        this.placing = false;
+        if (state.tool.type === 'note') this.core.setTool({ type: 'pointer' });
+        this.openNote(placed.id);
+      }
     }
-    this.known = new Set(state.annotations.map(a => a.id));
+    this.annotations = state.annotations;
+    if (state.tool.type !== 'note') this.placing = false;
     for (const session of this.views.values()) this.layout(session, state);
     this.focusNote = null;
   }
@@ -541,7 +570,18 @@ var HiBulbReader = class {
     const hostRect = session.paperHost.getBoundingClientRect();
     const pdf = view._iframeWindow.PDFViewerApplication;
     for (const a of annotations) {
-      const rect = this.rect(view, a);
+      let rect;
+      if (pdf && a.position.rects) {
+        const { scrollLeft, scrollTop } = scroller;
+        let saved = session.pageRects.get(a.position);
+        if (!saved) {
+          rect = this.rect(view, a);
+          if (!rect) continue;
+          saved = [rect[0]+scrollLeft,rect[1]+scrollTop,rect[2]+scrollLeft,rect[3]+scrollTop];
+          session.pageRects.set(a.position,saved);
+        }
+        rect = [saved[0]-scrollLeft,saved[1]-scrollTop,saved[2]-scrollLeft,saved[3]-scrollTop];
+      } else rect = this.rect(view,a);
       if (!rect) continue;
       const outsideX = rect[2] < 0 || rect[0] > frameRect.width;
       const offset = horizontal ? Math.abs(scroller.scrollLeft) + (scroller.scrollLeft < 0 ? frameRect.width - rect[2] : rect[0]) : rect[1] + scroller.scrollTop;
@@ -574,7 +614,7 @@ var HiBulbReader = class {
         entry = this.makeCard(session, a); this.cards.set(key, entry);
       }
       entry.annotation = a;
-      entry.editor.readOnly = !this.writable(a);
+      entry.remove.hidden = entry.editor.readOnly = !this.writable(a);
       if (!entry.editing && entry.editor.value !== a.comment) {
         const { selectionStart, selectionEnd, selectionDirection } = entry.editor;
         entry.editor.value = a.comment || '';
