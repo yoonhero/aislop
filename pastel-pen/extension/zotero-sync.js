@@ -9,7 +9,10 @@ const HiBulbSync = (() => {
   async function stage(action, item) {
     if (!item || !/^https?:/.test(item.url) || !["add", "note", "color", "placement", "fold", "remove"].includes(action)) return {};
     if (!(await browser.storage.local.get(pairing))[pairing]) return {};
-    return { [prefix + item.id]: { revision: crypto.randomUUID(), removed: action === "remove", item } };
+    const key = prefix + item.id;
+    const previous = (await browser.storage.local.get(key))[key];
+    const fields = [...new Set([...(previous?.fields || []), action])];
+    return { [key]: { revision: crypto.randomUUID(), removed: action === "remove", fields, item } };
   }
   async function flush() {
     if (running) return;
@@ -24,7 +27,7 @@ const HiBulbSync = (() => {
         const send = async snapshot => fetch("http://127.0.0.1:23119/hibulb/sync", {
           method: "POST", credentials: "omit", redirect: "error", signal: AbortSignal.timeout(65000),
           headers: { "Content-Type": "application/json", "Zotero-Allowed-Request": "1", "X-HiBulb-Pair": token },
-          body: JSON.stringify({ item, removed: change.removed, snapshot })
+          body: JSON.stringify({ item, removed: change.removed, fields:change.fields, snapshot })
         });
         let response = await send();
         if (response.status === 409) {
@@ -48,8 +51,38 @@ const HiBulbSync = (() => {
         await ack;
         } catch (error) { console.debug("HiBulb will retry this annotation", error.message); if(error instanceof TypeError)break; }
       }
+      await pull(token);
     } catch (error) { console.debug("HiBulb sync will retry", error.message); }
     finally { running = false; }
+  }
+  async function pull(token) {
+    const {key,read}=PastelPen;
+    const records=read((await browser.storage.local.get(key))[key]).items;
+    const response=await fetch("http://127.0.0.1:23119/hibulb/sync",{
+      method:"POST",credentials:"omit",redirect:"error",signal:AbortSignal.timeout(60000),
+      headers:{"Content-Type":"application/json","Zotero-Allowed-Request":"1","X-HiBulb-Pair":token},
+      body:JSON.stringify({action:"pull",known:records.map(i=>i.id)})
+    });
+    if(!response.ok)return;
+    const updates=await response.json();
+    const apply=writes.then(async()=>{
+      const stored=await browser.storage.local.get([pairing,key,...updates.map(i=>prefix+i.id)]);
+      if(stored[pairing]!==token)return;
+      const data=read(stored[key]),local=new Map(data.items.map(i=>[i.id,i]));
+      let changed=false;
+      for(const update of updates){
+        if(stored[prefix+update.id])continue;
+        const item=local.get(update.id);
+        if(!item){
+          if(update.exact && update.url){data.items.unshift(update);local.set(update.id,update);changed=true;}
+        }else if((item.note||"")!==update.note || item.color!==update.color){
+          item.note=update.note;item.color=update.color;changed=true;
+        }
+      }
+      if(changed)await browser.storage.local.set({[key]:data});
+    });
+    writes=apply.catch(console.warn);
+    await apply;
   }
   setInterval(flush, 30000);
   schedule();

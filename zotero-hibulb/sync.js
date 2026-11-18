@@ -16,14 +16,18 @@ var FirefoxSync = (() => {
     return (await Zotero.Relations.getByPredicateAndObject('item', predicate, uri))
       .find(i => i.libraryID === Zotero.Libraries.userLibraryID && !i.deleted);
   }
-  function locate(html, item) {
+  function documentIndex(html) {
     const win = Zotero.getMainWindow();
     const doc = new win.DOMParser().parseFromString(html, 'text/html');
     const scope = Cu.Sandbox(Services.scriptSecurityManager.getSystemPrincipal());
     Object.assign(scope,{document:doc,Node:win.Node,NodeFilter:win.NodeFilter,getComputedStyle:el=>el.style});
     Services.scriptloader.loadSubScript('resource://hibulb/anchors.js',scope);
     const anchors = scope.PastelAnchors, index = anchors.index();
-    let hit = anchors.locate(item, index);
+    return {doc,anchors,index,win};
+  }
+  function locate(html,item) {
+    const {doc,anchors,index,win}=documentIndex(html);
+    let hit=anchors.locate(item,index);
     if (!hit) {
       // Snapshot serialization can change whitespace in otherwise identical text.
       const compact = index.text.replace(/\s/g,''), needle = item.exact.replace(/\s/g,'');
@@ -74,7 +78,62 @@ var FirefoxSync = (() => {
     }
     return {parent};
   }
-  async function receive({item,removed,snapshot}) {
+  function exportRange(source,position) {
+    const {doc,anchors,index}=source;
+    const root=position.type==='CssSelector'?doc.body.querySelector(position.value):doc.body;
+    if(!root)return null;
+    const range=doc.createRange();range.selectNodeContents(root);
+    const offsets=position.type==='CssSelector'?position.refinedBy:position;
+    if(offsets){
+      if(offsets.type!=='TextPositionSelector')return null;
+      const it=doc.createNodeIterator(root,4);let n,offset=0,start=false,end=false;
+      while(n=it.nextNode()){
+        if(!start&&offsets.start<offset+n.length){range.setStart(n,offsets.start-offset);start=true;}
+        if(offsets.end<=offset+n.length){range.setEnd(n,offsets.end-offset);end=true;break;}
+        offset+=n.length;
+      }
+      if(!start||!end)return null;
+    }
+    const bounds=anchors.selected(range,index);
+    if(!bounds)return null;
+    const {start,end}=bounds,text=index.text;
+    return {start,end,exact:text.slice(start,end),prefix:text.slice(Math.max(0,start-80),start),suffix:text.slice(end,end+80)};
+  }
+  async function pull(ids) {
+    if(!Array.isArray(ids))return 400;
+    const known=new Set(ids),updates=[];
+    const collection=Zotero.Collections.getByLibrary(Zotero.Libraries.userLibraryID).find(c=>!c.parentID&&c.name==='HiBulb · Firefox');
+    for(const parent of collection?.getChildItems()||[]){
+      if(!parent.isRegularItem())continue;
+      for(const aid of parent.getAttachments()){
+        const att=Zotero.Items.get(aid);
+        if(att.attachmentContentType!=='text/html')continue;
+        const page=att.getRelationsByPredicate(predicate).find(v=>v.startsWith('urn:hibulb:page:'));
+        if(!page)continue;
+        let source;
+        for(const annotation of att.getAnnotations()){
+          if(annotation.annotationType!=='highlight')continue;
+          const relation=annotation.getRelationsByPredicate(predicate).find(v=>v.startsWith(recordURI('')));
+          const id=relation?relation.slice(recordURI('').length):'zotero-'+annotation.key;
+          const record={id,note:annotation.annotationComment||'',color:annotation.annotationColor};
+          if(!known.has(id)){
+            try {
+              source ||= documentIndex(await Zotero.File.getContentsAsync(await att.getFilePathAsync()));
+              const anchor=exportRange(source,JSON.parse(annotation.annotationPosition));
+              if(!anchor?.exact.trim())continue;
+              Object.assign(record,anchor,{url:page.slice('urn:hibulb:page:'.length),title:parent.getField('title'),
+                quote:annotation.annotationText||anchor.exact,createdAt:Zotero.Date.sqlToISO8601(annotation.dateAdded),
+                paper:record.color,folded:!record.note});
+            }catch(error){Zotero.logError(error);continue;}
+          }
+          if(!relation){annotation.addRelation(predicate,recordURI(id));await annotation.saveTx();}
+          updates.push(record);
+        }
+      }
+    }
+    return [200,'application/json',JSON.stringify(updates)];
+  }
+  async function receive({item,removed,snapshot,fields}) {
     if(!item||!/^[-_\w]{1,128}$/.test(item.id)||typeof item.exact!=='string'||!item.exact.trim()||
       typeof item.quote!=='string'||!/^#[0-9a-f]{6}$/i.test(item.color)||typeof (item.note??'')!=='string')return 400;
     const url=canonical(item.url), identity=recordURI(item.id);
@@ -104,7 +163,9 @@ var FirefoxSync = (() => {
       annotation=await Zotero.Annotations.saveFromJSON(att,{key:Zotero.DataObjectUtilities.generateKey(),type:'highlight',
         text:item.quote,comment:item.note||'',color:item.color,pageLabel:'',...located,relations:{[predicate]:identity}});
     }else{
-      annotation.annotationComment=item.note||'';annotation.annotationColor=item.color;await annotation.saveTx();
+      if(!fields||fields.includes('note')||fields.includes('add'))annotation.annotationComment=item.note||'';
+      if(!fields||fields.includes('color')||fields.includes('add'))annotation.annotationColor=item.color;
+      await annotation.saveTx();
     }
     const layout='extensions.hibulb.layout.'+att.libraryID+'.'+att.key+'.'+annotation.key;
     const previous=JSON.parse(Zotero.Prefs.get(layout,true)||'{}'),p=item.placement;
@@ -119,7 +180,7 @@ var FirefoxSync = (() => {
       supportedMethods=['POST'];supportedDataTypes=['application/json'];
       init({headers,data}){
         if(headers['x-hibulb-pair']!==Zotero.Prefs.get(pref,true))return 403;
-        const result=pending.then(()=>receive(data));
+        const result=pending.then(()=>data?.action==='pull'?pull(data.known):receive(data));
         pending=result.catch(e=>Zotero.logError(e));return result;
       }
     }
