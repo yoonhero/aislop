@@ -284,7 +284,7 @@ var HiBulbReader = class {
     const inner = session.view._iframeWindow.document;
     const shell = inner.createElement('div');
     shell.className = 'hibulb-paper-note'; shell.dataset.id = annotation.id;
-    shell.style.cssText = 'all:initial!important;position:absolute!important;display:block!important;left:var(--note-left,0px)!important;top:var(--note-top,0px)!important;width:var(--note-width,300px)!important;height:var(--note-height,210px)!important;transform:var(--note-transform)!important;transform-origin:0 0!important;pointer-events:none!important;z-index:var(--note-z,1)!important';
+    shell.style.cssText = 'all:initial!important;position:absolute!important;display:block!important;left:var(--note-left,0px)!important;top:var(--note-top,0px)!important;width:300px!important;height:210px!important;transform:var(--note-transform)!important;transform-origin:0 0!important;pointer-events:none!important;z-index:var(--note-z,1)!important';
     const frame = inner.createElement('iframe');
     frame.title = 'HiBulb margin note';
     frame.style.cssText = 'all:initial!important;display:block!important;width:100%!important;height:100%!important;border:0!important;border-radius:2px!important;box-shadow:0 2px 5px #0002!important;pointer-events:auto!important;background:transparent!important';
@@ -408,22 +408,30 @@ var HiBulbReader = class {
       shell.style.setProperty('--note-top', bounds.top + delta[1] * paper.zoom - host.top + 'px'); persist();
     };
     for (const side of ['left', 'right']) {
-      const handle = this.button('Resize note from ' + side + ' corner (arrow keys)', 'resize', () => {});
+      const handle = this.button('Scale note from ' + side + ' corner (arrow keys)', 'resize', () => {});
       handle.classList.add('hibulb-resize', 'hibulb-resize-' + side);
       footer.append(handle);
       let start;
       const begin = () => {
         const paper = this.paper(session.view, entry.annotation), bounds = shell.getBoundingClientRect();
         entry.resizing = true;
-        start = { left: (bounds.left - paper.left) / paper.zoom, width: bounds.width / paper.zoom, height: bounds.height / paper.zoom };
+        start = {
+          left: (bounds.left - paper.left) / paper.zoom,
+          width: shell.offsetWidth, height: shell.offsetHeight,
+          scale: bounds.width / (shell.offsetWidth * paper.zoom)
+        };
       };
       const resize = (dx, dy) => {
         const paper = this.paper(session.view, entry.annotation);
-        const maxWidth = side === 'left' ? start.left + start.width : paper.width / paper.zoom - start.left;
-        const width = Math.min(maxWidth, Math.max(Math.min(180, maxWidth), start.width + (side === 'left' ? -dx : dx)));
-        const left = start.left + (side === 'left' ? start.width - width : 0);
-        shell.style.setProperty('--note-width', width + 'px');
-        shell.style.setProperty('--note-height', Math.max(120, start.height + dy) + 'px');
+        const available = side === 'left' ? start.left + start.width * start.scale : paper.width / paper.zoom - start.left;
+        const maxScale = available / start.width;
+        // Project the pointer onto the paper's diagonal. The entire iframe
+        // scales uniformly, so text wrapping, math and the editor stay intact.
+        const delta = ((side === 'left' ? -dx : dx) * start.width + dy * start.height)
+          / (start.width ** 2 + start.height ** 2);
+        const scale = Math.min(maxScale, Math.max(Math.min(.6, maxScale), start.scale + delta));
+        const left = start.left + (side === 'left' ? start.width * (start.scale - scale) : 0);
+        shell.style.setProperty('--note-scale', scale);
         shell.style.setProperty('--note-left', paper.left + left * paper.zoom - session.paperHost.getBoundingClientRect().left + 'px');
       };
       const finish = () => {
@@ -431,7 +439,7 @@ var HiBulbReader = class {
         start = null; entry.resizing = false;
         const paper = this.paper(session.view, entry.annotation), bounds = shell.getBoundingClientRect();
         this.host.setLayout(annotation.id, {
-          width: bounds.width / paper.zoom, height: bounds.height / paper.zoom,
+          scale: bounds.width / (shell.offsetWidth * paper.zoom),
           x: (bounds.left - paper.left) / Math.max(1, paper.width - bounds.width)
         });
         this.schedule();
@@ -543,10 +551,10 @@ var HiBulbReader = class {
       if (!placement.open) continue;
       cardIDs.add(key);
       const paper = this.paper(view, a);
-      const width = Math.min(placement.width || 300, paper.width / paper.zoom);
-      const height = placement.height || 210;
-      const visualWidth = width * paper.zoom;
-      const visualHeight = height * paper.zoom;
+      const width = 300, height = 210;
+      const scale = Math.min(placement.scale || 1, paper.width / (paper.zoom * width));
+      const visualWidth = width * paper.zoom * scale;
+      const visualHeight = height * paper.zoom * scale;
       let left = paper.left + (placement.x ?? 1) * (paper.width - visualWidth);
       let top = rect[1] + (placement.dy || 0) * paper.units;
       if (placement.dy === undefined) {
@@ -573,11 +581,10 @@ var HiBulbReader = class {
         entry.editor.setSelectionRange(selectionStart, selectionEnd, selectionDirection);
         this.preview(entry);
       }
-      if (!entry.resizing) {
-        entry.shell.style.setProperty('--note-width', width + 'px');
-        entry.shell.style.setProperty('--note-height', height + 'px');
-      }
-      entry.shell.style.setProperty('--note-transform', pdf ? 'scale(calc(var(--scale-factor) * .75))' : 'scale(var(--scale, var(--content-scale, 1)))');
+      if (!entry.resizing) entry.shell.style.setProperty('--note-scale', scale);
+      entry.shell.style.setProperty('--note-transform', pdf
+        ? 'scale(calc(var(--scale-factor) * .75 * var(--note-scale)))'
+        : 'scale(calc(var(--scale, var(--content-scale, 1)) * var(--note-scale)))');
       entry.noteDoc.documentElement.style.colorScheme = view._iframeWindow.document.documentElement.getAttribute('data-color-scheme') || this.win.getComputedStyle(this.doc.documentElement).colorScheme;
       entry.card.style.setProperty('--annotation-color', a.color);
       if (!entry.moving && !entry.resizing) {
