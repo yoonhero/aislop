@@ -1,5 +1,6 @@
 var sessions = new Map();
 var resource;
+var FirefoxSync;
 var active = false;
 const pluginID = 'hibulb@aislop.local';
 function install() {}
@@ -10,6 +11,9 @@ async function startup({ rootURI }) {
   active = true;
   resource = Services.io.getProtocolHandler('resource').QueryInterface(Ci.nsIResProtocolHandler);
   resource.setSubstitution('hibulb', Services.io.newURI(rootURI));
+  Services.scriptloader.loadSubScript(rootURI + 'sync.js', this);
+  FirefoxSync.start();
+  await Zotero.PreferencePanes.register({pluginID, src:rootURI+'preferences.xhtml',label:'HiBulb'});
   Zotero.Reader.registerEventListener('renderToolbar', mount, pluginID);
   Zotero.Reader.registerEventListener('renderSidebarAnnotationHeader', sidebar, pluginID);
   for (const reader of Zotero.Reader._readers) mount({ reader });
@@ -84,6 +88,7 @@ function sidebar({ reader, doc, params, append }) {
 
 async function shutdown() {
   active = false;
+  await FirefoxSync?.stop();
   Zotero.Reader.unregisterEventListener('renderToolbar', mount);
   Zotero.Reader.unregisterEventListener('renderSidebarAnnotationHeader', sidebar);
   for (const session of sessions.values()) session?.destroy();
